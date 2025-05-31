@@ -785,15 +785,15 @@ function displayRepositoryCarousel(repos) {
     if (window.innerWidth <= 992) return 2;  // Tablet: 2 repos
     return 3; // Desktop: 3 repos
   }
-  
-  // Create carousel container with responsive grid
+    // Create carousel container with responsive grid and smooth animations
   repoContainer.innerHTML = `
     <div style="position: relative; width: 100%; margin: 0 auto;">
       <div id="repo-slides-container" style="
         display: flex;
         gap: 16px;
-        transition: transform 0.5s ease-in-out;
         width: 100%;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
       "></div>
       <div style="text-align: center; margin-top: 24px;">
         <button id="prev-repo" style="
@@ -806,8 +806,9 @@ function displayRepositoryCarousel(repos) {
           cursor: pointer;
           font-size: 20px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          transition: all 0.2s ease;
-        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">←</button>
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        " onmouseover="this.style.transform='scale(1.1) rotate(-5deg)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.25)'" 
+           onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">←</button>
         <span id="repo-counter" style="margin: 0 20px; font-weight: bold; font-size: 16px;"></span>
         <button id="next-repo" style="
           background: #f9bf3f;
@@ -819,15 +820,15 @@ function displayRepositoryCarousel(repos) {
           cursor: pointer;
           font-size: 20px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          transition: all 0.2s ease;
-        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">→</button>
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        " onmouseover="this.style.transform='scale(1.1) rotate(5deg)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.25)'" 
+           onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">→</button>
       </div>
       <div style="text-align: center; margin-top: 16px;">
         <div id="slide-indicators" style="display: flex; justify-content: center; gap: 8px;"></div>
       </div>
     </div>
   `;
-
   function createRepoCard(repo) {
     const reposPerSlide = getReposPerSlide();
     const cardWidth = reposPerSlide === 1 ? '100%' : 
@@ -842,14 +843,17 @@ function displayRepositoryCarousel(repos) {
         padding: 20px;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         min-height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        transform: translateY(0);
+        opacity: 1;
+        will-change: transform, box-shadow;
       " onclick="window.open('${repo.url}', '_blank')" 
-         onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'"
-         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'">
+         onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.boxShadow='0 12px 35px rgba(0,0,0,0.2)'"
+         onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'">>
         <div>
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
             <h4 style="margin: 0; font-size: 18px; color: #333; font-weight: bold; line-height: 1.2;">${repo.name}</h4>
@@ -893,29 +897,56 @@ function displayRepositoryCarousel(repos) {
       const repoIndex = (currentStartIndex + i) % repos.length;
       currentRepos.push(repos[repoIndex]);
     }
+      // Add repository cards with stagger animation
+    currentRepos.forEach((repo, index) => {
+      const cardHTML = createRepoCard(repo);
+      slidesContainer.innerHTML += cardHTML;
+    });
     
-    // Add repository cards
-    currentRepos.forEach(repo => {
-      slidesContainer.innerHTML += createRepoCard(repo);
+    // Apply entrance animation with stagger effect
+    const cards = slidesContainer.querySelectorAll('.repo-card');
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px) scale(0.95)';
+      card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+      
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0) scale(1)';
+      }, index * 150 + 100);
     });
     
     // Update counter
     const slideNumber = Math.floor(currentStartIndex / reposPerSlide) + 1;
     const totalSlides = Math.ceil(repos.length / reposPerSlide);
     counter.textContent = `Slide ${slideNumber} of ${totalSlides} (${repos.length} total repos)`;
-    
-    // Update indicators
+      // Update indicators
     indicators.innerHTML = '';
     for (let i = 0; i < totalSlides; i++) {
       const indicator = document.createElement('div');
+      const isActive = i === slideNumber - 1;
       indicator.style.cssText = `
-        width: 8px;
+        width: ${isActive ? '24px' : '8px'};
         height: 8px;
-        border-radius: 50%;
-        background: ${i === slideNumber - 1 ? '#007acc' : '#ccc'};
+        border-radius: 4px;
+        background: ${isActive ? '#007acc' : '#ccc'};
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: ${isActive ? 1 : 0.6};
+        transform: scale(${isActive ? 1.2 : 1});
       `;
+      indicator.onmouseover = () => {
+        if (!isActive) {
+          indicator.style.opacity = '0.8';
+          indicator.style.transform = 'scale(1.1)';
+        }
+      };
+      indicator.onmouseout = () => {
+        if (!isActive) {
+          indicator.style.opacity = '0.6';
+          indicator.style.transform = 'scale(1)';
+        }
+      };
       indicator.onclick = () => {
         currentStartIndex = i * reposPerSlide;
         updateDisplay();

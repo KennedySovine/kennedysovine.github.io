@@ -2390,3 +2390,102 @@ hr {
 #prev-repo:active, #next-repo:active {
   transform: scale(0.95) !important;
 }
+
+/* Enhanced Repository Carousel Animations */
+#repo-slides-container {
+  perspective: 1000px;
+}
+
+/* Card entrance animations */
+@keyframes cardFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.repo-card-enter {
+  animation: cardFadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Button pulse animation on load */
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+}
+
+#prev-repo, #next-repo {
+  animation: buttonPulse 2s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Indicator glow effect */
+@keyframes indicatorGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(0, 122, 204, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(0, 122, 204, 0.4);
+  }
+}
+
+#slide-indicators > div:hover {
+  animation: indicatorGlow 1.5s ease-in-out infinite;
+}
+
+/* Smooth container transitions */
+.carousel-transition {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading shimmer for cards */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.repo-card-loading {
+  background: linear-gradient(90deg, #ffdd99 25%, #f9bf3f 50%, #ffdd99 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced hover effects */
+.repo-card:hover {
+  filter: brightness(1.05);
+}
+
+/* Responsive animation adjustments */
+@media screen and (max-width: 768px) {
+  .repo-card-enter {
+    animation-duration: 0.4s;
+  }
+  
+  #prev-repo, #next-repo {
+    animation: none; /* Disable pulse on mobile for performance */
+  }
+}
+
+/* Focus states for accessibility */
+#prev-repo:focus, #next-repo:focus {
+  outline: 2px solid #007acc;
+  outline-offset: 2px;
+}
