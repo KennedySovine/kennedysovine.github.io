@@ -239,30 +239,61 @@ function renderRepoSlides(direction = null) {
   function createCard(repo, pos) {
     const div = document.createElement("div");
     div.className = `repo-card repo-card-${pos}`;
-    div.style = `
+    
+    // Base styles for all cards
+    div.style.cssText = `
       position: absolute;
-      width: 300px;
-      padding: 16px;
+      width: 280px;
+      height: 180px;
+      padding: 20px;
       border-radius: 12px;
       background: linear-gradient(135deg, #ffdd99, #f9bf3f);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: all 0.4s ease;
-      ${pos === 'left' ? 'left: -150px; opacity: 0.5; transform: scale(0.8);' : ''}
-      ${pos === 'center' ? 'left: 50%; transform: translateX(-50%); opacity: 1; z-index: 1; cursor: pointer;' : ''}
-      ${pos === 'right' ? 'right: -150px; opacity: 0.5; transform: scale(0.8);' : ''}
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow: hidden;
     `;
     
-    if (pos === "center") {
+    // Position-specific styles
+    if (pos === 'left') {
+      div.style.cssText += `
+        left: 50px;
+        transform: translateY(-50%) scale(0.85);
+        opacity: 0.7;
+        z-index: 1;
+      `;
+    } else if (pos === 'center') {
+      div.style.cssText += `
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%) scale(1);
+        opacity: 1;
+        z-index: 3;
+        cursor: pointer;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+      `;
       div.onclick = () => window.open(`https://github.com/${repo.author}/${repo.name}`, "_blank");
+    } else if (pos === 'right') {
+      div.style.cssText += `
+        right: 50px;
+        transform: translateY(-50%) scale(0.85);
+        opacity: 0.7;
+        z-index: 1;
+      `;
     }
     
     div.innerHTML = `
-      <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">${repo.name}</div>
-      <div style="font-size: 12px; color: #555; margin-bottom: 12px;">${repo.description || ""}</div>
-      <div style="display: flex; gap: 16px; font-size: 12px; color: #666;">
-        <span><strong>Language:</strong> ${repo.language || "N/A"}</span>
-        <span><strong>★ Stars:</strong> ${repo.stars}</span>
-        <span><strong>⑂ Forks:</strong> ${repo.forks}</span>
+      <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${repo.name}</div>
+      <div style="font-size: 13px; color: #666; margin-bottom: 16px; height: 40px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #555;">
+        <span style="display: flex; align-items: center; gap: 4px;">
+          <span style="width: 8px; height: 8px; background: #007acc; border-radius: 50%;"></span>
+          ${repo.language || "N/A"}
+        </span>
+        <span style="display: flex; align-items: center; gap: 4px;">
+          ⭐ ${repo.stars || 0}
+        </span>
+        <span style="display: flex; align-items: center; gap: 4px;">
+          🍴 ${repo.forks || 0}
+        </span>
       </div>
     `;
     return div;
@@ -273,16 +304,51 @@ function renderRepoSlides(direction = null) {
   const centerCard = createCard(repoSlides[centerIdx], "center");
   const rightCard = createCard(repoSlides[rightIdx], "right");
 
-  // Set container height and position
+  // Set container styles
   const container = document.getElementById("repos");
-  container.style.position = "relative";
-  container.style.height = "200px";
-  container.style.width = "100%";
+  container.style.cssText = `
+    position: relative;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+  `;
 
-  // Append in order: left, center, right
+  // Animation classes for smooth transitions
+  if (direction === "left") {
+    leftCard.classList.add("slide-in-center");
+    centerCard.classList.add("slide-out-right");
+    rightCard.classList.add("slide-in-right");
+  } else if (direction === "right") {
+    rightCard.classList.add("slide-in-center");
+    centerCard.classList.add("slide-out-left");
+    leftCard.classList.add("slide-in-left");
+  }
+
+  // Position all cards at center initially for animation
+  if (direction) {
+    [leftCard, centerCard, rightCard].forEach(card => {
+      card.style.top = "50%";
+    });
+  } else {
+    // Initial render - position cards directly
+    leftCard.style.top = "50%";
+    centerCard.style.top = "50%";
+    rightCard.style.top = "50%";
+  }
+
+  // Append cards
   container.appendChild(leftCard);
   container.appendChild(centerCard);
   container.appendChild(rightCard);
+
+  // Clean up animation classes after animation completes
+  if (direction) {
+    setTimeout(() => {
+      leftCard.classList.remove("slide-in-center", "slide-in-left");
+      centerCard.classList.remove("slide-out-right", "slide-out-left");
+      rightCard.classList.remove("slide-in-center", "slide-in-right");
+    }, 500);
+  }
 }
 
 // Navigation with animation
@@ -296,7 +362,7 @@ function setupCarouselNavigation() {
       animating = true;
       currentRepoIndex = (currentRepoIndex - 1 + repoSlides.length) % repoSlides.length;
       renderRepoSlides("left");
-      setTimeout(() => { animating = false; }, 400);
+      setTimeout(() => { animating = false; }, 500);
     };
     
     rightBtn.onclick = () => {
@@ -304,7 +370,7 @@ function setupCarouselNavigation() {
       animating = true;
       currentRepoIndex = (currentRepoIndex + 1) % repoSlides.length;
       renderRepoSlides("right");
-      setTimeout(() => { animating = false; }, 400);
+      setTimeout(() => { animating = false; }, 500);
     };
   }
 }
