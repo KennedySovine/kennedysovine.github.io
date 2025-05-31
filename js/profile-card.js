@@ -3,25 +3,31 @@ window.addEventListener("DOMContentLoaded", async function () {
     const resp = await fetch(url);
     return resp.json();
   }
-
   document.querySelectorAll(".stack-card").forEach(async function (el) {
     const userId = el.getAttribute("user-id");
 
-    const response = await get(
-      `https://api.stackexchange.com/2.2/users/${userId}?site=stackoverflow`
-    );
-    const user = response.items[0];
-    const {
-      profile_image,
-      website_url,
-      link,
-      display_name,
-      reputation,
-      user_id,
-    } = user;
-    const { gold, silver, bronze } = user.badge_counts;
+    try {
+      const response = await get(
+        `https://api.stackexchange.com/2.2/users/${userId}?site=stackoverflow`
+      );
+      
+      if (!response.items || response.items.length === 0) {
+        el.innerHTML = `<div style="padding: 20px; text-align: center; color: #666;">Stack Overflow profile unavailable</div>`;
+        return;
+      }
+      
+      const user = response.items[0];
+      const {
+        profile_image,
+        website_url,
+        link,
+        display_name,
+        reputation,
+        user_id,
+      } = user;
+      const { gold, silver, bronze } = user.badge_counts || { gold: 0, silver: 0, bronze: 0 };
 
-    const profileLink = website_url || link;
+      const profileLink = website_url || link;
 
     el.innerHTML = `
         <a href="${profileLink}" target="_blank" style="text-decoration: none; color: black; display: block; border-radius: 12px; padding: 16px; font-size: 14px; background: linear-gradient(135deg, #ffdd99, #f9bf3f); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease-in-out;">
