@@ -14,6 +14,5 @@ export const config = {
   API_ENDPOINTS: {
     github: 'https://api.github.com',
     stackexchange: 'https://api.stackexchange.com/2.2',
-    medium: 'https://api.rss2json.com/v1/api.json'
   }
 };
