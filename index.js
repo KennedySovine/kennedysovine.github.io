@@ -228,127 +228,213 @@ let animating = false;
 function renderRepoSlides(direction = null) {
   if (!repoSlides.length) return;
   const repoCarousel = document.getElementById("repos");
-  repoCarousel.innerHTML = "";
-
+  
   const total = repoSlides.length;
   const leftIdx = (currentRepoIndex - 1 + total) % total;
   const centerIdx = currentRepoIndex;
   const rightIdx = (currentRepoIndex + 1) % total;
 
-  // Helper to create a card
-  function createCard(repo, pos) {
-    const div = document.createElement("div");
-    div.className = `repo-card repo-card-${pos}`;
+  // If this is the first render, create the initial cards
+  if (!direction) {
+    repoCarousel.innerHTML = "";
     
-    // Base styles for all cards
-    div.style.cssText = `
-      position: absolute;
-      width: 280px;
-      height: 180px;
-      padding: 20px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #ffdd99, #f9bf3f);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    // Set container styles
+    repoCarousel.style.cssText = `
+      position: relative;
+      height: 250px;
+      width: 100%;
       overflow: hidden;
     `;
+
+    // Create and position initial cards
+    const leftCard = createCard(repoSlides[leftIdx], "left");
+    const centerCard = createCard(repoSlides[centerIdx], "center");
+    const rightCard = createCard(repoSlides[rightIdx], "right");
+
+    repoCarousel.appendChild(leftCard);
+    repoCarousel.appendChild(centerCard);
+    repoCarousel.appendChild(rightCard);
+    return;
+  }
+
+  // For animations, we'll move existing cards and create new ones
+  const existingCards = repoCarousel.children;
+  
+  if (direction === "right") {
+    // Moving right: left card becomes center, center becomes right, new card comes from left
+    const newLeftCard = createCard(repoSlides[leftIdx], "left");
+    newLeftCard.style.left = "-100px";
+    newLeftCard.style.opacity = "0";
     
-    // Position-specific styles
-    if (pos === 'left') {
-      div.style.cssText += `
-        left: 50px;
-        transform: translateY(-50%) scale(0.85);
-        opacity: 0.7;
-        z-index: 1;
-      `;
-    } else if (pos === 'center') {
-      div.style.cssText += `
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%) scale(1);
-        opacity: 1;
-        z-index: 3;
-        cursor: pointer;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
-      `;
-      div.onclick = () => window.open(`https://github.com/${repo.author}/${repo.name}`, "_blank");
-    } else if (pos === 'right') {
-      div.style.cssText += `
-        right: 50px;
-        transform: translateY(-50%) scale(0.85);
-        opacity: 0.7;
-        z-index: 1;
-      `;
-    }
+    repoCarousel.insertBefore(newLeftCard, existingCards[0]);
     
-    div.innerHTML = `
-      <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${repo.name}</div>
-      <div style="font-size: 13px; color: #666; margin-bottom: 16px; height: 40px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #555;">
-        <span style="display: flex; align-items: center; gap: 4px;">
-          <span style="width: 8px; height: 8px; background: #007acc; border-radius: 50%;"></span>
-          ${repo.language || "N/A"}
-        </span>
-        <span style="display: flex; align-items: center; gap: 4px;">
-          ⭐ ${repo.stars || 0}
-        </span>
-        <span style="display: flex; align-items: center; gap: 4px;">
-          🍴 ${repo.forks || 0}
-        </span>
-      </div>
-    `;
-    return div;
-  }
-
-  // Create cards
-  const leftCard = createCard(repoSlides[leftIdx], "left");
-  const centerCard = createCard(repoSlides[centerIdx], "center");
-  const rightCard = createCard(repoSlides[rightIdx], "right");
-
-  // Set container styles
-  const container = document.getElementById("repos");
-  container.style.cssText = `
-    position: relative;
-    height: 250px;
-    width: 100%;
-    overflow: hidden;
-  `;
-
-  // Animation classes for smooth transitions
-  if (direction === "left") {
-    leftCard.classList.add("slide-in-center");
-    centerCard.classList.add("slide-out-right");
-    rightCard.classList.add("slide-in-right");
-  } else if (direction === "right") {
-    rightCard.classList.add("slide-in-center");
-    centerCard.classList.add("slide-out-left");
-    leftCard.classList.add("slide-in-left");
-  }
-
-  // Position all cards at center initially for animation
-  if (direction) {
-    [leftCard, centerCard, rightCard].forEach(card => {
-      card.style.top = "50%";
-    });
-  } else {
-    // Initial render - position cards directly
-    leftCard.style.top = "50%";
-    centerCard.style.top = "50%";
-    rightCard.style.top = "50%";
-  }
-
-  // Append cards
-  container.appendChild(leftCard);
-  container.appendChild(centerCard);
-  container.appendChild(rightCard);
-
-  // Clean up animation classes after animation completes
-  if (direction) {
+    // Animate all cards
     setTimeout(() => {
-      leftCard.classList.remove("slide-in-center", "slide-in-left");
-      centerCard.classList.remove("slide-out-right", "slide-out-left");
-      rightCard.classList.remove("slide-in-center", "slide-in-right");
-    }, 500);
+      // New left card slides in
+      newLeftCard.style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      newLeftCard.style.left = "50px";
+      newLeftCard.style.opacity = "0.7";
+      
+      // Old left becomes center
+      existingCards[1].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      existingCards[1].style.left = "50%";
+      existingCards[1].style.transform = "translateX(-50%) translateY(-50%) scale(1)";
+      existingCards[1].style.opacity = "1";
+      existingCards[1].style.zIndex = "3";
+      existingCards[1].style.boxShadow = "0 12px 35px rgba(0, 0, 0, 0.2)";
+      
+      // Old center becomes right and old right slides out
+      existingCards[2].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      existingCards[2].style.left = "auto";
+      existingCards[2].style.right = "50px";
+      existingCards[2].style.transform = "translateY(-50%) scale(0.85)";
+      existingCards[2].style.opacity = "0.7";
+      existingCards[2].style.zIndex = "1";
+      
+      if (existingCards[3]) {
+        existingCards[3].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+        existingCards[3].style.right = "-100px";
+        existingCards[3].style.opacity = "0";
+      }
+    }, 10);
+    
+    // Clean up after animation
+    setTimeout(() => {
+      if (existingCards[3]) {
+        repoCarousel.removeChild(existingCards[3]);
+      }
+      // Update click handlers
+      updateClickHandlers();
+    }, 650);
+    
+  } else if (direction === "left") {
+    // Moving left: right card becomes center, center becomes left, new card comes from right
+    const newRightCard = createCard(repoSlides[rightIdx], "right");
+    newRightCard.style.right = "-100px";
+    newRightCard.style.opacity = "0";
+    newRightCard.style.left = "auto";
+    
+    repoCarousel.appendChild(newRightCard);
+    
+    // Animate all cards
+    setTimeout(() => {
+      // New right card slides in
+      newRightCard.style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      newRightCard.style.right = "50px";
+      newRightCard.style.opacity = "0.7";
+      
+      // Old right becomes center
+      existingCards[2].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      existingCards[2].style.left = "50%";
+      existingCards[2].style.right = "auto";
+      existingCards[2].style.transform = "translateX(-50%) translateY(-50%) scale(1)";
+      existingCards[2].style.opacity = "1";
+      existingCards[2].style.zIndex = "3";
+      existingCards[2].style.boxShadow = "0 12px 35px rgba(0, 0, 0, 0.2)";
+      
+      // Old center becomes left
+      existingCards[1].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      existingCards[1].style.left = "50px";
+      existingCards[1].style.transform = "translateY(-50%) scale(0.85)";
+      existingCards[1].style.opacity = "0.7";
+      existingCards[1].style.zIndex = "1";
+      
+      // Old left slides out
+      existingCards[0].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+      existingCards[0].style.left = "-100px";
+      existingCards[0].style.opacity = "0";
+    }, 10);
+    
+    // Clean up after animation
+    setTimeout(() => {
+      if (existingCards[0] && existingCards[0].parentNode === repoCarousel) {
+        repoCarousel.removeChild(existingCards[0]);
+      }
+      // Update click handlers
+      updateClickHandlers();
+    }, 650);
   }
+}
+
+// Helper to create a card
+function createCard(repo, pos) {
+  const div = document.createElement("div");
+  div.className = `repo-card repo-card-${pos}`;
+  div.dataset.repoUrl = `https://github.com/${repo.author}/${repo.name}`;
+  
+  // Base styles for all cards
+  div.style.cssText = `
+    position: absolute;
+    width: 280px;
+    height: 180px;
+    padding: 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    top: 50%;
+    will-change: transform, opacity, left, right;
+  `;
+  
+  // Position-specific styles
+  if (pos === 'left') {
+    div.style.cssText += `
+      left: 50px;
+      transform: translateY(-50%) scale(0.85);
+      opacity: 0.7;
+      z-index: 1;
+    `;
+  } else if (pos === 'center') {
+    div.style.cssText += `
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%) scale(1);
+      opacity: 1;
+      z-index: 3;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    `;
+  } else if (pos === 'right') {
+    div.style.cssText += `
+      right: 50px;
+      left: auto;
+      transform: translateY(-50%) scale(0.85);
+      opacity: 0.7;
+      z-index: 1;
+    `;
+  }
+  
+  div.innerHTML = `
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${repo.name}</div>
+    <div style="font-size: 13px; color: #666; margin-bottom: 16px; height: 40px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #555;">
+      <span style="display: flex; align-items: center; gap: 4px;">
+        <span style="width: 8px; height: 8px; background: #007acc; border-radius: 50%;"></span>
+        ${repo.language || "N/A"}
+      </span>
+      <span style="display: flex; align-items: center; gap: 4px;">
+        ⭐ ${repo.stars || 0}
+      </span>
+      <span style="display: flex; align-items: center; gap: 4px;">
+        🍴 ${repo.forks || 0}
+      </span>
+    </div>
+  `;
+  
+  return div;
+}
+
+// Update click handlers for center card
+function updateClickHandlers() {
+  const cards = document.querySelectorAll('.repo-card');
+  cards.forEach(card => {
+    card.onclick = null; // Remove existing handlers
+    if (card.style.zIndex === '3') { // Center card
+      card.style.cursor = 'pointer';
+      card.onclick = () => window.open(card.dataset.repoUrl, "_blank");
+    } else {
+      card.style.cursor = 'default';
+    }
+  });
 }
 
 // Navigation with animation
@@ -361,16 +447,16 @@ function setupCarouselNavigation() {
       if (!repoSlides.length || animating) return;
       animating = true;
       currentRepoIndex = (currentRepoIndex - 1 + repoSlides.length) % repoSlides.length;
-      renderRepoSlides("left");
-      setTimeout(() => { animating = false; }, 500);
+      renderRepoSlides("right"); // Swipe right when going to previous repo
+      setTimeout(() => { animating = false; }, 650);
     };
     
     rightBtn.onclick = () => {
       if (!repoSlides.length || animating) return;
       animating = true;
       currentRepoIndex = (currentRepoIndex + 1) % repoSlides.length;
-      renderRepoSlides("right");
-      setTimeout(() => { animating = false; }, 500);
+      renderRepoSlides("left"); // Swipe left when going to next repo
+      setTimeout(() => { animating = false; }, 650);
     };
   }
 }
@@ -383,7 +469,8 @@ async function fetchReposFromGit(url) {
     }
     const items = await response.json();
     if (Array.isArray(items) && items.length > 0) {
-      repoSlides = items;
+      // Take up to 10 repositories instead of limiting to fewer
+      repoSlides = items.slice(0, 10);
       currentRepoIndex = 0;
       renderRepoSlides();
       setupCarouselNavigation();
@@ -398,8 +485,100 @@ async function fetchReposFromGit(url) {
 }
 
 function populateRepo(items, id) {
-  // This function is now replaced by the carousel functionality
-  // but keeping it for compatibility if needed elsewhere
+  // Updated to handle up to 10 repositories instead of 4
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    console.warn("No repo items to populate");
+    return;
+  }
+  
+  const projectdesign = document.getElementById(id);
+  if (!projectdesign) {
+    console.warn(`Element with id '${id}' not found`);
+    return;
+  }
+  
+  const count = Math.min(10, items.length);
+
+  const rowWrapper = document.createElement("div");
+  rowWrapper.style = "display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;";
+  projectdesign.appendChild(rowWrapper);
+
+  for (let i = 0; i < count; i++) {
+    const item = items[i];
+    if (!item) continue;
+    
+    const repoCard = document.createElement("div");
+    repoCard.className = "repo-card";
+    repoCard.style = `
+          flex: 1 0 48%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          border-radius: 12px;
+          padding: 16px;
+          font-size: 14px;
+          background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s ease-in-out;
+          cursor: pointer;
+      `;
+
+    const repoLink = document.createElement("a");
+    repoLink.href = `https://github.com/${item.author || 'unknown'}/${item.name || 'unknown'}`;
+    repoLink.target = "_blank";
+    repoLink.style = "text-decoration: none; color: black; display: block; height: 100%;";
+
+    repoCard.appendChild(repoLink);
+
+    const repoName = document.createElement("h4");
+    repoName.className = "repo-heading";
+    repoName.innerHTML = item.name || 'Unknown Repository';
+    repoName.style = "margin: 0; font-size: 18px; font-weight: bold;";
+    repoLink.appendChild(repoName);
+
+    const repoDescription = document.createElement("p");
+    repoDescription.className = "repo-description";
+    repoDescription.innerHTML = item.description || 'No description available';
+    repoDescription.style = "margin-top: 8px; font-size: 12px; color: #555;";
+    repoLink.appendChild(repoDescription);
+
+    const statsRow = document.createElement("div");
+    statsRow.style = `
+          display: flex; 
+          align-items: center; 
+          gap: 16px; 
+          margin-top: 12px; 
+          font-size: 12px; 
+          color: #666;
+      `;
+
+    const languageDiv = document.createElement("div");
+    languageDiv.style = "display: flex; align-items: center; gap: 4px;";
+    languageDiv.innerHTML = `
+          <span style="width: 8px; height: 8px; background-color: #666; border-radius: 50%; display: inline-block;"></span>
+          ${item.language || 'Unknown'}
+      `;
+    statsRow.appendChild(languageDiv);
+
+    const starsDiv = document.createElement("div");
+    starsDiv.style = "display: flex; align-items: center; gap: 4px;";
+    starsDiv.innerHTML = `
+          <img src="https://img.icons8.com/ios-filled/16/666666/star--v1.png" alt="Stars">
+          ${item.stars || 0}
+      `;
+    statsRow.appendChild(starsDiv);
+
+    const forksDiv = document.createElement("div");
+    forksDiv.style = "display: flex; align-items: center; gap: 4px;";
+    forksDiv.innerHTML = `
+          <img src="https://img.icons8.com/ios-filled/16/666666/code-fork.png" alt="Forks">
+          ${item.forks || 0}
+      `;
+    statsRow.appendChild(forksDiv);
+
+    repoLink.appendChild(statsRow);
+    rowWrapper.appendChild(repoCard);
+  }
 }
 
 function populateExp_Edu(items, id) {
