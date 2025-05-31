@@ -220,6 +220,95 @@ function populateBlogs(items, id) {
   }
 }
 
+let repoSlides = [];
+let currentRepoIndex = 0;
+let animating = false;
+
+// Helper: Render 3 slides (left, center, right) with animation
+function renderRepoSlides(direction = null) {
+  if (!repoSlides.length) return;
+  const repoCarousel = document.getElementById("repos");
+  repoCarousel.innerHTML = "";
+
+  const total = repoSlides.length;
+  const leftIdx = (currentRepoIndex - 1 + total) % total;
+  const centerIdx = currentRepoIndex;
+  const rightIdx = (currentRepoIndex + 1) % total;
+
+  // Helper to create a card
+  function createCard(repo, pos) {
+    const div = document.createElement("div");
+    div.className = `repo-card repo-card-${pos}`;
+    div.style = `
+      position: absolute;
+      width: 300px;
+      padding: 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s ease;
+      ${pos === 'left' ? 'left: -150px; opacity: 0.5; transform: scale(0.8);' : ''}
+      ${pos === 'center' ? 'left: 50%; transform: translateX(-50%); opacity: 1; z-index: 1; cursor: pointer;' : ''}
+      ${pos === 'right' ? 'right: -150px; opacity: 0.5; transform: scale(0.8);' : ''}
+    `;
+    
+    if (pos === "center") {
+      div.onclick = () => window.open(`https://github.com/${repo.author}/${repo.name}`, "_blank");
+    }
+    
+    div.innerHTML = `
+      <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">${repo.name}</div>
+      <div style="font-size: 12px; color: #555; margin-bottom: 12px;">${repo.description || ""}</div>
+      <div style="display: flex; gap: 16px; font-size: 12px; color: #666;">
+        <span><strong>Language:</strong> ${repo.language || "N/A"}</span>
+        <span><strong>★ Stars:</strong> ${repo.stars}</span>
+        <span><strong>⑂ Forks:</strong> ${repo.forks}</span>
+      </div>
+    `;
+    return div;
+  }
+
+  // Create cards
+  const leftCard = createCard(repoSlides[leftIdx], "left");
+  const centerCard = createCard(repoSlides[centerIdx], "center");
+  const rightCard = createCard(repoSlides[rightIdx], "right");
+
+  // Set container height and position
+  const container = document.getElementById("repos");
+  container.style.position = "relative";
+  container.style.height = "200px";
+  container.style.width = "100%";
+
+  // Append in order: left, center, right
+  container.appendChild(leftCard);
+  container.appendChild(centerCard);
+  container.appendChild(rightCard);
+}
+
+// Navigation with animation
+function setupCarouselNavigation() {
+  const leftBtn = document.getElementById("repo-carousel-left");
+  const rightBtn = document.getElementById("repo-carousel-right");
+  
+  if (leftBtn && rightBtn) {
+    leftBtn.onclick = () => {
+      if (!repoSlides.length || animating) return;
+      animating = true;
+      currentRepoIndex = (currentRepoIndex - 1 + repoSlides.length) % repoSlides.length;
+      renderRepoSlides("left");
+      setTimeout(() => { animating = false; }, 400);
+    };
+    
+    rightBtn.onclick = () => {
+      if (!repoSlides.length || animating) return;
+      animating = true;
+      currentRepoIndex = (currentRepoIndex + 1) % repoSlides.length;
+      renderRepoSlides("right");
+      setTimeout(() => { animating = false; }, 400);
+    };
+  }
+}
+
 async function fetchReposFromGit(url) {
   try {
     const response = await fetch(url);
@@ -228,7 +317,10 @@ async function fetchReposFromGit(url) {
     }
     const items = await response.json();
     if (Array.isArray(items) && items.length > 0) {
-      populateRepo(items, "repos");
+      repoSlides = items;
+      currentRepoIndex = 0;
+      renderRepoSlides();
+      setupCarouselNavigation();
     } else {
       console.warn("No repositories found from API");
       document.getElementById("repos").innerHTML = "<div>No repositories found.</div>";
@@ -240,99 +332,8 @@ async function fetchReposFromGit(url) {
 }
 
 function populateRepo(items, id) {
-  if (!items || !Array.isArray(items) || items.length === 0) {
-    console.warn("No repo items to populate");
-    return;
-  }
-  
-  const projectdesign = document.getElementById(id);
-  if (!projectdesign) {
-    console.warn(`Element with id '${id}' not found`);
-    return;
-  }
-  
-  const count = Math.min(4, items.length);
-
-  const rowWrapper = document.createElement("div");
-  rowWrapper.style = "display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;";
-  projectdesign.appendChild(rowWrapper);
-
-  for (let i = 0; i < count; i++) {
-    const item = items[i];
-    if (!item) continue;
-    
-    const repoCard = document.createElement("div");
-    repoCard.className = "repo-card";
-    repoCard.style = `
-          flex: 1 0 48%;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          border-radius: 12px;
-          padding: 16px;
-          font-size: 14px;
-          background: linear-gradient(135deg, #ffdd99, #f9bf3f);
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-          transition: transform 0.2s ease-in-out;
-          cursor: pointer;
-      `;
-
-    const repoLink = document.createElement("a");
-    repoLink.href = `https://github.com/${item.author || 'unknown'}/${item.name || 'unknown'}`;
-    repoLink.target = "_blank";
-    repoLink.style = "text-decoration: none; color: black; display: block; height: 100%;";
-
-    repoCard.appendChild(repoLink);
-
-    const repoName = document.createElement("h4");
-    repoName.className = "repo-heading";
-    repoName.innerHTML = item.name || 'Unknown Repository';
-    repoName.style = "margin: 0; font-size: 18px; font-weight: bold;";
-    repoLink.appendChild(repoName);
-
-    const repoDescription = document.createElement("p");
-    repoDescription.className = "repo-description";
-    repoDescription.innerHTML = item.description || 'No description available';
-    repoDescription.style = "margin-top: 8px; font-size: 12px; color: #555;";
-    repoLink.appendChild(repoDescription);
-
-    const statsRow = document.createElement("div");
-    statsRow.style = `
-          display: flex; 
-          align-items: center; 
-          gap: 16px; 
-          margin-top: 12px; 
-          font-size: 12px; 
-          color: #666;
-      `;
-
-    const languageDiv = document.createElement("div");
-    languageDiv.style = "display: flex; align-items: center; gap: 4px;";
-    languageDiv.innerHTML = `
-          <span style="width: 8px; height: 8px; background-color: #666; border-radius: 50%; display: inline-block;"></span>
-          ${item.language || 'Unknown'}
-      `;
-    statsRow.appendChild(languageDiv);
-
-    const starsDiv = document.createElement("div");
-    starsDiv.style = "display: flex; align-items: center; gap: 4px;";
-    starsDiv.innerHTML = `
-          <img src="https://img.icons8.com/ios-filled/16/666666/star--v1.png" alt="Stars">
-          ${item.stars || 0}
-      `;
-    statsRow.appendChild(starsDiv);
-
-    const forksDiv = document.createElement("div");
-    forksDiv.style = "display: flex; align-items: center; gap: 4px;";
-    forksDiv.innerHTML = `
-          <img src="https://img.icons8.com/ios-filled/16/666666/code-fork.png" alt="Forks">
-          ${item.forks || 0}
-      `;
-    statsRow.appendChild(forksDiv);
-
-    repoLink.appendChild(statsRow);
-    rowWrapper.appendChild(repoCard);
-  }
+  // This function is now replaced by the carousel functionality
+  // but keeping it for compatibility if needed elsewhere
 }
 
 function populateExp_Edu(items, id) {
