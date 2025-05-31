@@ -9,11 +9,23 @@ import {
 } from "./user-data/data.js";
 
 import { URLs } from "./user-data/urls.js";
+import { config } from "./user-data/config.js";
 
 const { medium, gitConnected, gitRepo } = URLs;
 
 async function fetchBlogsFromMedium(url) {
   try {
+    if (!url) {
+      console.log("No Medium URL provided, skipping blog fetch");
+      document.getElementById("blogs").innerHTML = `
+        <li style="text-align: center; padding: 20px;">
+          <p>No blog posts available at this time.</p>
+          <p>Check back later for updates!</p>
+        </li>
+      `;
+      return;
+    }
+
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Medium API error: ${response.status}`);
@@ -23,7 +35,12 @@ async function fetchBlogsFromMedium(url) {
     // Check if required data exists
     if (!data.items || !Array.isArray(data.items)) {
       console.warn("Medium API response missing items array");
-      document.getElementById("blogs").innerHTML = "<li>No blog posts found.</li>";
+      document.getElementById("blogs").innerHTML = `
+        <li style="text-align: center; padding: 20px;">
+          <p>No blog posts found.</p>
+          <p>Visit the blog directly for latest updates.</p>
+        </li>
+      `;
       return;
     }
     
@@ -35,7 +52,12 @@ async function fetchBlogsFromMedium(url) {
     populateBlogs(data.items, "blogs");
   } catch (error) {
     console.error("Error in fetching the blogs from Medium profile:", error);
-    document.getElementById("blogs").innerHTML = "<li>Unable to load blog posts at this time.</li>";
+    document.getElementById("blogs").innerHTML = `
+      <li style="text-align: center; padding: 20px;">
+        <p>Blog posts are currently unavailable.</p>
+        <p>Please try again later.</p>
+      </li>
+    `;
   }
 }
 
@@ -220,141 +242,7 @@ function populateBlogs(items, id) {
   }
 }
 
-let repoSlides = [];
-let currentRepoIndex = 0;
-let animating = false;
-
-// Helper: Render 3 slides (left, center, right) with animation
-function renderRepoSlides(direction = null) {
-  if (!repoSlides.length) return;
-  const repoCarousel = document.getElementById("repos");
-  
-  const total = repoSlides.length;
-  const leftIdx = (currentRepoIndex - 1 + total) % total;
-  const centerIdx = currentRepoIndex;
-  const rightIdx = (currentRepoIndex + 1) % total;
-
-  // If this is the first render, create the initial cards
-  if (!direction) {
-    repoCarousel.innerHTML = "";
-    
-    // Set container styles
-    repoCarousel.style.cssText = `
-      position: relative;
-      height: 250px;
-      width: 100%;
-      overflow: hidden;
-    `;
-
-    // Create and position initial cards
-    const leftCard = createCard(repoSlides[leftIdx], "left");
-    const centerCard = createCard(repoSlides[centerIdx], "center");
-    const rightCard = createCard(repoSlides[rightIdx], "right");
-
-    repoCarousel.appendChild(leftCard);
-    repoCarousel.appendChild(centerCard);
-    repoCarousel.appendChild(rightCard);
-    return;
-  }
-
-  // For animations, we'll move existing cards and create new ones
-  const existingCards = repoCarousel.children;
-  
-  if (direction === "right") {
-    // Moving right: left card becomes center, center becomes right, new card comes from left
-    const newLeftCard = createCard(repoSlides[leftIdx], "left");
-    newLeftCard.style.left = "-100px";
-    newLeftCard.style.opacity = "0";
-    
-    repoCarousel.insertBefore(newLeftCard, existingCards[0]);
-    
-    // Animate all cards
-    setTimeout(() => {
-      // New left card slides in
-      newLeftCard.style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      newLeftCard.style.left = "50px";
-      newLeftCard.style.opacity = "0.7";
-      
-      // Old left becomes center
-      existingCards[1].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      existingCards[1].style.left = "50%";
-      existingCards[1].style.transform = "translateX(-50%) translateY(-50%) scale(1)";
-      existingCards[1].style.opacity = "1";
-      existingCards[1].style.zIndex = "3";
-      existingCards[1].style.boxShadow = "0 12px 35px rgba(0, 0, 0, 0.2)";
-      
-      // Old center becomes right and old right slides out
-      existingCards[2].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      existingCards[2].style.left = "auto";
-      existingCards[2].style.right = "50px";
-      existingCards[2].style.transform = "translateY(-50%) scale(0.85)";
-      existingCards[2].style.opacity = "0.7";
-      existingCards[2].style.zIndex = "1";
-      
-      if (existingCards[3]) {
-        existingCards[3].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-        existingCards[3].style.right = "-100px";
-        existingCards[3].style.opacity = "0";
-      }
-    }, 10);
-    
-    // Clean up after animation
-    setTimeout(() => {
-      if (existingCards[3]) {
-        repoCarousel.removeChild(existingCards[3]);
-      }
-      // Update click handlers
-      updateClickHandlers();
-    }, 650);
-    
-  } else if (direction === "left") {
-    // Moving left: right card becomes center, center becomes left, new card comes from right
-    const newRightCard = createCard(repoSlides[rightIdx], "right");
-    newRightCard.style.right = "-100px";
-    newRightCard.style.opacity = "0";
-    newRightCard.style.left = "auto";
-    
-    repoCarousel.appendChild(newRightCard);
-    
-    // Animate all cards
-    setTimeout(() => {
-      // New right card slides in
-      newRightCard.style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      newRightCard.style.right = "50px";
-      newRightCard.style.opacity = "0.7";
-      
-      // Old right becomes center
-      existingCards[2].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      existingCards[2].style.left = "50%";
-      existingCards[2].style.right = "auto";
-      existingCards[2].style.transform = "translateX(-50%) translateY(-50%) scale(1)";
-      existingCards[2].style.opacity = "1";
-      existingCards[2].style.zIndex = "3";
-      existingCards[2].style.boxShadow = "0 12px 35px rgba(0, 0, 0, 0.2)";
-      
-      // Old center becomes left
-      existingCards[1].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      existingCards[1].style.left = "50px";
-      existingCards[1].style.transform = "translateY(-50%) scale(0.85)";
-      existingCards[1].style.opacity = "0.7";
-      existingCards[1].style.zIndex = "1";
-      
-      // Old left slides out
-      existingCards[0].style.transition = "all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
-      existingCards[0].style.left = "-100px";
-      existingCards[0].style.opacity = "0";
-    }, 10);
-    
-    // Clean up after animation
-    setTimeout(() => {
-      if (existingCards[0] && existingCards[0].parentNode === repoCarousel) {
-        repoCarousel.removeChild(existingCards[0]);
-      }
-      // Update click handlers
-      updateClickHandlers();
-    }, 650);
-  }
-}
+// OLD CAROUSEL CODE REMOVED - USING NEW SIMPLE IMPLEMENTATION BELOW
 
 // Helper to create a card
 function createCard(repo, pos) {
@@ -437,55 +325,47 @@ function updateClickHandlers() {
   });
 }
 
-// Navigation with animation
-function setupCarouselNavigation() {
-  const leftBtn = document.getElementById("repo-carousel-left");
-  const rightBtn = document.getElementById("repo-carousel-right");
-  
-  if (leftBtn && rightBtn) {
-    leftBtn.onclick = () => {
-      if (!repoSlides.length || animating) return;
-      animating = true;
-      currentRepoIndex = (currentRepoIndex - 1 + repoSlides.length) % repoSlides.length;
-      renderRepoSlides("right"); // Swipe right when going to previous repo
-      setTimeout(() => { animating = false; }, 650);
-    };
-    
-    rightBtn.onclick = () => {
-      if (!repoSlides.length || animating) return;
-      animating = true;
-      currentRepoIndex = (currentRepoIndex + 1) % repoSlides.length;
-      renderRepoSlides("left"); // Swipe left when going to next repo
-      setTimeout(() => { animating = false; }, 650);
-    };
+// Cache for GitHub repos to reduce API calls
+const CACHE_KEY = 'github_repos_cache';
+
+function getCachedRepos() {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp < config.CACHE_DURATION) {
+        if (config.DEBUG) console.log("Using cached repository data");
+        return data;
+      }
+    }
+  } catch (error) {
+    console.warn("Error reading cache:", error);
+  }
+  return null;
+}
+
+function setCachedRepos(data) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      data: data,
+      timestamp: Date.now()
+    }));
+  } catch (error) {
+    console.warn("Error setting cache:", error);
   }
 }
 
-async function fetchReposFromGit(url) {
+function clearRepoCache() {
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Repos API error: ${response.status}`);
-    }
-    const items = await response.json();
-    if (Array.isArray(items) && items.length > 0) {
-      // Take up to 10 repositories instead of limiting to fewer
-      repoSlides = items.slice(0, 10);
-      currentRepoIndex = 0;
-      renderRepoSlides();
-      setupCarouselNavigation();
-    } else {
-      console.warn("No repositories found from API");
-      document.getElementById("repos").innerHTML = "<div>No repositories found.</div>";
-    }
+    localStorage.removeItem(CACHE_KEY);
+    console.log("Repository cache cleared");
   } catch (error) {
-    console.error("Error in fetching repos:", error);
-    document.getElementById("repos").innerHTML = "<div>Unable to load repositories at this time.</div>";
+    console.warn("Error clearing cache:", error);
   }
 }
 
 function populateRepo(items, id) {
-  // Updated to handle up to 10 repositories instead of 4
+  // Updated to handle up to 6 repositories instead of 10
   if (!items || !Array.isArray(items) || items.length === 0) {
     console.warn("No repo items to populate");
     return;
@@ -497,7 +377,7 @@ function populateRepo(items, id) {
     return;
   }
   
-  const count = Math.min(10, items.length);
+  const count = Math.min(6, items.length);
 
   const rowWrapper = document.createElement("div");
   rowWrapper.style = "display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;";
@@ -741,10 +621,335 @@ function getBlogDate(publishDate) {
 populateBio(bio, "bio");
 populateSkills(skills, "skills");
 fetchBlogsFromMedium(medium);
-fetchReposFromGit(gitRepo);
+fetchRepositories(); // New simplified GitHub API function
 fetchGitConnectedData(gitConnected);
 populateExp_Edu(experience, "experience");
 populateTrekking(trekking);
 populatePasses(passes);
 populateExp_Edu(education, "education");
 populateLinks(footer, "footer");
+
+// NEW SIMPLIFIED GITHUB REPOSITORY FETCHING
+async function fetchRepositories() {
+  console.log("🚀 Starting repository fetch...");
+  
+  try {
+    const headers = {
+      'Accept': 'application/vnd.github.v3+json'
+    };
+    
+    // Add GitHub token for authentication
+    if (config.GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${config.GITHUB_TOKEN}`;
+      console.log("🔑 Using GitHub authentication token");
+    }
+
+    let allRepos = [];
+
+    // Step 1: Try to get pinned repositories using GraphQL
+    console.log("📌 Fetching pinned repositories...");
+    try {
+      const graphqlQuery = {
+        query: `
+          query {
+            user(login: "KennedySovine") {
+              pinnedItems(first: 6, types: REPOSITORY) {
+                nodes {
+                  ... on Repository {
+                    name
+                    description
+                    url
+                    primaryLanguage {
+                      name
+                    }
+                    stargazerCount
+                    forkCount
+                    owner {
+                      login
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `
+      };
+
+      const graphqlResponse = await fetch('https://api.github.com/graphql', {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(graphqlQuery)
+      });
+
+      if (graphqlResponse.ok) {
+        const graphqlData = await graphqlResponse.json();
+        if (graphqlData.data?.user?.pinnedItems?.nodes) {
+          const pinnedRepos = graphqlData.data.user.pinnedItems.nodes.map(repo => ({
+            name: repo.name,
+            description: repo.description || "No description available",
+            author: repo.owner.login,
+            language: repo.primaryLanguage?.name || "Unknown",
+            stars: repo.stargazerCount || 0,
+            forks: repo.forkCount || 0,
+            url: repo.url,
+            isPinned: true
+          }));
+          
+          allRepos = pinnedRepos;
+          console.log(`📌 Found ${pinnedRepos.length} pinned repositories:`, pinnedRepos.map(r => r.name));
+        }
+      }
+    } catch (graphqlError) {
+      console.warn("⚠️ GraphQL pinned repos failed:", graphqlError.message);
+    }
+
+    // Step 2: Get additional repositories to reach 10 total
+    if (allRepos.length < 10) {
+      console.log(`🔍 Fetching additional repositories (need ${10 - allRepos.length} more)...`);
+      
+      const reposResponse = await fetch(`https://api.github.com/users/KennedySovine/repos?per_page=30&sort=updated&type=owner`, {
+        headers: headers
+      });
+
+      if (reposResponse.ok) {
+        const repos = await reposResponse.json();
+        
+        // Log rate limit info
+        const rateLimit = reposResponse.headers.get('X-RateLimit-Limit');
+        const rateRemaining = reposResponse.headers.get('X-RateLimit-Remaining');
+        if (rateLimit && rateRemaining) {
+          console.log(`⏱️ GitHub API Rate Limit: ${rateRemaining}/${rateLimit} remaining`);
+        }
+
+        // Filter out forks, archived repos, and already pinned repos
+        const pinnedNames = allRepos.map(r => r.name.toLowerCase());
+        const additionalRepos = repos
+          .filter(repo => 
+            !repo.fork && 
+            !repo.archived && 
+            !pinnedNames.includes(repo.name.toLowerCase())
+          )
+          .slice(0, 10 - allRepos.length)
+          .map(repo => ({
+            name: repo.name,
+            description: repo.description || "No description available",
+            author: repo.owner.login,
+            language: repo.language || "Unknown",
+            stars: repo.stargazers_count || 0,
+            forks: repo.forks_count || 0,
+            url: repo.html_url,
+            isPinned: false
+          }));
+
+        allRepos = [...allRepos, ...additionalRepos];
+        console.log(`✅ Added ${additionalRepos.length} additional repositories:`, additionalRepos.map(r => r.name));
+      } else if (reposResponse.status === 403) {
+        console.error("❌ GitHub API rate limit exceeded");
+      }
+    }
+
+    console.log(`🎯 Total repositories fetched: ${allRepos.length}`);
+    console.log("📋 Final repository list:", allRepos.map(r => `${r.name} (${r.isPinned ? 'pinned' : 'regular'})`));
+
+    if (allRepos.length === 0) {
+      throw new Error("No repositories found");
+    }
+
+    // Create simple carousel display
+    displayRepositoryCarousel(allRepos);
+
+  } catch (error) {
+    console.error("❌ Error fetching repositories:", error);
+    
+    // Show fallback message
+    document.getElementById("repos").innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #666;">
+        <h3>Repositories Currently Unavailable</h3>
+        <p>Unable to fetch repository data at this time.</p>
+        <p>Please visit my <a href="https://github.com/KennedySovine" target="_blank" style="color: #f9bf3f;">GitHub profile</a> directly.</p>
+      </div>
+    `;
+  }
+}
+
+function displayRepositoryCarousel(repos) {
+  const repoContainer = document.getElementById("repos");
+  let currentStartIndex = 0;
+  
+  // Dynamic repos per slide based on screen size
+  function getReposPerSlide() {
+    if (window.innerWidth <= 768) return 1;  // Mobile: 1 repo
+    if (window.innerWidth <= 992) return 2;  // Tablet: 2 repos
+    return 3; // Desktop: 3 repos
+  }
+  
+  // Create carousel container with responsive grid
+  repoContainer.innerHTML = `
+    <div style="position: relative; width: 100%; margin: 0 auto;">
+      <div id="repo-slides-container" style="
+        display: flex;
+        gap: 16px;
+        transition: transform 0.5s ease-in-out;
+        width: 100%;
+      "></div>
+      <div style="text-align: center; margin-top: 24px;">
+        <button id="prev-repo" style="
+          background: #f9bf3f;
+          border: none;
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          margin: 0 15px;
+          cursor: pointer;
+          font-size: 20px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">←</button>
+        <span id="repo-counter" style="margin: 0 20px; font-weight: bold; font-size: 16px;"></span>
+        <button id="next-repo" style="
+          background: #f9bf3f;
+          border: none;
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          margin: 0 15px;
+          cursor: pointer;
+          font-size: 20px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">→</button>
+      </div>
+      <div style="text-align: center; margin-top: 16px;">
+        <div id="slide-indicators" style="display: flex; justify-content: center; gap: 8px;"></div>
+      </div>
+    </div>
+  `;
+
+  function createRepoCard(repo) {
+    const reposPerSlide = getReposPerSlide();
+    const cardWidth = reposPerSlide === 1 ? '100%' : 
+                     reposPerSlide === 2 ? 'calc(50% - 8px)' : 
+                     'calc(33.333% - 11px)';
+    
+    return `
+      <div class="repo-card" style="
+        flex: 0 0 ${cardWidth};
+        background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      " onclick="window.open('${repo.url}', '_blank')" 
+         onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <h4 style="margin: 0; font-size: 18px; color: #333; font-weight: bold; line-height: 1.2;">${repo.name}</h4>
+            ${repo.isPinned ? '<span style="background: #007acc; color: white; padding: 3px 6px; border-radius: 4px; font-size: 10px; white-space: nowrap;">📌 PINNED</span>' : ''}
+          </div>
+          <p style="color: #555; margin: 0 0 16px 0; font-size: 13px; line-height: 1.4; flex-grow: 1;">${repo.description}</p>
+        </div>
+        <div>
+          <div style="display: flex; gap: 12px; margin-bottom: 12px; font-size: 12px; color: #666; flex-wrap: wrap;">
+            <span style="display: flex; align-items: center; gap: 4px;">
+              <span style="width: 8px; height: 8px; background: #007acc; border-radius: 50%;"></span>
+              ${repo.language}
+            </span>
+            <span style="display: flex; align-items: center; gap: 4px;">
+              ⭐ ${repo.stars}
+            </span>
+            <span style="display: flex; align-items: center; gap: 4px;">
+              🍴 ${repo.forks}
+            </span>
+          </div>
+          <div style="font-size: 11px; color: #888; text-align: center;">
+            Click to view on GitHub
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function updateDisplay() {
+    const reposPerSlide = getReposPerSlide();
+    const slidesContainer = document.getElementById("repo-slides-container");
+    const counter = document.getElementById("repo-counter");
+    const indicators = document.getElementById("slide-indicators");
+    
+    // Clear container
+    slidesContainer.innerHTML = '';
+    
+    // Get current repositories for this slide
+    const currentRepos = [];
+    for (let i = 0; i < reposPerSlide; i++) {
+      const repoIndex = (currentStartIndex + i) % repos.length;
+      currentRepos.push(repos[repoIndex]);
+    }
+    
+    // Add repository cards
+    currentRepos.forEach(repo => {
+      slidesContainer.innerHTML += createRepoCard(repo);
+    });
+    
+    // Update counter
+    const slideNumber = Math.floor(currentStartIndex / reposPerSlide) + 1;
+    const totalSlides = Math.ceil(repos.length / reposPerSlide);
+    counter.textContent = `Slide ${slideNumber} of ${totalSlides} (${repos.length} total repos)`;
+    
+    // Update indicators
+    indicators.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+      const indicator = document.createElement('div');
+      indicator.style.cssText = `
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: ${i === slideNumber - 1 ? '#007acc' : '#ccc'};
+        cursor: pointer;
+        transition: all 0.3s ease;
+      `;
+      indicator.onclick = () => {
+        currentStartIndex = i * reposPerSlide;
+        updateDisplay();
+      };
+      indicators.appendChild(indicator);
+    }
+  }
+
+  // Navigation
+  document.getElementById("prev-repo").onclick = () => {
+    const reposPerSlide = getReposPerSlide();
+    currentStartIndex = (currentStartIndex - reposPerSlide + repos.length) % repos.length;
+    updateDisplay();
+  };
+
+  document.getElementById("next-repo").onclick = () => {
+    const reposPerSlide = getReposPerSlide();
+    currentStartIndex = (currentStartIndex + reposPerSlide) % repos.length;
+    updateDisplay();
+  };
+
+  // Handle window resize
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      // Reset to first slide and update display
+      currentStartIndex = 0;
+      updateDisplay();
+    }, 250);
+  });
+
+  // Initial display
+  updateDisplay();
+  
+  console.log(`✨ Repository carousel displayed successfully with ${repos.length} repos!`);
+}

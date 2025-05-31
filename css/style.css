@@ -2338,3 +2338,55 @@ hr {
     z-index: 1;
   }
 }
+
+#repo-slides-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+/* Repository carousel responsive adjustments */
+@media screen and (max-width: 768px) {
+  #repo-slides-container .repo-card {
+    flex: 0 0 100% !important;
+    margin-bottom: 16px;
+  }
+  
+  #repo-slides-container {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  .repo-card {
+    min-height: 180px !important;
+  }
+}
+
+@media screen and (max-width: 992px) and (min-width: 769px) {
+  #repo-slides-container .repo-card {
+    flex: 0 0 calc(50% - 8px) !important;
+  }
+}
+
+/* Smooth hover effects for repo cards */
+.repo-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.repo-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2) !important;
+}
+
+/* Button hover effects */
+#prev-repo:hover, #next-repo:hover {
+  background: #f0b235 !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;
+}
+
+#prev-repo:active, #next-repo:active {
+  transform: scale(0.95) !important;
+}
