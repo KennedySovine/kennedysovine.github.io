@@ -194,11 +194,7 @@ export const footer = [
   //       },
   //       {
   //         text: "GitHub",
-  //         link: "https://github.com/vinaysomawat",
-  //       },
-  //       {
-  //         text: "LeetCode",
-  //         link: "https://leetcode.com/somawatvinay/",
+  //         link: "https://github.com/KennedySovine",
   //       },
   //     ],
   //   },
@@ -224,7 +220,7 @@ export const footer = [
     data: [
       //   {
       //     text: "Linkedin",
-      //     link: "https://www.linkedin.com/in/vinaysomawat/",
+      //     link: "https://www.linkedin.com/in/kennedy-sovine-975090199/",
       //   },
       //   {
       //     text: "Twitter",
@@ -236,7 +232,7 @@ export const footer = [
       },
       {
         text: "Github",
-        link: "https://github.com/vinaysomawat/vinaysomawat.github.io",
+        link: "https://github.com/kennedysovine/kennedysovine.github.io",
       },
     ],
   },
