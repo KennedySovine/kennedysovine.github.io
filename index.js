@@ -15,39 +15,53 @@ const { medium, gitConnected, gitRepo } = URLs;
 async function fetchBlogsFromMedium(url) {
   try {
     const response = await fetch(url);
-    const { items, feed } = await response.json();
-    document.getElementById("profile-img").src = feed.image;
-    populateBlogs(items, "blogs");
+    if (!response.ok) {
+      throw new Error(`Medium API error: ${response.status}`);
+    }
+    const data = await response.json();
+    
+    // Check if required data exists
+    if (!data.items || !Array.isArray(data.items)) {
+      console.warn("Medium API response missing items array");
+      document.getElementById("blogs").innerHTML = "<li>No blog posts found.</li>";
+      return;
+    }
+    
+    // Safely get profile image if feed exists
+    if (data.feed && data.feed.image) {
+      document.getElementById("profile-img").src = data.feed.image;
+    }
+    
+    populateBlogs(data.items, "blogs");
   } catch (error) {
-    throw new Error(
-      `Error in fetching the blogs from Medium profile: ${error}`
-    );
-  }
-}
-
-async function fetchReposFromGit(url) {
-  try {
-    const response = await fetch(url);
-    const items = await response.json();
-    populateRepo(items, "repos");
-  } catch (error) {
-    throw new Error(`Error in fetching the blogs from repos: ${error}`);
+    console.error("Error in fetching the blogs from Medium profile:", error);
+    document.getElementById("blogs").innerHTML = "<li>Unable to load blog posts at this time.</li>";
   }
 }
 
 async function fetchGitConnectedData(url) {
   try {
     const response = await fetch(url);
-    console.log(response);
-    const { basics } = await response.json();
-    // populateBlogs(items, "blogs");
-    mapBasicResponse(basics);
+    if (!response.ok) {
+      throw new Error(`GitConnected API error: ${response.status}`);
+    }
+    const data = await response.json();
+    if (data && data.basics) {
+      mapBasicResponse(data.basics);
+    } else {
+      console.warn("GitConnected API response missing basics data");
+    }
   } catch (error) {
-    throw new Error(`Error in fetching the blogs from git connected: ${error}`);
+    console.error("Error in fetching data from git connected:", error);
   }
 }
 
 function mapBasicResponse(basics) {
+  if (!basics) {
+    console.warn("Basics data is undefined");
+    return;
+  }
+  
   const {
     name,
     label,
@@ -71,8 +85,9 @@ function mapBasicResponse(basics) {
     website,
   } = basics;
 
-  // added title of page
-  window.parent.document.title = name;
+  if (name) {
+    window.parent.document.title = name;
+  }
 }
 
 function populateBio(items, id) {
@@ -123,11 +138,23 @@ function populatePasses(items) {
 }
 
 function populateBlogs(items, id) {
+  if (!items || !Array.isArray(items)) {
+    console.warn("No blog items to populate");
+    return;
+  }
+  
   const projectdesign = document.getElementById(id);
-  const count = 3; // Number of blogs to display
+  if (!projectdesign) {
+    console.warn(`Element with id '${id}' not found`);
+    return;
+  }
+  
+  const count = Math.min(3, items.length);
 
   for (let i = 0; i < count; i++) {
-    // Create a wrapper for the blog card
+    const item = items[i];
+    if (!item) continue;
+    
     const blogCard = document.createElement("div");
     blogCard.className = "blog-card";
     blogCard.style = `
@@ -142,78 +169,102 @@ function populateBlogs(items, id) {
           cursor: pointer;
       `;
 
-    // Wrap the card content in an anchor tag
     const blogLink = document.createElement("a");
-    blogLink.href = items[i].link;
+    blogLink.href = item.link || '#';
     blogLink.target = "_blank";
     blogLink.style = "text-decoration: none; color: black; display: block;";
 
     blogCard.appendChild(blogLink);
 
-    // Blog Title
     const blogTitle = document.createElement("h4");
     blogTitle.className = "blog-heading";
-    blogTitle.innerHTML = items[i].title;
+    blogTitle.innerHTML = item.title || 'Untitled';
     blogTitle.style = "margin: 0px; font-size: 18px; font-weight: bold;";
     blogLink.appendChild(blogTitle);
 
-    // Publish Date
     const pubDateEle = document.createElement("p");
     pubDateEle.className = "publish-date";
-    pubDateEle.innerHTML = getBlogDate(items[i].pubDate);
+    pubDateEle.innerHTML = getBlogDate(item.pubDate);
     pubDateEle.style = "margin: 0 0 5px; font-size: 12px; color: #555;";
     blogLink.appendChild(pubDateEle);
 
-    // Blog Description
     const blogDescription = document.createElement("p");
     blogDescription.className = "blog-description";
-    const html = items[i].content;
-    const [, doc] = /<p>(.*?)<\/p>/g.exec(html) || [];
+    const html = item.content || '';
+    const [, doc] = /<p>(.*?)<\/p>/g.exec(html) || [null, 'No description available'];
     blogDescription.innerHTML = doc;
     blogDescription.style = "margin: 0 0 12px; font-size: 12px; color: #000;";
     blogLink.appendChild(blogDescription);
 
-    // Categories (Tags)
     const categoriesDiv = document.createElement("div");
     categoriesDiv.style = "display: flex; gap: 8px; margin-top: 12px;";
 
-    for (const category of items[i].categories) {
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.innerHTML = category;
-      badge.style = `
-              font-size: 12px;
-              padding: 4px 8px;
-              background-color: #007acc;
-              color: white;
-              border-radius: 4px;
-          `;
-      categoriesDiv.appendChild(badge);
+    if (item.categories && Array.isArray(item.categories)) {
+      for (const category of item.categories) {
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.innerHTML = category;
+        badge.style = `
+                font-size: 12px;
+                padding: 4px 8px;
+                background-color: #007acc;
+                color: white;
+                border-radius: 4px;
+            `;
+        categoriesDiv.appendChild(badge);
+      }
     }
 
     blogLink.appendChild(categoriesDiv);
-
-    // Append the blog card to the container
     projectdesign.appendChild(blogCard);
   }
 }
 
-function populateRepo(items, id) {
-  const projectdesign = document.getElementById(id);
-  const count = 4; // Adjust this count based on the number of repos you want to display
+async function fetchReposFromGit(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Repos API error: ${response.status}`);
+    }
+    const items = await response.json();
+    if (Array.isArray(items) && items.length > 0) {
+      populateRepo(items, "repos");
+    } else {
+      console.warn("No repositories found from API");
+      document.getElementById("repos").innerHTML = "<div>No repositories found.</div>";
+    }
+  } catch (error) {
+    console.error("Error in fetching repos:", error);
+    document.getElementById("repos").innerHTML = "<div>Unable to load repositories at this time.</div>";
+  }
+}
 
-  // Set up a wrapper div to hold repo cards in rows of 2
+function populateRepo(items, id) {
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    console.warn("No repo items to populate");
+    return;
+  }
+  
+  const projectdesign = document.getElementById(id);
+  if (!projectdesign) {
+    console.warn(`Element with id '${id}' not found`);
+    return;
+  }
+  
+  const count = Math.min(4, items.length);
+
   const rowWrapper = document.createElement("div");
-  rowWrapper.style =
-    "display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;";
+  rowWrapper.style = "display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;";
   projectdesign.appendChild(rowWrapper);
 
   for (let i = 0; i < count; i++) {
-    // Create elements for each repo card
+    const item = items[i];
+    if (!item) continue;
+    
     const repoCard = document.createElement("div");
     repoCard.className = "repo-card";
     repoCard.style = `
-          flex: 1 0 48%;  /* Two cards in one row */
+          flex: 1 0 48%;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -226,30 +277,25 @@ function populateRepo(items, id) {
           cursor: pointer;
       `;
 
-    // Make the card clickable by wrapping the content inside an anchor tag
     const repoLink = document.createElement("a");
-    repoLink.href = `https://github.com/${items[i].author}/${items[i].name}`;
+    repoLink.href = `https://github.com/${item.author || 'unknown'}/${item.name || 'unknown'}`;
     repoLink.target = "_blank";
-    repoLink.style =
-      "text-decoration: none; color: black; display: block; height: 100%;";
+    repoLink.style = "text-decoration: none; color: black; display: block; height: 100%;";
 
     repoCard.appendChild(repoLink);
 
-    // Repository name
     const repoName = document.createElement("h4");
     repoName.className = "repo-heading";
-    repoName.innerHTML = items[i].name;
+    repoName.innerHTML = item.name || 'Unknown Repository';
     repoName.style = "margin: 0; font-size: 18px; font-weight: bold;";
     repoLink.appendChild(repoName);
 
-    // Repository description
     const repoDescription = document.createElement("p");
     repoDescription.className = "repo-description";
-    repoDescription.innerHTML = items[i].description;
+    repoDescription.innerHTML = item.description || 'No description available';
     repoDescription.style = "margin-top: 8px; font-size: 12px; color: #555;";
     repoLink.appendChild(repoDescription);
 
-    // Stats row (Language, Stars, Forks)
     const statsRow = document.createElement("div");
     statsRow.style = `
           display: flex; 
@@ -260,36 +306,31 @@ function populateRepo(items, id) {
           color: #666;
       `;
 
-    // Language
     const languageDiv = document.createElement("div");
     languageDiv.style = "display: flex; align-items: center; gap: 4px;";
     languageDiv.innerHTML = `
           <span style="width: 8px; height: 8px; background-color: #666; border-radius: 50%; display: inline-block;"></span>
-          ${items[i].language}
+          ${item.language || 'Unknown'}
       `;
     statsRow.appendChild(languageDiv);
 
-    // Stars
     const starsDiv = document.createElement("div");
     starsDiv.style = "display: flex; align-items: center; gap: 4px;";
     starsDiv.innerHTML = `
           <img src="https://img.icons8.com/ios-filled/16/666666/star--v1.png" alt="Stars">
-          ${items[i].stars}
+          ${item.stars || 0}
       `;
     statsRow.appendChild(starsDiv);
 
-    // Forks
     const forksDiv = document.createElement("div");
     forksDiv.style = "display: flex; align-items: center; gap: 4px;";
     forksDiv.innerHTML = `
           <img src="https://img.icons8.com/ios-filled/16/666666/code-fork.png" alt="Forks">
-          ${items[i].forks}
+          ${item.forks || 0}
       `;
     statsRow.appendChild(forksDiv);
 
     repoLink.appendChild(statsRow);
-
-    // Add the repo card to the row wrapper
     rowWrapper.appendChild(repoCard);
   }
 }
@@ -452,16 +493,12 @@ function getBlogDate(publishDate) {
 }
 
 populateBio(bio, "bio");
-
 populateSkills(skills, "skills");
-
 fetchBlogsFromMedium(medium);
 fetchReposFromGit(gitRepo);
 fetchGitConnectedData(gitConnected);
-
 populateExp_Edu(experience, "experience");
 populateTrekking(trekking);
 populatePasses(passes);
 populateExp_Edu(education, "education");
-
 populateLinks(footer, "footer");
