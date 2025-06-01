@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Integration Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+        <h1>LinkedIn Integration Test</h1>
+        
+        <div id="linkedin-status"></div>
+        
+        <h2>Console Commands</h2>
+        <p>Open browser console and try these commands:</p>
+        <ul>
+            <li><code>testLinkedIn()</code> - Test LinkedIn integration</li>
+            <li><code>new LinkedInIntegration().getLinkedInProfile()</code> - Get profile info</li>
+        </ul>
+        
+        <h2>Configuration Status</h2>
+        <div id="config-status">Loading...</div>
+    </div>
+
+    <script type="module">
+        import { config } from './user-data/config.js';
+        import LinkedInIntegration, { initializeLinkedInIntegration } from './js/linkedin-integration.js';
+
+        // Display configuration status
+        const configStatus = document.getElementById('config-status');
+        configStatus.innerHTML = `
+            <p><strong>LinkedIn Profile URL:</strong> ${config.LINKEDIN?.PROFILE_URL || 'Not configured'}</p>
+            <p><strong>Auto Fetch:</strong> ${config.LINKEDIN?.AUTO_FETCH ? 'Enabled' : 'Disabled'}</p>
+        `;
+
+        // Initialize LinkedIn integration
+        initializeLinkedInIntegration().then((result) => {
+            const statusDiv = document.getElementById('linkedin-status');
+            if (result) {
+                statusDiv.innerHTML = `
+                    <h2>✅ LinkedIn Integration Status</h2>
+                    <p><strong>Status:</strong> ${result.status}</p>
+                    <p><strong>Profile URL:</strong> ${result.profileUrl || 'Not configured'}</p>
+                    <p><strong>Last Updated:</strong> ${result.lastUpdated}</p>
+                    
+                    ${result.profileUrl ? `
+                        <a href="${result.profileUrl}" target="_blank" class="linkedin-profile-link">
+                            <i class="fab fa-linkedin"></i>
+                            <span>View LinkedIn Profile</span>
+                        </a>
+                    ` : `
+                        <div class="linkedin-status not-configured">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn Not Configured</span>
+                            <small>Add your profile URL to config.js</small>
+                        </div>
+                    `}
+                    
+                    <h3>Instructions</h3>
+                    <p><strong>${result.instructions.title}</strong></p>
+                    <p>${result.instructions.message}</p>
+                    <ul>
+                        ${result.instructions.steps?.map(step => `<li>${step}</li>`).join('') || ''}
+                    </ul>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <h2>❌ LinkedIn Integration Failed</h2>
+                    <p>Could not initialize LinkedIn integration</p>
+                `;
+            }
+        }).catch((error) => {
+            console.error('LinkedIn integration error:', error);
+            document.getElementById('linkedin-status').innerHTML = `
+                <h2>❌ LinkedIn Integration Error</h2>
+                <p>Error: ${error.message}</p>
+            `;
+        });
+    </script>
+</body>
+</html>

@@ -54,14 +54,17 @@ window.addEventListener("DOMContentLoaded", async function () {
                                 <div>
                     <p style="font-size: 12px; color: #666; margin: 0;">SILVER</p>
                     <p style="font-size: 20px; font-weight: bold; color: #222;">${silver}</p>
-                </div>
-                <div>
+                </div>                <div>
                     <p style="font-size: 12px; color: #666; margin: 0;">BRONZE</p>
                     <p style="font-size: 20px; font-weight: bold; color: #222;">${bronze}</p>
                 </div>
             </div>
         </a>
         `;
+    } catch (error) {
+      console.error('Error loading Stack Overflow profile:', error);
+      el.innerHTML = `<div style="padding: 20px; text-align: center; color: #666;">Error loading Stack Overflow profile</div>`;
+    }
   });
 
   document.querySelectorAll(".github-card").forEach(async function (el) {
