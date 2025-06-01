@@ -194,3 +194,7 @@ link: "https://github.com/vinaysomawat/vinaysomawat.github.io",
     data: ["Made with &hearts; by Vinay Somawat"],
   },
 ];
+
+export const passes = [
+  // Add your passes data here, or leave empty if not needed
+];
