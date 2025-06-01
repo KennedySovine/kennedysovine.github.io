@@ -92,16 +92,7 @@ function populateSkills(items, id) {
   });
 }
 
-function populatePasses(items) {
-  const trekTag = document.getElementById("passes");
-  items.forEach((item) => {
-    const trekCard = getElement("div", "");
-    trekCard.innerHTML = `
-            <li class="trek-title"><strong>${item.name},</strong> ${item.state} - ${item.height}</li>
-    `;
-    trekTag.appendChild(trekCard);
-  });
-}
+
 
 // OLD CAROUSEL CODE REMOVED - USING NEW SIMPLE IMPLEMENTATION BELOW
 
