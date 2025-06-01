@@ -638,12 +638,12 @@ function displayRepositoryCarousel3Cards(repos) {
     <div style="position: relative; width: 100%; margin: 0 auto;">
       <div id="repo-carousel" style="
         width: 100%;
-        min-height: 220px;
+        min-height: 320px;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
-        gap: 24px;
+        gap: 32px;
         perspective: 1000px;
       "></div>
       <div style="text-align: center; margin-top: 24px;">
@@ -687,19 +687,34 @@ function displayRepositoryCarousel3Cards(repos) {
     card.className = `repo-card repo-card-${position}`;
     card.dataset.repoUrl = repo.url;
 
+    // Responsive sizing
+    let cardWidth = 420;
+    let cardHeight = 260;
+    if (window.innerWidth < 900) {
+      cardWidth = Math.max(window.innerWidth * 0.48, 220);
+      cardHeight = 200;
+    }
+    if (window.innerWidth < 600) {
+      cardWidth = Math.max(window.innerWidth * 0.48, 160);
+      cardHeight = 180;
+    }
+
     // Base styles for all cards
     card.style.cssText = `
       position: absolute;
-      width: 280px;
-      height: 180px;
-      padding: 20px;
-      border-radius: 12px;
+      width: ${cardWidth}px;
+      height: ${cardHeight}px;
+      padding: 24px;
+      border-radius: 16px;
       background: linear-gradient(135deg, #b19cd9, #6a5acd);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       top: 50%;
       transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       will-change: transform, opacity, left, right;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     `;
 
     // Position-specific styles and transitions
@@ -710,6 +725,7 @@ function displayRepositoryCarousel3Cards(repos) {
         opacity: 0.7;
         z-index: 1;
         cursor: default;
+        filter: blur(0.5px) brightness(0.95);
       `;
     } else if (position === "center") {
       card.style.cssText += `
@@ -729,18 +745,19 @@ function displayRepositoryCarousel3Cards(repos) {
         opacity: 0.7;
         z-index: 1;
         cursor: default;
+        filter: blur(0.5px) brightness(0.95);
       `;
     }
 
     card.innerHTML = `
-      <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+      <div style="font-size: 22px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
         ${repo.name}
-        ${repo.isPinned ? '<span style="background: #4169e1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">📌</span>' : ''}
+        ${repo.isPinned ? '<span style="background: #4169e1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 8px;">📌</span>' : ''}
       </div>
-      <div style="font-size: 13px; color: #666; margin-bottom: 16px; height: 40px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #555;">
+      <div style="font-size: 15px; color: #666; margin-bottom: 16px; height: 48px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #555;">
         <span style="display: flex; align-items: center; gap: 4px;">
-          <span style="width: 8px; height: 8px; background: #4169e1; border-radius: 50%;"></span>
+          <span style="width: 10px; height: 10px; background: #4169e1; border-radius: 50%;"></span>
           ${repo.language || "N/A"}
         </span>
         <span style="display: flex; align-items: center; gap: 4px;">
@@ -758,183 +775,82 @@ function displayRepositoryCarousel3Cards(repos) {
   // Update display with 3-card layout and smooth animations
   function updateDisplay(direction = "none") {
     const carousel = document.getElementById("repo-carousel");
-    const counter = document.getElementById("repo-counter");
-    const indicators = document.getElementById("slide-indicators");
+    carousel.innerHTML = "";
 
-    // Animation configuration
-    const animationDuration = 600;
-    const isAnimating = carousel.classList.contains("animating");
+    // Calculate indices for left, center, right
+    const total = repos.length;
+    const leftIndex = (currentCenterIndex - 1 + total) % total;
+    const centerIndex = currentCenterIndex;
+    const rightIndex = (currentCenterIndex + 1) % total;
 
-    if (isAnimating) return; // Prevent overlapping animations
-
-    carousel.classList.add("animating");
-
-    // Get existing cards
-    const existingCards = carousel.querySelectorAll(".repo-card");
-
-    // Calculate new indices
-    const leftIndex = (currentCenterIndex - 1 + repos.length) % repos.length;
-    const rightIndex = (currentCenterIndex + 1) % repos.length;
-
-    // Create new cards with initial hidden state
-    const newLeftCard = createRepoCard(repos[leftIndex], "left");
-    const newCenterCard = createRepoCard(repos[currentCenterIndex], "center");
-    const newRightCard = createRepoCard(repos[rightIndex], "right");
-
-    // Set initial animation states based on direction
-    if (direction === "next") {
-      // New cards slide in from the right
-      newLeftCard.style.transform = "translateY(-50%) scale(0.85) translateX(100px)";
-      newLeftCard.style.opacity = "0";
-      newCenterCard.style.transform = "translateX(-50%) translateY(-50%) scale(1.12) translateY(-10px) translateX(100px)";
-      newCenterCard.style.opacity = "0";
-      newRightCard.style.transform = "translateY(-50%) scale(0.85) translateX(100px)";
-      newRightCard.style.opacity = "0";
-    } else if (direction === "prev") {
-      // New cards slide in from the left
-      newLeftCard.style.transform = "translateY(-50%) scale(0.85) translateX(-100px)";
-      newLeftCard.style.opacity = "0";
-      newCenterCard.style.transform = "translateX(-50%) translateY(-50%) scale(1.12) translateY(-10px) translateX(-100px)";
-      newCenterCard.style.opacity = "0";
-      newRightCard.style.transform = "translateY(-50%) scale(0.85) translateX(-100px)";
-      newRightCard.style.opacity = "0";
+    // Always render left, center, right cards (even if only 1 or 2 repos)
+    if (total === 1) {
+      const centerCard = createRepoCard(repos[centerIndex], "center");
+      carousel.appendChild(centerCard);
+    } else if (total === 2) {
+      const leftCard = createRepoCard(repos[leftIndex], "left");
+      const centerCard = createRepoCard(repos[centerIndex], "center");
+      carousel.appendChild(leftCard);
+      carousel.appendChild(centerCard);
     } else {
-      // Fade in for initial load or indicator clicks
-      newLeftCard.style.opacity = "0";
-      newLeftCard.style.transform = "translateY(-50%) scale(0.75)";
-      newCenterCard.style.opacity = "0";
-      newCenterCard.style.transform = "translateX(-50%) translateY(-50%) scale(0.95) translateY(-10px)";
-      newRightCard.style.opacity = "0";
-      newRightCard.style.transform = "translateY(-50%) scale(0.75)";
+      const leftCard = createRepoCard(repos[leftIndex], "left");
+      const centerCard = createRepoCard(repos[centerIndex], "center");
+      const rightCard = createRepoCard(repos[rightIndex], "right");
+      carousel.appendChild(leftCard);
+      carousel.appendChild(centerCard);
+      carousel.appendChild(rightCard);
     }
 
-    // Add new cards to carousel
-    carousel.appendChild(newLeftCard);
-    carousel.appendChild(newCenterCard);
-    carousel.appendChild(newRightCard);
+    // Update counter
+    document.getElementById("repo-counter").textContent = `${centerIndex + 1} of ${total} repositories`;
 
-    // Animate existing cards out
-    if (existingCards.length > 0) {
-      existingCards.forEach((card, index) => {
-        if (direction === "next") {
-          card.style.transform += " translateX(-100px)";
-          card.style.opacity = "0";
-        } else if (direction === "prev") {
-          card.style.transform += " translateX(100px)";
-          card.style.opacity = "0";
-        } else {
-          card.style.opacity = "0";
-          card.style.transform += " scale(0.8)";
-        }
-      });
-    }
-
-    // Animate new cards in
-    requestAnimationFrame(() => {
-      // Reset transforms for smooth animation
-      newLeftCard.style.transform = "translateY(-50%) scale(0.85)";
-      newLeftCard.style.opacity = "0.7";
-      newLeftCard.style.left = "50px";
-
-      newCenterCard.style.transform = "translateX(-50%) translateY(-50%) scale(1.12) translateY(-10px)";
-      newCenterCard.style.opacity = "1";
-      newCenterCard.style.left = "50%";
-
-      newRightCard.style.transform = "translateY(-50%) scale(0.85)";
-      newRightCard.style.opacity = "0.7";
-      newRightCard.style.right = "50px";
-      newRightCard.style.left = "auto";
-    });
-
-    // Clean up after animation
-    setTimeout(() => {
-      if (existingCards.length > 0) {
-        existingCards.forEach((card) => card.remove());
-      }
-      carousel.classList.remove("animating");
-
-      // Add click handler to center card
-      newCenterCard.onclick = () => window.open(repos[currentCenterIndex].url, "_blank");
-    }, animationDuration);
-
-    // Update counter with smooth transition
-    counter.style.opacity = "0.5";
-    setTimeout(() => {
-      counter.textContent = `${currentCenterIndex + 1} of ${repos.length} repositories`;
-      counter.style.opacity = "1";
-    }, animationDuration / 2);
-
-    // Update indicators with staggered animation
+    // Update slide indicators
+    const indicators = document.getElementById("slide-indicators");
     indicators.innerHTML = "";
-    repos.forEach((_, index) => {
-      const indicator = document.createElement("div");
-      const isActive = index === currentCenterIndex;
-      indicator.style.cssText = `
-        width: ${isActive ? '24px' : '8px'};
-        height: 8px;
-        border-radius: 4px;
-        background: ${isActive ? '#4169e1' : '#ccc'};
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        opacity: 0;
-        transform: scale(${isActive ? 1.2 : 1}) translateY(10px);
-      `;
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement("div");
+      dot.style = `width: 14px; height: 6px; border-radius: 4px; background: ${i === centerIndex ? '#4169e1' : '#e0e0e0'}; transition: background 0.3s; margin: 0 2px;`;
+      indicators.appendChild(dot);
+    }
 
-      // Staggered fade in
-      setTimeout(() => {
-        indicator.style.opacity = isActive ? "1" : "0.6";
-        indicator.style.transform = `scale(${isActive ? 1.2 : 1}) translateY(0px)`;
-      }, index * 50);
-
-      indicator.onmouseover = () => {
-        if (!isActive) {
-          indicator.style.opacity = "0.8";
-          indicator.style.transform = "scale(1.1) translateY(0px)";
-        }
-      };
-
-      indicator.onmouseout = () => {
-        if (!isActive) {
-          indicator.style.opacity = "0.6";
-          indicator.style.transform = "scale(1) translateY(0px)";
-        }
-      };
-
-      indicator.onclick = () => {
-        if (currentCenterIndex !== index) {
-          currentCenterIndex = index;
-          updateDisplay("fade");
-        }
-      };
-
-      indicators.appendChild(indicator);
+    // Add click handlers for center card
+    const cards = document.querySelectorAll('.repo-card');
+    cards.forEach(card => {
+      card.onclick = null;
+      if (card.classList.contains('repo-card-center')) {
+        card.style.cursor = 'pointer';
+        card.onclick = () => {
+          window.open(card.dataset.repoUrl, '_blank');
+        };
+      } else {
+        card.style.cursor = 'default';
+      }
     });
   }
-
-  // Navigation handlers with directional animations
-  document.getElementById("prev-repo").onclick = () => {
-    currentCenterIndex = (currentCenterIndex - 1 + repos.length) % repos.length;
-    updateDisplay("prev");
-  };
-
-  document.getElementById("next-repo").onclick = () => {
-    currentCenterIndex = (currentCenterIndex + 1) % repos.length;
-    updateDisplay("next");
-  };
-
-  // Handle window resize for mobile responsiveness
-  let resizeTimeout;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      updateDisplay();
-    }, 250);
-  });
 
   // Initial display
   updateDisplay();
 
-  console.log(`✨ 3-card layered carousel displayed successfully with ${repos.length} repos!`);
+  // Navigation handlers
+  document.getElementById("prev-repo").onclick = function () {
+    currentCenterIndex = (currentCenterIndex - 1 + repos.length) % repos.length;
+    updateDisplay("left");
+  };
+  document.getElementById("next-repo").onclick = function () {
+    currentCenterIndex = (currentCenterIndex + 1) % repos.length;
+    updateDisplay("right");
+  };
+
+  // Keyboard navigation
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") {
+      currentCenterIndex = (currentCenterIndex - 1 + repos.length) % repos.length;
+      updateDisplay("left");
+    } else if (e.key === "ArrowRight") {
+      currentCenterIndex = (currentCenterIndex + 1) % repos.length;
+      updateDisplay("right");
+    }
+  });
 }
 
 /**
