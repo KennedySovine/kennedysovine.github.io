@@ -463,9 +463,8 @@ fetchRepositories();
 populateExp_Edu(experience, "experience");
 populateExp_Edu(education, "education");
 populateCertifications(certifications, "certifications");
-populateTrekking(trekking);
-populatePasses(passes);
 populateLinks(footer, "footer");
+loadGitHubContributions();
 
 // Initialize LinkedIn integration if enabled
 if (config.LINKEDIN?.AUTO_FETCH) {
@@ -1072,38 +1071,149 @@ function showDataSourceIndicator(source, lastUpdated) {
   }, 5000);
 }
 
-// --- GitHub Contributions Graph ---
-// (function loadGitHubContributions() {
-//   const username = "KennedySovine";
-//   const container = document.getElementById("github-contributions-graph");
-//   if (!container) return;
+// GitHub Contributions Graph Loader
+function loadGitHubContributions() {
+  const username = "KennedySovine";
+  const container = document.getElementById("github-contributions-graph");
+  if (!container) return;
 
-//   // GitHub profile contributions SVG URL
-//   const url = `https://github.com/users/${username}/contributions`;
+  // Use GitHub's contribution graph API through a proxy or direct fetch
+  const proxyUrl = `https://github.com/${username}`;
+  
+  // Alternative approach: Use GitHub's calendar heatmap directly
+  container.innerHTML = `
+    <div style="
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      text-align: center;
+    ">
+      <iframe 
+        src="https://github.com/${username}"
+        style="
+          width: 100%;
+          height: 200px;
+          border: none;
+          border-radius: 8px;
+        "
+        onload="this.style.height = '200px'"
+        sandbox="allow-scripts allow-same-origin"
+      ></iframe>
+      <p style="margin-top: 15px; font-size: 14px; color: #666;">
+        <a href="https://github.com/${username}" target="_blank" style="color: #6a5acd; text-decoration: none;">
+          📊 View full GitHub profile →
+        </a>
+      </p>
+    </div>
+  `;
 
-//   fetch(url)
-//     .then((response) => response.text())
-//     .then((html) => {
-//       // Extract the SVG from the HTML
-//       const temp = document.createElement("div");
-//       temp.innerHTML = html;
-//       const svg = temp.querySelector("svg.js-calendar-graph-svg");
-//       if (svg) {
-//         svg.style.width = "100%";
-//         svg.style.height = "auto";
-//         svg.style.background = "#fff";
-//         svg.style.borderRadius = "8px";
-//         svg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)";
-//         container.innerHTML = "";
-//         container.appendChild(svg);
-//       } else {
-//         container.innerHTML = "<p style='color: #c00;'>Unable to load contributions graph.</p>";
-//       }
-//     })
-//     .catch(() => {
-//       container.innerHTML = "<p style='color: #c00;'>Unable to load contributions graph.</p>";
-//     });
-// })();
+  // Fallback: Try to fetch and parse the contributions
+  fetch(`https://api.github.com/users/${username}/events?per_page=100`)
+    .then(response => {
+      if (!response.ok) throw new Error('API limit reached');
+      return response.json();
+    })
+    .then(events => {
+      // Create a simple activity indicator
+      const activityCount = events.length;
+      const recentActivity = events.slice(0, 10);
+      
+      container.innerHTML = `
+        <div style="
+          background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+          border-radius: 12px;
+          padding: 24px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        ">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h3 style="color: #333; margin: 0 0 8px 0;">Recent GitHub Activity</h3>
+            <p style="color: #666; margin: 0;">${activityCount} recent events</p>
+          </div>
+          
+          <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+          ">
+            ${recentActivity.slice(0, 6).map(event => `
+              <div style="
+                background: white;
+                padding: 12px;
+                border-radius: 8px;
+                border-left: 4px solid #6a5acd;
+                font-size: 12px;
+              ">
+                <div style="font-weight: bold; color: #333; margin-bottom: 4px;">
+                  ${event.type.replace(/([A-Z])/g, ' $1').trim()}
+                </div>
+                <div style="color: #666;">
+                  ${event.repo.name.split('/')[1] || event.repo.name}
+                </div>
+                <div style="color: #999; font-size: 10px; margin-top: 4px;">
+                  ${new Date(event.created_at).toLocaleDateString()}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div style="text-align: center;">
+            <a href="https://github.com/${username}" target="_blank" style="
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              background: #6a5acd;
+              color: white;
+              padding: 12px 24px;
+              border-radius: 8px;
+              text-decoration: none;
+              font-weight: bold;
+              transition: background 0.3s ease;
+            " onmouseover="this.style.background='#5a4bbd'" onmouseout="this.style.background='#6a5acd'">
+              📊 View Full GitHub Profile
+              <span style="font-size: 12px;">→</span>
+            </a>
+          </div>
+        </div>
+      `;
+    })
+    .catch(() => {
+      // Final fallback: Simple GitHub profile link
+      container.innerHTML = `
+        <div style="
+          background: linear-gradient(135deg, #6a5acd, #8a7fd8);
+          border-radius: 12px;
+          padding: 40px 20px;
+          text-align: center;
+          color: white;
+          box-shadow: 0 4px 12px rgba(106, 90, 205, 0.3);
+        ">
+          <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+          <h3 style="margin: 0 0 12px 0; font-size: 24px;">GitHub Contributions</h3>
+          <p style="margin: 0 0 24px 0; opacity: 0.9;">
+            Check out my GitHub profile to see my contribution history and recent projects.
+          </p>
+          <a href="https://github.com/${username}" target="_blank" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+            Visit GitHub Profile
+            <span style="font-size: 12px;">→</span>
+          </a>
+        </div>
+      `;
+    });
+}
 
 function populateCertifications(items, id) {
   const main = document.getElementById(id);
