@@ -12,13 +12,23 @@
         <h1>LinkedIn Integration Test</h1>
         
         <div id="linkedin-status"></div>
-        
-        <h2>Console Commands</h2>
-        <p>Open browser console and try these commands:</p>
+          <h2>Console Commands</h2>
+        <p>Open browser console (F12) and try these commands:</p>
         <ul>
+            <li><code>updateBioFromLinkedIn()</code> - Get step-by-step instructions</li>
+            <li><code>updateBioManually("Your LinkedIn about text")</code> - Convert LinkedIn text to bio format</li>
             <li><code>testLinkedIn()</code> - Test LinkedIn integration</li>
-            <li><code>new LinkedInIntegration().getLinkedInProfile()</code> - Get profile info</li>
         </ul>
+        
+        <h2>Quick Steps to Update Your About Section</h2>
+        <ol>
+            <li>Visit your LinkedIn profile: <a href="https://www.linkedin.com/in/kennedy-sovine-975090199" target="_blank">https://www.linkedin.com/in/kennedy-sovine-975090199</a></li>
+            <li>Copy your "About" section text</li>
+            <li>Open browser console (F12)</li>
+            <li>Run: <code>updateBioManually("paste your LinkedIn about text here")</code></li>
+            <li>Copy the generated bio array to user-data/data.js</li>
+            <li>Refresh your portfolio to see the updated about section</li>
+        </ol>
         
         <h2>Configuration Status</h2>
         <div id="config-status">Loading...</div>

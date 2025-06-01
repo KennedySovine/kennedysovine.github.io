@@ -12,6 +12,8 @@ import { URLs } from "./user-data/urls.js";
 import { config } from "./user-data/config.js";
 import LinkedInIntegration, {
   initializeLinkedInIntegration,
+  updateBioFromLinkedIn,
+  updateBioManually,
 } from "./js/linkedin-integration.js";
 
 const { medium, gitConnected, gitRepo } = URLs;

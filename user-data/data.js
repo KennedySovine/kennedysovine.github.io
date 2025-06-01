@@ -1,22 +1,20 @@
 export const bio = [
-  "Hello, I'm Vinay Somawat!",
-  "<strong>Frontend Software Engineer</strong> with 4+ years of experience building scalable, user-focused web applications.",
-  "Skilled in Angular, TypeScript, and performance optimization, I aim to leverage my expertise in delivering innovative solutions that drive measurable business outcomes.",
-  "Passionate about mentoring, teamwork, and continuous improvement in engineering processes.",
+  "Since I was young, programming and working with computers has been my passion. I started taking summer courses at <strong>IDTech</strong> before taking <strong>AP Computer Science A</strong> in Highschool, scoring a <strong>5</strong> on the AP exam.",
+  "In university, I have moved on to take <strong>Computer Science for Games</strong>, developing many game prototypes and learning a lot about game development in the process.",
 ];
 
 export const skills = [
-  "JavaScript, TypeScript, Angular, AngularJS, React, HTML5, CSS, Bootstrap, Tailwind CSS",
-  "RxJS, NGXS, NGRX, WebSockets, Stencil, Storybook, Module Federation, Webpack",
-  "Jenkins, JIRA, Git",
-  "Performance Optimization, Responsive Design, Cross-Browser Compatibility",
+  "Please visit your LinkedIn profile to copy your current skills",
+  "LinkedIn Profile: https://www.linkedin.com/in/kennedy-sovine-975090199",
+  "Update this skills array with your actual LinkedIn skills",
+  "Use the console command 'updateBioFromLinkedIn()' for guidance",
 ];
 
 export const experience = [
   {
     title: "Shiprocket Private Limited",
     duration: "September 2023 - Present",
-    subtitle: "Software Engineer",
+    subtitle: "Student Intern",
     details: [
       "Developed a design system using Stencil and Storybook that provides consistent UI components across platforms, ensuring a cohesive design.",
       "Developed a dynamic support ticket panel that renders subcategories based on component IDs, handling up to 100 AWBs simultaneously.",
@@ -198,23 +196,23 @@ export const footer = [
   //       },
   //     ],
   //   },
-  //   {
-  //     label: "Resources",
-  //     data: [
-  //       {
-  //         text: "Enable Dark/Light Mode",
-  //         func: "enableDarkMode()",
-  //       },
-  //       {
-  //         text: "Print this page",
-  //         func: "window.print()",
-  //       },
-  //       {
-  //         text: "Clone this page",
-  //         link: "https://github.com/vinaysomawat/vinaysomawat.github.io",
-  //       },
-  //     ],
-  //   },
+  {
+    label: "Resources",
+     data: [
+ {
+ text: "Enable Dark/Light Mode",
+func: "enableDarkMode()",
+ },
+{
+ text: "Print this page",
+ func: "window.print()",
+ },
+ {
+ text: "Clone this page",
+link: "https://github.com/vinaysomawat/vinaysomawat.github.io",
+ },
+],
+  },
   {
     label: "Links",
     data: [
@@ -226,10 +224,6 @@ export const footer = [
       //     text: "Twitter",
       //     link: "https://twitter.com/thesigmakid",
       //   },
-      {
-        text: "Buy me a coffee",
-        link: "https://www.buymeacoffee.com/r194dME8y",
-      },
       {
         text: "Github",
         link: "https://github.com/kennedysovine/kennedysovine.github.io",

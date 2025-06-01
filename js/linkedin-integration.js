@@ -84,7 +84,7 @@ class LinkedInIntegration {
   }
 
   /**
-   * Create LinkedIn profile reference with URL and instructions
+   * Create LinkedIn profile reference with URL and sample data for Kennedy Sovine
    */
   createProfileReference() {
     const profileUrl = config.LINKEDIN?.PROFILE_URL;
@@ -93,21 +93,42 @@ class LinkedInIntegration {
       return this.createDefaultProfile();
     }
 
+    // Since we have Kennedy's LinkedIn profile URL, provide specific guidance
+    const kennedyLinkedInData = {
+      suggestedBio: [
+        "Hello, I'm Kennedy Sovine!",
+        "I'm a passionate professional with experience in technology and innovation.",
+        "Visit my LinkedIn profile to learn more about my background and expertise.",
+        "Connect with me to discuss opportunities and collaborations."
+      ],
+      suggestedSkills: [
+        "Visit https://www.linkedin.com/in/kennedy-sovine-975090199 to see current skills",
+        "Copy your skills from LinkedIn 'Skills & endorsements' section",
+        "Update the skills array in user-data/data.js"
+      ],
+      linkedInInstructions: "Copy content from your LinkedIn profile and update user-data/data.js"
+    };
+
     return {
       source: 'linkedin_public',
       profileUrl: profileUrl,
       linkedInUrl: profileUrl,
       lastUpdated: new Date().toISOString(),
       status: 'configured',
+      data: kennedyLinkedInData,
       instructions: {
-        title: 'LinkedIn Profile Connected',
-        message: 'Your LinkedIn profile URL is configured. Update your portfolio data manually in data.js',
+        title: 'LinkedIn Profile Connected - Update Required',
+        message: 'Your LinkedIn profile URL is configured. Please manually update your portfolio data.',
         steps: [
-          '1. Visit your LinkedIn profile to get current information',
-          '2. Update bio in user-data/data.js',
-          '3. Update skills in user-data/data.js', 
-          '4. Update experience in user-data/data.js'
+          '1. Visit your LinkedIn profile: ' + profileUrl,
+          '2. Copy your current summary/about section',
+          '3. Update the bio array in user-data/data.js',
+          '4. Copy your skills from LinkedIn skills section',
+          '5. Update the skills array in user-data/data.js',
+          '6. Copy work experience details',
+          '7. Update the experience array in user-data/data.js'
         ],
+        quickUpdate: 'Use the console command: updateBioFromLinkedIn() for guided updates',
         profileUrl: profileUrl
       }
     };
@@ -258,4 +279,79 @@ if (typeof window !== 'undefined') {
     console.log('LinkedIn Profile Info:', result);
     return result;
   };
+  window.updateBioFromLinkedIn = updateBioFromLinkedIn;
+  window.updateBioManually = updateBioManually;
+}
+
+// Helper function to update bio with LinkedIn data
+export function updateBioFromLinkedIn() {
+  const linkedin = new LinkedInIntegration();
+  
+  console.group('🔗 LinkedIn Bio Update Helper');
+  console.log('1. Visit your LinkedIn profile: https://www.linkedin.com/in/kennedy-sovine-975090199');
+  console.log('2. Copy your "About" section text');
+  console.log('3. Run: updateBioManually("Your LinkedIn about text here")');
+  console.log('4. The bio will be automatically formatted and ready to copy to data.js');
+  console.groupEnd();
+  
+  return {
+    visitProfile: () => window.open('https://www.linkedin.com/in/kennedy-sovine-975090199', '_blank'),
+    updateBio: (linkedInAboutText) => updateBioManually(linkedInAboutText)
+  };
+}
+
+// Function to manually update bio with LinkedIn text
+export function updateBioManually(aboutText) {
+  if (!aboutText) {
+    console.error('❌ Please provide your LinkedIn about text');
+    return;
+  }
+  
+  // Format the LinkedIn about text into bio array format
+  const sentences = aboutText.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const formattedBio = [];
+  
+  // Add greeting
+  formattedBio.push("Hello, I'm Kennedy Sovine!");
+  
+  // Add the LinkedIn content, splitting long sentences
+  sentences.forEach(sentence => {
+    const trimmed = sentence.trim();
+    if (trimmed.length > 0) {
+      if (trimmed.length > 100) {
+        // Split long sentences at commas or other natural breaks
+        const parts = trimmed.split(',');
+        parts.forEach(part => {
+          if (part.trim().length > 0) {
+            formattedBio.push(part.trim() + (part.includes(',') ? '' : '.'));
+          }
+        });
+      } else {
+        formattedBio.push(trimmed + (trimmed.endsWith('.') ? '' : '.'));
+      }
+    }
+  });
+  
+  console.group('✅ Updated Bio Array');
+  console.log('Copy this to user-data/data.js:');
+  console.log('export const bio = [');
+  formattedBio.forEach(line => {
+    console.log(`  "${line}",`);
+  });
+  console.log('];');
+  console.groupEnd();
+  
+  // Also update the page immediately for preview
+  const bioElement = document.getElementById('bio');
+  if (bioElement) {
+    bioElement.innerHTML = '';
+    formattedBio.forEach(bioText => {
+      const p = document.createElement('p');
+      p.innerHTML = bioText;
+      bioElement.appendChild(p);
+    });
+    console.log('🎉 Bio updated on page for preview!');
+  }
+  
+  return formattedBio;
 }

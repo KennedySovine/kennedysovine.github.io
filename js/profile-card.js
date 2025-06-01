@@ -3,69 +3,6 @@ window.addEventListener("DOMContentLoaded", async function () {
     const resp = await fetch(url);
     return resp.json();
   }
-  document.querySelectorAll(".stack-card").forEach(async function (el) {
-    const userId = el.getAttribute("user-id");
-
-    try {
-      const response = await get(
-        `https://api.stackexchange.com/2.2/users/${userId}?site=stackoverflow`
-      );
-      
-      if (!response.items || response.items.length === 0) {
-        el.innerHTML = `<div style="padding: 20px; text-align: center; color: #666;">Stack Overflow profile unavailable</div>`;
-        return;
-      }
-      
-      const user = response.items[0];
-      const {
-        profile_image,
-        website_url,
-        link,
-        display_name,
-        reputation,
-        user_id,
-      } = user;
-      const { gold, silver, bronze } = user.badge_counts || { gold: 0, silver: 0, bronze: 0 };
-
-      const profileLink = website_url || link;
-
-    el.innerHTML = `
-        <a href="${profileLink}" target="_blank" style="text-decoration: none; color: black; display: block; border-radius: 12px; padding: 16px; font-size: 14px; background: linear-gradient(135deg, #ffdd99, #f9bf3f); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease-in-out;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <img style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff;" src="${profile_image}" alt="Profile image"></img>
-                <div style="flex-grow: 1;">
-                    <h3 style="margin: 0; font-size: 18px; font-weight: bold;">${display_name}</h3>
-                    <p style="margin: 4px 0 0; font-size: 12px; color: #555;">
-                        @${link
-                          .replace("https://", "")
-                          .replace(`/users/${user_id}`, "")}
-                    </p>
-                </div>
-            </div>
-            <div style="margin-top: 16px; display: flex; justify-content: space-between; text-align: center;">
-                <div>
-                    <p style="font-size: 12px; color: #666; margin: 0;">REPUTATION</p>
-                    <p style="font-size: 20px; font-weight: bold; color: #222;">${reputation}</p>
-                </div>
-                <div>
-                    <p style="font-size: 12px; color: #666; margin: 0;">GOLD</p>
-                    <p style="font-size: 20px; font-weight: bold; color: #222;">${gold}</p>
-                </div>
-                                <div>
-                    <p style="font-size: 12px; color: #666; margin: 0;">SILVER</p>
-                    <p style="font-size: 20px; font-weight: bold; color: #222;">${silver}</p>
-                </div>                <div>
-                    <p style="font-size: 12px; color: #666; margin: 0;">BRONZE</p>
-                    <p style="font-size: 20px; font-weight: bold; color: #222;">${bronze}</p>
-                </div>
-            </div>
-        </a>
-        `;
-    } catch (error) {
-      console.error('Error loading Stack Overflow profile:', error);
-      el.innerHTML = `<div style="padding: 20px; text-align: center; color: #666;">Error loading Stack Overflow profile</div>`;
-    }
-  });
 
   document.querySelectorAll(".github-card").forEach(async function (el) {
     const username = el.getAttribute("username");

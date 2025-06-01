@@ -9,10 +9,9 @@ export const config = {
   
   // Debug mode
   DEBUG: false,
-    // API endpoints
+  // API endpoints
   API_ENDPOINTS: {
     github: 'https://api.github.com',
-    stackexchange: 'https://api.stackexchange.com/2.2',
     linkedin: 'https://api.linkedin.com/v2',
   },
   
