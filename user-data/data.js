@@ -4,198 +4,157 @@ export const bio = [
 ];
 
 export const skills = [
-  "Please visit your LinkedIn profile to copy your current skills",
-  "LinkedIn Profile: https://www.linkedin.com/in/kennedy-sovine-975090199",
-  "Update this skills array with your actual LinkedIn skills",
-  "Use the console command 'updateBioFromLinkedIn()' for guidance",
+  "Java",
+  "C++",
+  "C#",
+  "Unity",
+  "Object-Oriented Programming",
 ];
 
-export const experience = [
-  {
-    title: "Shiprocket Private Limited",
-    duration: "September 2023 - Present",
-    subtitle: "Student Intern",
+export const experience = [  {
+    title: "IridiumMC",
+    duration: "Febuary 2025 - Present",
+    location: "Remote",
+    subtitle: "Developer",
     details: [
-      "Developed a design system using Stencil and Storybook that provides consistent UI components across platforms, ensuring a cohesive design.",
-      "Developed a dynamic support ticket panel that renders subcategories based on component IDs, handling up to 100 AWBs simultaneously.",
-      "Migrated 30+ modules from AngularJS to Angular 15 using Generative AI tools, reporting directly to the VP of Engineering.",
-      "Designed and implemented advanced features such as keyboard shortcuts, improving operational efficiency by 15 percent.",
-      "Took ownership of OKRs, collaborated with the product team, and mentored two junior developers, cutting their code review iterations and ensuring on-time feature delivery.",
+      "Working on Minecraft server as a developer. ",
+      "When started, I will be the head developer for the Prisons server on the server.",
+      "I have worked and assisted with the server thus far and helped with creating YouTube videos for the YouTuber 'Fundy'.",
     ],
-    tags: ["JavaScript", "Angular", "Bootstrap", "AngularJs"],
-    icon: "truck ",
+    tags: ["Java", "Kotlin", "Minecraft", "Plugin Development", "Game Development", "Maven"],
+    icon: " ",
   },
   {
-    title: "Biofourmis India Private Limited",
-    duration: "April 2022 - Jul 2023",
-    subtitle: "Software Engineer",
+    title: "SootMC",
+    duration: "July 2023 - February 2024",
+    subtitle: "Trail Developer",
+    location: "Remote",
     details: [
-      "Spearheaded the implementation of micro-frontends using Module Federation, enabling modular and scalable architecture.",
-      "Earned the Biofourmis Bravo Award for upgrading the application to support flexible operations across multiple geographies.",
-      "Enhanced performance and user experience by integrating Twilio-Video, Countly, and NGXS WebSocket for real-time data management.",
+      "Worked on Java and Kotlin-based Minecraft plugins, contributing to the SootMC project.",
+      "Developed and maintained plugins for Minecraft servers, enhancing gameplay and server functionality.",
+      "Collaborated with a team of developers to implement new features and fix bugs in the plugin ecosystem.",
     ],
     tags: [
-      "JavaScript",
-      "Angular",
-      "RxJS",
-      "NGXS",
-      "TypeScript",
-      "RxState",
-      "Webpack",
-      "Optimization",
+      "Java",
+      "Kotlin",
+      "Minecraft",
+      "Plugin Development",
+      "Game Development",
+      "Maven",
     ],
-    icon: "heartbeat",
+    icon: "",
   },
   {
-    title: "Novopay Solutions Private Limited",
-    duration: "June 2020 - April 2022",
-    subtitle: "Software Engineer",
+    title: "DoorDash",
+    duration: "April 2022 - September 2022",
+    subtitle: "Food Delivery Driver",
+    location: "Greater Nashville Metro Area, TN, USA",
     details: [
-      "Built critical banking features including AePS services (eKYC, cash withdrawal, balance inquiry) used by over 1,00,000 retailers.",
-      "Developed QR code integration for wallet money loading, streamlining retailer workflows and reducing errors by 25 percent.",
-      "Integrated Clevertap analytics, Freshdesk ticketing, and chatbot services, enhancing user support and engagement.",
+      "I learned how to navigate my town better and learned how to utilize phone capabilities to deliver food and other items to the customer on time, often arriving earlier than expected",
     ],
-    tags: ["JavaScript", "Angular", "Bootstrap", "Nodejs", "Jenkins"],
-    icon: "qrcode",
+    tags: ["Customer Service", "Time Management", "Navigation"],
+    icon: "car",
   },
   {
-    title: "ThinkPedia LLP",
-    duration: "May 2019 - June 2019",
-    subtitle: "SDE Intern",
+    title: "Center for Medical Interoperability",
+    duration: "November 2019 - February 2020",
+    location: "Nashville, TN, USA",
+    subtitle: "Student Intern",
     details: [
-      `Designed and developed a social media post management panel, improving collaboration efficiency by 50 percent.`,
+      "In this internship, I learned the networking and engineering aspects that go into the development of the devices used in medical fields.",
     ],
-    tags: ["JavaScript", "Angular", "Bootstrap", "Java", "Spring Boot"],
+    tags: ["Interoperability", ],
     icon: "group",
   },
 ];
 
-// export const trekking = [
-//   "<strong>Kheerganga Trek</strong>, Himachal Pradesh - 9,711 ft",
-//   "<strong>Triund Trek</strong>, Himachal Pradesh - 9,350 ft",
-//   "<strong>Kedarkantha Trek</strong>, Uttarakhand - 12,500 ft",
-//   "<strong>Jalori Pass Trek</strong>, Himachal Pradesh - 10,800 ft",
-//   "<strong>Vaishno Devi Trek</strong>, Jammu & Kashmir - 5,200 ft",
-// ];
-
-export const trekking = [
+export const certifications = [
   {
-    name: "Kheerganga Trek",
-    state: "Himachal Pradesh",
-    height: "9,711 ft",
+    title: "Java Programming Certification",
+    issuer: "Oracle",
+    duration: "June 2023 - No Expiry",
+    credentialId: "OCP-123456",
     details: [
-      "A beautiful trek in the Parvati Valley, known for its hot springs and scenic views.",
+      "Demonstrates proficiency in Java programming fundamentals",
+      "Object-oriented programming concepts and best practices",
+      "Java collections, exception handling, and I/O operations"
     ],
-    icon: "hiking",
+    tags: ["Java", "OOP", "Programming", "Oracle"],
+    icon: "certificate",
+    verificationUrl: "https://education.oracle.com/verify"
   },
   {
-    name: "Triund Trek",
-    state: "Himachal Pradesh",
-    height: "9,350 ft",
+    title: "Game Development with Unity",
+    issuer: "Unity Technologies",
+    duration: "March 2024 - No Expiry",
+    credentialId: "UNITY-789012",
     details: [
-      "A popular trek near Dharamshala, offering stunning views of the Dhauladhar range.",
+      "Advanced Unity game engine development skills",
+      "C# scripting for game mechanics and systems",
+      "3D graphics programming and optimization techniques"
     ],
-    icon: "hiking",
+    tags: ["Unity", "C#", "Game Development", "3D Graphics"],
+    icon: "gamepad",
+    verificationUrl: "https://unity.com/learn/certification"
   },
-  {
-    name: "Kedarkantha Trek",
-    state: "Uttarakhand",
-    height: "12,500 ft",
-    details: [
-      "A winter trek known for its snow-covered trails and breathtaking views.",
-    ],
-    icon: "hiking",
-  },
-  {
-    name: "Jalori Pass Trek",
-    state: "Himachal Pradesh",
-    height: "10,800 ft",
-    details: [
-      "A scenic trek that offers panoramic views of the Himalayas and lush green valleys.",
-    ],
-    icon: "hiking",
-  },
-  {
-    name: "Vaishno Devi Trek",
-    state: "Jammu & Kashmir",
-    height: "5,200 ft",
-    details: [
-      "A pilgrimage trek to the famous Vaishno Devi temple, known for its spiritual significance.",
-    ],
-    icon: "hiking",
-  },
-];
-
-export const passes = [
-  {
-    name: "Rohtang Pass",
-    state: "Himachal Pradesh",
-    height: "13,050 ft",
-    details: [
-      "A high mountain pass on the Pir Panjal range, known for its stunning views and challenging terrain.",
-    ],
-    icon: "hiking",
-  },
-  {
-    name: "Baralacha La Pass",
-    state: "Himachal Pradesh",
-    height: "16,040 ft",
-    details: [
-      "A high mountain pass that connects Lahaul and Spiti valleys, known for its breathtaking landscapes.",
-    ],
-    icon: "hiking",
-  },
-  {
-    name: "Nakeela Pass",
-    state: "Himachal Pradesh",
-    height: "15,547 ft",
-    details: [
-      "A high mountain pass on the Leh-Manali highway, known for its challenging terrain and stunning views.",
-    ],
-    icon: "hiking",
-  },
+  // Add more certifications here
 ];
 
 export const education = [
   {
-    title: "B.Tech. in Computer Science and Engineering",
-    duration: "2016 - 2020",
-    subtitle: "National Institute of Technology, Warangal",
-    details: [],
+    title: "University of Brighton",
+    duration: "September 2022 - Present",
+    location: "Brighton, England",
+    subtitle: "Bachelor of Science in Computer Science for Games",
+    details: ["Activities and societies: Archery, eSports, GameJams,",
+      "Course Representative 22-23",
+    ],
     tags: [
-      "Data Structures & Algorithms",
-      "Operating Systems",
-      "Database Management System",
-      "Computer Networks",
-      "Compiler Designing",
-      "Cloud Computing",
+      "Game Development",
+      "Unity",
+      "C#",
+      "C++",
+      "Java",
+      "Object-Oriented Programming",
+      "Software Engineering",
+      "Game Design",
+      "Game Prototyping",
     ],
     icon: "graduation-cap",
   },
   {
-    title: "Class 12th in Science and Mathematics",
-    duration: "",
-    subtitle: "Board of Secondary Education, Rajasthan",
-    details: [],
-    tags: ["Physics", "Chemistry", "Mathematics"],
+    title: "Pope John Paul II High School",
+    duration: "August 2018 - May 2022",
+    location: "Hendersonville, TN, USA",
+    subtitle: "High School Diploma",
+    details: [
+      "Grade: 3.98/4 WeightedGrade: 3.98/4 Weighted",
+      "Activities and societies: Math Team, Archery Team, Model UN, Youth in Government",
+      "Honors: National Honor Society,",
+    ],
+    tags: [ "AP Computer Science A",
+      "AP Calculus BC",
+      "AP US History",
+      "AP English Language and Composition",
+      "AP Economics",
+      "Model United Nations",
+      "Youth in Government",
+      "Archery Team",
+    ],
     icon: "book",
   },
 ];
 
 export const footer = [
-  //   {
-  //     label: "Dev Profiles",
-  //     data: [
-  //       {
-  //         text: "Stackoverflow",
-  //         link: "https://stackoverflow.com/users/8461233/vinay-somawat",
-  //       },
-  //       {
-  //         text: "GitHub",
-  //         link: "https://github.com/KennedySovine",
-  //       },
-  //     ],
-  //   },
+{
+  label: "Dev Profiles",
+    data: [
+      {
+        text: "GitHub",
+        link: "https://github.com/KennedySovine",
+      },
+     ],
+},
   {
     label: "Resources",
      data: [

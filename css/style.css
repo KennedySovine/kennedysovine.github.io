@@ -540,7 +540,6 @@ body.offcanvas .colorlib-nav-toggle {
 .colorlib-profile,
 .colorlib-projects,
 .colorlib-education,
-.colorlib-blogs,
 .colorlib-work,
 .colorlib-about,
 .colorlib-installation,
@@ -558,8 +557,7 @@ body.offcanvas .colorlib-nav-toggle {
 	display: flex;
 }
 
-@media screen and (max-width: 768px) {
-	.colorlib-experience,
+@media screen and (max-width: 768px) {	.colorlib-experience,
 	.colorlib-skills,
 	.colorlib-profile,
 	.colorlib-projects,
@@ -571,10 +569,6 @@ body.offcanvas .colorlib-nav-toggle {
 	.colorlib-contact {
 		padding-top: 2em;
 		padding-bottom: 0em;
-	}
-	
-	.colorlib-blogs {
-		display: none;
 	}
 
 	.profile-cards {
@@ -1185,72 +1179,7 @@ body.offcanvas .colorlib-nav-toggle {
 	}
 }
 
-.blog-entry {
-	width: 100%;
-	float: left;
-	background: #fff;
-	margin-bottom: 2em;
-}
-@media screen and (max-width: 768px) {
-	.blog-entry {
-		margin-bottom: 3em;
-	}
-}
-.blog-entry .blog-img {
-	width: 100%;
-	float: left;
-	overflow: hidden;
-	position: relative;
-	z-index: 1;
-	margin-bottom: 25px;
-}
-.blog-entry .blog-img img {
-	position: relative;
-	max-width: 100%;
-	-webkit-transform: scale(1);
-	-moz-transform: scale(1);
-	-ms-transform: scale(1);
-	-o-transform: scale(1);
-	transform: scale(1);
-	-webkit-transition: 0.3s;
-	-o-transition: 0.3s;
-	transition: 0.3s;
-}
-.blog-entry .desc h3 {
-	font-size: 16px;
-	margin-bottom: 25px;
-	line-height: auto;
-	font-weight: 500;
-	letter-spacing: 0.5px;
-	font-family: "Quicksand", Arial, sans-serif;
-}
-.blog-entry .desc h3 a {
-	text-decoration: none;
-}
-.blog-entry .desc span {
-	display: block;
-	margin-bottom: 20px;
-	font-size: 12px;
-	color: rgba(0, 0, 0, 0.4) !important;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	font-weight: 400;
-}
-.blog-entry .desc span small i {
-	color: #999999;
-}
-.blog-entry .desc .lead {
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 2px;
-}
-.blog-entry:hover .blog-img img {
-	-webkit-transform: scale(1.1);
-	-moz-transform: scale(1.1);
-	-ms-transform: scale(1.1);
-	-o-transform: scale(1.1);
-	transform: scale(1.1);
-}
+
 
 .work-menu span {
 	margin-left: 10px;

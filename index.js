@@ -18,54 +18,6 @@ import LinkedInIntegration, {
 
 const { medium, gitConnected, gitRepo } = URLs;
 
-async function fetchBlogsFromMedium(url) {
-  try {
-    if (!url) {
-      console.log("No Medium URL provided, skipping blog fetch");
-      document.getElementById("blogs").innerHTML = `
-        <li style="text-align: center; padding: 20px;">
-          <p>No blog posts available at this time.</p>
-          <p>Check back later for updates!</p>
-        </li>
-      `;
-      return;
-    }
-
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Medium API error: ${response.status}`);
-    }
-    const data = await response.json();
-
-    // Check if required data exists
-    if (!data.items || !Array.isArray(data.items)) {
-      console.warn("Medium API response missing items array");
-      document.getElementById("blogs").innerHTML = `
-        <li style="text-align: center; padding: 20px;">
-          <p>No blog posts found.</p>
-          <p>Visit the blog directly for latest updates.</p>
-        </li>
-      `;
-      return;
-    }
-
-    // Safely get profile image if feed exists
-    if (data.feed && data.feed.image) {
-      document.getElementById("profile-img").src = data.feed.image;
-    }
-
-    populateBlogs(data.items, "blogs");
-  } catch (error) {
-    console.error("Error in fetching the blogs from Medium profile:", error);
-    document.getElementById("blogs").innerHTML = `
-      <li style="text-align: center; padding: 20px;">
-        <p>Blog posts are currently unavailable.</p>
-        <p>Please try again later.</p>
-      </li>
-    `;
-  }
-}
-
 async function fetchGitConnectedData(url) {
   try {
     const response = await fetch(url);
@@ -99,7 +51,6 @@ function mapBasicResponse(basics) {
     summary,
     profiles,
     headline,
-    blog,
     yearsOfExperience,
     username,
     locationAsString,
@@ -162,89 +113,6 @@ function populatePasses(items) {
     `;
     trekTag.appendChild(trekCard);
   });
-}
-
-function populateBlogs(items, id) {
-  if (!items || !Array.isArray(items)) {
-    console.warn("No blog items to populate");
-    return;
-  }
-
-  const projectdesign = document.getElementById(id);
-  if (!projectdesign) {
-    console.warn(`Element with id '${id}' not found`);
-    return;
-  }
-
-  const count = Math.min(3, items.length);
-
-  for (let i = 0; i < count; i++) {
-    const item = items[i];
-    if (!item) continue;
-
-    const blogCard = document.createElement("div");
-    blogCard.className = "blog-card";
-    blogCard.style = `
-          display: flex;
-          flex-direction: column;
-          border-radius: 12px;
-          padding: 16px;
-          font-size: 14px;
-          background: linear-gradient(135deg, rgb(255, 221, 153), rgb(249, 191, 63));
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-          min-height: 150px;
-          cursor: pointer;
-      `;
-
-    const blogLink = document.createElement("a");
-    blogLink.href = item.link || "#";
-    blogLink.target = "_blank";
-    blogLink.style = "text-decoration: none; color: black; display: block;";
-
-    blogCard.appendChild(blogLink);
-
-    const blogTitle = document.createElement("h4");
-    blogTitle.className = "blog-heading";
-    blogTitle.innerHTML = item.title || "Untitled";
-    blogTitle.style = "margin: 0px; font-size: 18px; font-weight: bold;";
-    blogLink.appendChild(blogTitle);
-
-    const pubDateEle = document.createElement("p");
-    pubDateEle.className = "publish-date";
-    pubDateEle.innerHTML = getBlogDate(item.pubDate);
-    pubDateEle.style = "margin: 0 0 5px; font-size: 12px; color: #555;";
-    blogLink.appendChild(pubDateEle);
-
-    const blogDescription = document.createElement("p");
-    blogDescription.className = "blog-description";
-    const html = item.content || "";
-    const [, doc] = /<p>(.*?)<\/p>/g.exec(html) || [null, "No description available"];
-    blogDescription.innerHTML = doc;
-    blogDescription.style = "margin: 0 0 12px; font-size: 12px; color: #000;";
-    blogLink.appendChild(blogDescription);
-
-    const categoriesDiv = document.createElement("div");
-    categoriesDiv.style = "display: flex; gap: 8px; margin-top: 12px;";
-
-    if (item.categories && Array.isArray(item.categories)) {
-      for (const category of item.categories) {
-        const badge = document.createElement("span");
-        badge.className = "badge";
-        badge.innerHTML = category;
-        badge.style = `
-                font-size: 12px;
-                padding: 4px 8px;
-                background-color: #007acc;
-                color: white;
-                border-radius: 4px;
-            `;
-        categoriesDiv.appendChild(badge);
-      }
-    }
-
-    blogLink.appendChild(categoriesDiv);
-    projectdesign.appendChild(blogCard);
-  }
 }
 
 // OLD CAROUSEL CODE REMOVED - USING NEW SIMPLE IMPLEMENTATION BELOW
@@ -474,6 +342,16 @@ function populateExp_Edu(items, id) {
     spanTimelineSublabel.className = "timeline-sublabel";
     spanTimelineSublabel.innerHTML = items[i].subtitle;
 
+    // Add location if it exists
+    if (items[i].location) {
+      let spanTimelineLocation = document.createElement("span");
+      spanTimelineLocation.className = "timeline-location";
+      spanTimelineLocation.innerHTML = " • " + items[i].location;
+      spanTimelineLocation.style.fontStyle = "italic";
+      spanTimelineLocation.style.color = "#666";
+      spanTimelineSublabel.append(spanTimelineLocation);
+    }
+
     let spanh2 = document.createElement("span");
     spanh2.innerHTML = items[i].duration;
 
@@ -591,41 +469,8 @@ function getElement(tagName, className) {
   return item;
 }
 
-function getBlogDate(publishDate) {
-  const elapsed = Date.now() - Date.parse(publishDate);
-
-  // Time conversions in milliseconds
-  const msPerSecond = 1000;
-  const msPerMinute = msPerSecond * 60;
-  const msPerHour = msPerMinute * 60;
-  const msPerDay = msPerHour * 24;
-  const msPerMonth = msPerDay * 30;
-  const msPerYear = msPerDay * 365;
-
-  if (elapsed < msPerMinute) {
-    const seconds = Math.floor(elapsed / msPerSecond);
-    return `${seconds} seconds ago`;
-  } else if (elapsed < msPerHour) {
-    const minutes = Math.floor(elapsed / msPerMinute);
-    return `${minutes} minutes ago`;
-  } else if (elapsed < msPerDay) {
-    const hours = Math.floor(elapsed / msPerHour);
-    return `${hours} hours ago`;
-  } else if (elapsed < msPerMonth) {
-    const days = Math.floor(elapsed / msPerDay);
-    return days == 1 ? `${days} day ago` : `${days} days ago`;
-  } else if (elapsed < msPerYear) {
-    const months = Math.floor(elapsed / msPerMonth);
-    return months == 1 ? `${months} month ago` : `${months} months ago`;
-  } else {
-    const years = Math.floor(elapsed / msPerYear);
-    return years == 1 ? `${years} year ago` : `${years} years ago`;
-  }
-}
-
 populateBio(bio, "bio");
 populateSkills(skills, "skills");
-fetchBlogsFromMedium(medium);
 fetchRepositories(); // New simplified GitHub API function
 fetchGitConnectedData(gitConnected);
 populateExp_Edu(experience, "experience");
