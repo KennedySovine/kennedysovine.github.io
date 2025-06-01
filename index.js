@@ -130,7 +130,7 @@ function createCard(repo, pos) {
     height: 180px;
     padding: 20px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+    background: linear-gradient(135deg, #b19cd9, #6a5acd);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     top: 50%;
@@ -169,7 +169,7 @@ function createCard(repo, pos) {
     <div style="font-size: 13px; color: #666; margin-bottom: 16px; height: 40px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
     <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #555;">
       <span style="display: flex; align-items: center; gap: 4px;">
-        <span style="width: 8px; height: 8px; background: #007acc; border-radius: 50%;"></span>
+        <span style="width: 8px; height: 8px; background: #4169e1; border-radius: 50%;"></span>
         ${repo.language || "N/A"}
       </span>
       <span style="display: flex; align-items: center; gap: 4px;">
@@ -270,7 +270,7 @@ function populateRepo(items, id) {
           border-radius: 12px;
           padding: 16px;
           font-size: 14px;
-          background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+          background: linear-gradient(135deg, #b19cd9, #6a5acd);
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
           transition: transform 0.2s ease-in-out;
           cursor: pointer;
@@ -472,7 +472,7 @@ function getElement(tagName, className) {
 populateBio(bio, "bio");
 populateSkills(skills, "skills");
 fetchRepositories(); // New simplified GitHub API function
-fetchGitConnectedData(gitConnected);
+//fetchGitConnectedData(gitConnected); // Disabled: API not found
 populateExp_Edu(experience, "experience");
 populateTrekking(trekking);
 populatePasses(passes);
@@ -635,7 +635,7 @@ async function fetchRepositories() {
       <div style="text-align: center; padding: 40px; color: #666;">
         <h3>Repositories Currently Unavailable</h3>
         <p>Unable to fetch repository data at this time.</p>
-        <p>Please visit my <a href="https://github.com/KennedySovine" target="_blank" style="color: #f9bf3f;">GitHub profile</a> directly.</p>
+        <p>Please visit my <a href="https://github.com/KennedySovine" target="_blank" style="color: #6a5acd;">GitHub profile</a> directly.</p>
       </div>
     `;
   }
@@ -661,7 +661,7 @@ function displayRepositoryCarousel3Cards(repos) {
       "></div>
       <div style="text-align: center; margin-top: 24px;">
         <button id="prev-repo" style="
-          background: #f9bf3f;
+          background: #6a5acd;
           border: none;
           border-radius: 50%;
           width: 50px;
@@ -675,7 +675,7 @@ function displayRepositoryCarousel3Cards(repos) {
            onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">←</button>
         <span id="repo-counter" style="margin: 0 20px; font-weight: bold; font-size: 16px;"></span>
         <button id="next-repo" style="
-          background: #f9bf3f;
+          background: #6a5acd;
           border: none;
           border-radius: 50%;
           width: 50px;
@@ -707,7 +707,7 @@ function displayRepositoryCarousel3Cards(repos) {
       height: 180px;
       padding: 20px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #ffdd99, #f9bf3f);
+      background: linear-gradient(135deg, #b19cd9, #6a5acd);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       top: 50%;
@@ -748,12 +748,12 @@ function displayRepositoryCarousel3Cards(repos) {
     card.innerHTML = `
       <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
         ${repo.name}
-        ${repo.isPinned ? '<span style="background: #007acc; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">📌</span>' : ''}
+        ${repo.isPinned ? '<span style="background: #4169e1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">📌</span>' : ''}
       </div>
       <div style="font-size: 13px; color: #666; margin-bottom: 16px; height: 40px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
       <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: #555;">
         <span style="display: flex; align-items: center; gap: 4px;">
-          <span style="width: 8px; height: 8px; background: #007acc; border-radius: 50%;"></span>
+          <span style="width: 8px; height: 8px; background: #4169e1; border-radius: 50%;"></span>
           ${repo.language || "N/A"}
         </span>
         <span style="display: flex; align-items: center; gap: 4px;">
@@ -886,7 +886,7 @@ function displayRepositoryCarousel3Cards(repos) {
         width: ${isActive ? '24px' : '8px'};
         height: 8px;
         border-radius: 4px;
-        background: ${isActive ? '#007acc' : '#ccc'};
+        background: ${isActive ? '#4169e1' : '#ccc'};
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 0;
@@ -1083,3 +1083,36 @@ function showDataSourceIndicator(source, lastUpdated) {
     }, 300);
   }, 5000);
 }
+
+// --- GitHub Contributions Graph ---
+// (function loadGitHubContributions() {
+//   const username = "KennedySovine";
+//   const container = document.getElementById("github-contributions-graph");
+//   if (!container) return;
+
+//   // GitHub profile contributions SVG URL
+//   const url = `https://github.com/users/${username}/contributions`;
+
+//   fetch(url)
+//     .then((response) => response.text())
+//     .then((html) => {
+//       // Extract the SVG from the HTML
+//       const temp = document.createElement("div");
+//       temp.innerHTML = html;
+//       const svg = temp.querySelector("svg.js-calendar-graph-svg");
+//       if (svg) {
+//         svg.style.width = "100%";
+//         svg.style.height = "auto";
+//         svg.style.background = "#fff";
+//         svg.style.borderRadius = "8px";
+//         svg.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)";
+//         container.innerHTML = "";
+//         container.appendChild(svg);
+//       } else {
+//         container.innerHTML = "<p style='color: #c00;'>Unable to load contributions graph.</p>";
+//       }
+//     })
+//     .catch(() => {
+//       container.innerHTML = "<p style='color: #c00;'>Unable to load contributions graph.</p>";
+//     });
+// })();

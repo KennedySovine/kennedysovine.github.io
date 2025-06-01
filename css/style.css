@@ -122,7 +122,7 @@ figure figcaption {
 	width: 300px;
 	position: fixed;
 	z-index: 1001;
-	background: linear-gradient(135deg, rgb(255, 221, 153), rgb(249, 191, 63));
+	background: linear-gradient(135deg, rgb(177, 156, 217), rgb(133, 119, 230));
 	-webkit-transition: 0.5s;
 	-o-transition: 0.5s;
 	transition: 0.5s;
@@ -137,7 +137,7 @@ figure figcaption {
 		-o-transform: translateX(-300px);
 		transform: translateX(-300px);
 		padding-top: 4em;
-		background-color: #f9bf3f;
+		background-color: #8577e6;
 		height: -webkit-fill-available;
 		left: 0px;
 	}
@@ -506,7 +506,7 @@ body.offcanvas #colorlib-aside {
 	-o-transform: translateX(0);
 	transform: translateX(0);
 	width: 372px;
-	background-color: #f9bf3f;
+	background-color: #8577e6;
 	z-index: 999;
 	position: fixed;
 }
@@ -648,7 +648,7 @@ body.offcanvas .colorlib-nav-toggle {
 
 .hire {
 	padding: 2em;
-	background: #f9bf3f;
+	background: #6a5acd;
 	color: #000;
 	border-radius: 4px;
 }
@@ -812,7 +812,7 @@ body.offcanvas .colorlib-nav-toggle {
 	position: absolute;
 	display: block;
 	width: 4px;
-	background: #f9bf3f;
+	background: #8577e6;
 	top: 20px;
 	bottom: 20px;
 	margin-left: 29px;
@@ -851,14 +851,14 @@ body.offcanvas .colorlib-nav-toggle {
 	.timeline-entry
 	.timeline-entry-inner
 	.timeline-icon.color-2 {
-	background: brown;
+	background: #4169e1;
 	color: white;
 }
 .timeline-centered
 	.timeline-entry
 	.timeline-entry-inner
 	.timeline-icon.color-3 {
-	background: #f9bf3f;
+	background: #8577e6;
 }
 .timeline-centered
 	.timeline-entry
@@ -884,7 +884,7 @@ body.offcanvas .colorlib-nav-toggle {
 
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label {
 	position: relative;
-	background: linear-gradient(135deg, rgb(255, 221, 153), rgb(249, 191, 63));
+	background: linear-gradient(135deg, rgb(177, 156, 217), rgb(133, 119, 230));
 	color: #000;
 	padding: 1.5em;
 	margin-left: 60px;
@@ -971,16 +971,25 @@ body.offcanvas .colorlib-nav-toggle {
 	font-weight: 500;
 }
 .services.color-2 {
-	border-bottom: 2px solid #ec5453;
+	border-bottom: 2px solid #4169e1;
 }
 .services.color-2 .icon2 i {
-	color: #ec5453;
+	color: #4169e1;
 }
 .services.color-3 {
-	border-bottom: 2px solid #f9bf3f;
+	border-bottom: 2px solid #8577e6;
 }
 .services.color-3 .icon2 i {
-	color: #f9bf3f;
+	color: #8577e6;
+}
+.services.color-3 .icon {
+	background: #8577e6;
+}
+.services.color-3 .icon:before {
+	border-color: transparent transparent #8577e6 transparent;
+}
+.services.color-3 .icon:after {
+	border-color: #8577e6 transparent transparent transparent;
 }
 .services.color-4 {
 	border-bottom: 2px solid #a84cb8;
@@ -1062,22 +1071,22 @@ body.offcanvas .colorlib-nav-toggle {
 	text-transform: uppercase;
 }
 .services.color-2 .icon {
-	background: #ec5453;
+	background: #4169e1;
 }
 .services.color-2 .icon:before {
-	border-color: transparent transparent #ec5453 transparent;
+	border-color: transparent transparent #4169e1 transparent;
 }
 .services.color-2 .icon:after {
-	border-color: #ec5453 transparent transparent transparent;
+	border-color: #4169e1 transparent transparent transparent;
 }
 .services.color-3 .icon {
-	background: #f9bf3f;
+	background: #8577e6;
 }
 .services.color-3 .icon:before {
-	border-color: transparent transparent #f9bf3f transparent;
+	border-color: transparent transparent #8577e6 transparent;
 }
 .services.color-3 .icon:after {
-	border-color: #f9bf3f transparent transparent transparent;
+	border-color: #8577e6 transparent transparent transparent;
 }
 .services.color-4 .icon {
 	background: #a84cb8;
@@ -1352,7 +1361,7 @@ body.offcanvas .colorlib-nav-toggle {
 	border-radius: 50%;
 }
 .colorlib-counters .counter-wrap {
-	border: 1px solid red !important;
+	border: 1px solid #4169e1 !important;
 }
 .colorlib-counters .colorlib-counter {
 	font-size: 40px;
@@ -1530,25 +1539,25 @@ body.offcanvas .colorlib-nav-toggle {
 }
 
 .btn-warning {
-	background: #f0ad4e;
+	background: #8577e6;
 	color: #fff;
-	border: 2px solid #f0ad4e;
+	border: 2px solid #8577e6;
 }
 .btn-warning:hover,
 .btn-warning:focus,
 .btn-warning:active {
-	background: #eea236 !important;
-	border-color: #eea236 !important;
+	background: #6a5acd !important;
+	border-color: #6a5acd !important;
 }
 .btn-warning.btn-outline {
 	background: transparent;
-	color: #f0ad4e;
-	border: 2px solid #f0ad4e;
+	color: #8577e6;
+	border: 2px solid #8577e6;
 }
 .btn-warning.btn-outline:hover,
 .btn-warning.btn-outline:focus,
 .btn-warning.btn-outline:active {
-	background: #f0ad4e;
+	background: #8577e6;
 	color: #fff;
 }
 
@@ -1960,7 +1969,7 @@ span {
 }
 
 :root {
-	--footer-bg: linear-gradient(135deg, rgb(255, 221, 153), rgb(249, 191, 63));
+	--footer-bg: linear-gradient(135deg, rgb(177, 156, 217), rgb(133, 119, 230));
 	--color: #000;
 	--color-smooth: #000;
 	--input-border: #3a456a;
@@ -2036,7 +2045,7 @@ span {
 	padding-bottom: 10px;
     text-align: right;
     font-weight: 600;
-	background-color: #f0ad4e;
+	background-color: #8577e6;
 }
 
 .badge {
@@ -2049,7 +2058,7 @@ span {
     vertical-align: middle;
     white-space: nowrap;
     text-align: center;
-    background-color: brown !important;
+    background-color: #4169e1 !important;
     border-radius: 10px;
 }
 
@@ -2281,9 +2290,9 @@ hr {
 }
 
 .linkedin-status.not-configured {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeaa7;
+  background: #e6e0ff;
+  color: #4c3d8b;
+  border: 1px solid #b19cd9;
 }
 
 .linkedin-status i {
