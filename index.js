@@ -92,17 +92,6 @@ function populateSkills(items, id) {
   });
 }
 
-function populateTrekking(items) {
-  const trektag = document.getElementById("trekking");
-  items.forEach((item) => {
-    const trekCard = getElement("div", "");
-    trekCard.innerHTML = `
-            <li class="trek-title"><strong>${item.name},</strong> ${item.state} - ${item.height}</li>
-    `;
-    trektag.appendChild(trekCard);
-  });
-}
-
 function populatePasses(items) {
   const trekTag = document.getElementById("passes");
   items.forEach((item) => {
@@ -347,7 +336,14 @@ function populateExp_Edu(items, id) {
       spanTimelineLocation.className = "timeline-location";
       spanTimelineLocation.innerHTML = " • " + items[i].location;
       spanTimelineLocation.style.fontStyle = "italic";
-      spanTimelineLocation.style.color = "#666";
+      spanTimelineLocation.style.color = "#C8A2C8";
+      // ADD OUTLINE FOR TEXT #C8A2C8
+      spanTimelineLocation.style.textShadow = `
+        -1px -1px 0 white,
+        1px -1px 0 white,
+        -1px 1px 0 white,
+        1px 1px 0 white
+      `;
       spanTimelineSublabel.append(spanTimelineLocation);
     }
 
@@ -473,7 +469,6 @@ populateSkills(skills, "skills");
 fetchRepositories(); // New simplified GitHub API function
 //fetchGitConnectedData(gitConnected); // Disabled: API not found
 populateExp_Edu(experience, "experience");
-populateTrekking(trekking);
 populatePasses(passes);
 populateExp_Edu(education, "education");
 populateLinks(footer, "footer");
