@@ -27,7 +27,7 @@ export const experience = [  {
   {
     title: "SootMC",
     duration: "July 2023 - February 2024",
-    subtitle: "Trail Developer",
+    subtitle: "Trial Developer",
     location: "Remote",
     details: [
       "Worked on Java and Kotlin-based Minecraft plugins, contributing to the SootMC project.",
@@ -70,32 +70,32 @@ export const experience = [  {
 
 export const certifications = [
   {
-    title: "Java Programming Certification",
-    issuer: "Oracle",
-    duration: "June 2023 - No Expiry",
-    credentialId: "OCP-123456",
+    title: "CS50's Introduction to Computer Science",
+    issuer: "CS50",
+    duration: "Febuary 2023- No Expiry",
+    credentialId: "e1a2f04e-d4b0-46b3-938c-059eeaa5ce1b",
     details: [
-      "Demonstrates proficiency in Java programming fundamentals",
-      "Object-oriented programming concepts and best practices",
-      "Java collections, exception handling, and I/O operations"
+      "This certificate verifies the completion of CS50's Introduction to Computer Science course.",
+      "It covers fundamental programming concepts, algorithms, data structures, and software engineering principles.",
+      "The course is designed to provide a strong foundation in computer science and programming skills."
     ],
-    tags: ["Java", "OOP", "Programming", "Oracle"],
+    tags: [""],
     icon: "certificate",
-    verificationUrl: "https://education.oracle.com/verify"
+    verificationUrl: "https://certificates.cs50.io/e1a2f04e-d4b0-46b3-938c-059eeaa5ce1b.pdf?size=letter"
   },
   {
-    title: "Game Development with Unity",
-    issuer: "Unity Technologies",
-    duration: "March 2024 - No Expiry",
-    credentialId: "UNITY-789012",
+    title: "edX Verified Certificate for CS50's Introduction to Computer Science",
+    issuer: "edX",
+    duration: "Febuary 2023 - No Expiry",
+    credentialId: "4a3490195128403ab3f27709f6c6ed08",
     details: [
-      "Advanced Unity game engine development skills",
-      "C# scripting for game mechanics and systems",
-      "3D graphics programming and optimization techniques"
+      "This certificate verifies the completion of CS50's Introduction to Computer Science course on edX.",
+      "It covers fundamental programming concepts, algorithms, data structures, and software engineering principles.",
+      "The course is designed to provide a strong foundation in computer science and programming skills."
     ],
-    tags: ["Unity", "C#", "Game Development", "3D Graphics"],
+    tags: [""],
     icon: "gamepad",
-    verificationUrl: "https://unity.com/learn/certification"
+    verificationUrl: "https://courses.edx.org/certificates/4a3490195128403ab3f27709f6c6ed08"
   },
   // Add more certifications here
 ];
@@ -197,4 +197,8 @@ link: "https://github.com/vinaysomawat/vinaysomawat.github.io",
 
 export const passes = [
   // Add your passes data here, or leave empty if not needed
+];
+
+export const trekking = [
+  // Add your trekking data here, or leave empty if not needed
 ];

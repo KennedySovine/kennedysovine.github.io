@@ -5,6 +5,8 @@ import {
   experience,
   passes,
   footer,
+  trekking,
+  certifications,
 } from "./user-data/data.js";
 
 import { URLs } from "./user-data/urls.js";
@@ -457,11 +459,12 @@ function getElement(tagName, className) {
 
 populateBio(bio, "bio");
 populateSkills(skills, "skills");
-fetchRepositories(); // New simplified GitHub API function
-//fetchGitConnectedData(gitConnected); // Disabled: API not found
+fetchRepositories();
 populateExp_Edu(experience, "experience");
-populatePasses(passes);
 populateExp_Edu(education, "education");
+populateCertifications(certifications, "certifications");
+populateTrekking(trekking);
+populatePasses(passes);
 populateLinks(footer, "footer");
 
 // Initialize LinkedIn integration if enabled
@@ -1101,3 +1104,74 @@ function showDataSourceIndicator(source, lastUpdated) {
 //       container.innerHTML = "<p style='color: #c00;'>Unable to load contributions graph.</p>";
 //     });
 // })();
+
+function populateCertifications(items, id) {
+  const main = document.getElementById(id);
+  if (!main) return;
+  
+  items.forEach(item => {
+    // Create subtitle with issuer
+    const spanSub = document.createElement("span");
+    spanSub.className = "timeline-sublabel";
+    spanSub.innerHTML = item.issuer;
+
+    // Create main title with duration
+    const h2 = document.createElement("h2");
+    h2.innerHTML = item.title;
+    const spanDur = document.createElement("span");
+    spanDur.innerHTML = item.duration;
+    h2.append(spanDur);
+
+    // Create label container
+    const divLabel = document.createElement("div");
+    divLabel.className = "timeline-label";
+    divLabel.append(h2, spanSub);
+
+    // Add details
+    item.details.forEach(detail => {
+      const p = document.createElement("p");
+      p.className = "timeline-text";
+      p.innerHTML = "■ " + detail;
+      divLabel.append(p);
+    });
+
+    // Add verification link if available
+    if (item.verificationUrl) {
+      const a = document.createElement("a");
+      a.href = item.verificationUrl;
+      a.target = "_blank";
+      a.textContent = "View Certificate";
+      a.className = "badge";
+      a.style.marginRight = "8px";
+      divLabel.append(a);
+    }
+
+    // Create icon
+    const iconEl = document.createElement("i");
+    iconEl.className = "fa fa-" + item.icon;
+    const divIcon = document.createElement("div");
+    divIcon.className = "timeline-icon color-2";
+    divIcon.append(iconEl);
+
+    // Create timeline entry
+    const inner = document.createElement("div");
+    inner.className = "timeline-entry-inner";
+    inner.append(divIcon, divLabel);
+
+    const article = document.createElement("article");
+    article.className = "timeline-entry animate-box";
+    article.append(inner);
+    main.append(article);
+  });
+
+  // Add terminal marker
+  const endIcon = document.createElement("div");
+  endIcon.className = "timeline-icon color-2";
+  const endInner = document.createElement("div");
+  endInner.className = "timeline-entry-inner";
+  endInner.append(endIcon);
+  const endArticle = document.createElement("article");
+  endArticle.className = "timeline-entry begin animate-box";
+  endArticle.append(endInner);
+  main.append(endArticle);
+}
