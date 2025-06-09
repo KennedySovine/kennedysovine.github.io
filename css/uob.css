@@ -35,9 +35,9 @@ body {
 
 .uob-year-btn.active, 
 .uob-year-btn:focus { 
-    background: #6a5acd; 
+    background: #8a7bc8; 
     color: #fff; 
-    border-color: #6a5acd; 
+    border-color: #8a7bc8; 
 }
 
 .uob-semester-labels { 
@@ -89,23 +89,26 @@ body {
     border: 2px solid #bdbdbd; 
     background: #f5f5f5; 
     font-size: 1rem; 
-    font-weight: 500; 
+    font-weight: bold; 
     cursor: pointer; 
     text-align: left; 
     transition: background 0.2s, border 0.2s; 
     position: relative; 
 }
 
+.uob-module-btn:hover {
+    background: #e1d7f5;
+    border-color: #b8a7d9;
+}
+
 .uob-module-btn.active, 
 .uob-module-btn:focus { 
-    background: #b19cd9; 
+    background: #c8b5e3; 
     color: #fff; 
-    border-color: #6a5acd; 
+    border-color: #8a7bc8; 
 }
 
 .uob-module-btn.sem3 { 
-    background: #e6e6fa; 
-    border-color: #b19cd9; 
     font-weight: 600;
     width: 100%;
 }
@@ -118,6 +121,8 @@ body {
     margin-top: 32px; 
     padding-left: 10px;
     padding-right: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 32px;
 }
 
 .uob-info-main { 
@@ -139,7 +144,54 @@ body {
     font-size: 1rem; 
     color: #222; 
     margin-bottom: 0; 
-    white-space: pre-line; 
+    line-height: 1.6;
+}
+
+.uob-info-readme h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0 0 16px 0;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+}
+
+.uob-info-readme h2 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 20px 0 12px 0;
+    color: #333;
+}
+
+.uob-info-readme h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 16px 0 8px 0;
+    color: #333;
+}
+
+.uob-info-readme p {
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+}
+
+.uob-info-readme ul {
+    margin: 0 0 12px 0;
+    padding-left: 20px;
+}
+
+.uob-info-readme li {
+    margin: 4px 0;
+    line-height: 1.5;
+}
+
+.uob-info-readme code {
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #d73a49;
 }
 
 .uob-info-bullets { 

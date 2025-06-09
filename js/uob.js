@@ -6,7 +6,7 @@ let currentYear = "2022 - 2023";
 let selectedModule = null;
 
 // DOM elements
-let yearButtons, moduleContainers, moduleTitle, moduleReadme, moduleBullets;
+let yearButtons, moduleContainers, moduleReadme, moduleBullets;
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
@@ -16,14 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
         year2: document.getElementById('year2-btn'),
         year3: document.getElementById('year3-btn')
     };
-    
-    moduleContainers = {
+      moduleContainers = {
         semester1: document.getElementById('semester1-modules'),
         semester2: document.getElementById('semester2-modules'),
         semester3: document.getElementById('semester3-modules')
     };
     
-    moduleTitle = document.getElementById('module-title');
     moduleReadme = document.getElementById('module-readme');
     moduleBullets = document.getElementById('module-bullets');
     
@@ -154,12 +152,9 @@ function selectFirstModule() {
 }
 
 function updateModuleInfo(module) {
-    // Update title
-    moduleTitle.textContent = module.title;
-    
-    // Update readme (simulate GitHub readme content)
+    // Update readme with GitHub-style markup rendering
     const readmeContent = generateReadmeContent(module);
-    moduleReadme.textContent = readmeContent;
+    moduleReadme.innerHTML = renderMarkdown(readmeContent);
     
     // Update bullet points
     updateBulletPoints(module.content);
@@ -197,6 +192,39 @@ This module includes various forms of assessment including practical work, writt
 For more information about this module, please refer to the official University of Brighton course documentation.`;
 
     return readmeText;
+}
+
+function renderMarkdown(text) {
+    // Simple markdown-to-HTML converter for basic GitHub README formatting
+    let html = text;
+    
+    // Convert headers (# ## ###)
+    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    
+    // Convert code blocks with backticks
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    
+    // Convert bullet points
+    html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
+    
+    // Wrap consecutive list items in ul tags
+    html = html.replace(/(<li>.*<\/li>\s*)+/g, function(match) {
+        return '<ul>' + match + '</ul>';
+    });
+    
+    // Convert line breaks to paragraphs
+    html = html.split('\n\n').map(paragraph => {
+        paragraph = paragraph.trim();
+        if (!paragraph) return '';
+        if (paragraph.startsWith('<h') || paragraph.startsWith('<ul') || paragraph.startsWith('<li')) {
+            return paragraph;
+        }
+        return '<p>' + paragraph.replace(/\n/g, '<br>') + '</p>';
+    }).join('\n');
+    
+    return html;
 }
 
 function updateBulletPoints(content) {
