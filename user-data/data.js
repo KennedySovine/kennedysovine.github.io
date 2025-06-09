@@ -197,12 +197,11 @@ export const modules = [{
       "Designing level encounters and puzzles"
     ],
     githubrepo: "https://github.com/KennedySovine/CI413-Game-Level-and-Asset-Design",
-  },
-  // LEVEL 5 MODULES
+  },  // LEVEL 5 MODULES
   {
     title: "CI541 - Game Development Frameworks",
-    // Assuming Level 5 is the academic year after 2022-2023
-    semester: "2",
+    year: "2023 - 2024",
+    semester: "1",
     details: [],
     content: [
       "How to choose a game framework",
@@ -218,7 +217,7 @@ export const modules = [{
       "Game state serialisation",
       "Advanced materials"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI541-Game_Development_Frameworks",
     },
     {
     title: "CI587 - Web Based Game Development",
@@ -234,7 +233,7 @@ export const modules = [{
       "Isometric views",
       "Networked games – challenges and opportunities"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI587-Web-Development-For-Games",
     },
     {
     title: "CI516 - Artificial Intelligence for Games",
@@ -252,7 +251,7 @@ export const modules = [{
       "Decision making",
       "Behaviour AI"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI516-AI-for-Games",
     },
     {
     title: "CI517 - Game Engine Fundamentals",
@@ -268,7 +267,7 @@ export const modules = [{
       "Scripting and domain-specific languages",
       "External tool integration"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI517_Game_Engine_Fundamentals",
     },
     {
     title: "CI536 - Integrated Group Project",
@@ -284,7 +283,7 @@ export const modules = [{
       "Testing",
       "Project documentation"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/Integrated-Group-Project",
     },
     {
     title: "CI520 - Narrative Game Design",
@@ -302,7 +301,7 @@ export const modules = [{
       "Cutscenes and Cinematics",
       "Tools to create narrative-driven games"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/Project-new-world",
     },
   // LEVEL 6 MODULES
   {
@@ -319,7 +318,7 @@ export const modules = [{
       "Report writing",
       "Project presentation and Exhibition"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/Final-Project",
   },
   {
     title: "CI628 - Multiplayer Game Development",
@@ -332,7 +331,7 @@ export const modules = [{
       "Multiplayer game architectures",
       "Implementation issues and techniques"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI628-Multiplayer-Game-Development",
   },
   {
     title: "CI606 - Virtual Reality Systems", // Option for semester 1
@@ -348,12 +347,12 @@ export const modules = [{
       "Interaction methods",
       "Motion tracking"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI606-Virtual-Reality",
   },
   {
     title: "CI620 - Intellectual Property Law and IT", // Option for semester 2
     year: "2024 - 2025",
-    semester: "1",
+    semester: "2",
     details: [],
     content: [
       "Why have an Intellectual Property system?",
@@ -380,7 +379,7 @@ export const modules = [{
       "Definition of real-time systems: hard and soft real-time clocks and timeouts. Scheduling. Real-time execution environments",
       "The web as a real-time system"
     ],
-    githubrepo: "",
+    githubrepo: "https://github.com/KennedySovine/CI646-Programming_Languages_Concurrency_and_ClientSideComputing",
   }
 ];
 
