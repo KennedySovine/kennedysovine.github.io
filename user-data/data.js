@@ -418,7 +418,7 @@ export const certifications = [
 export const education = [
   {
     title: "University of Brighton",
-    duration: "September 2022 - June 2025",
+    duration: "September 2022 - Present",
     location: "Brighton, England",
     subtitle: "Bachelor of Science in Computer Science for Games",
     details: ["Activities and societies: Archery, eSports, GameJams,",
