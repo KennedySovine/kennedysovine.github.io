@@ -268,13 +268,13 @@ figure figcaption {
 }
 
 #colorlib-main {
-  width: calc(100% - 340px);
-  float: right;
+  margin-left: 360px; /* Sidebar occupies 360px */
   transition: 0.5s;
+  /* Removed explicit width and float to allow natural fluid layout */
 }
 @media screen and (max-width: 768px) {
   #colorlib-main {
-    width: 100%;
+    margin-left: 0;
     padding: 0 1em;
   }
 }
@@ -1890,6 +1890,35 @@ span {
 	.timeline-icon {
 		display: none !important;
 	}
+}
+
+.edu-exp-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.edu-exp-row > section {
+  flex: 0 0 48%;
+  width: 48% !important;
+  clear: none !important;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+@media (max-width: 1200px) {
+  .edu-exp-row {
+    flex-direction: column;
+  }
+  .edu-exp-row > section {
+    flex: 1 1 100%;
+    width: 100% !important;
+  }
 }
 
 :root {

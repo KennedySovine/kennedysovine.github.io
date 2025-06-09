@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University of Brighton Modules</title>    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/uob.css">
+</head>
+<body>
+    <div class="uob-header">University of Brighton</div>
+    <div class="uob-year-buttons">
+        <button class="uob-year-btn active" id="year1-btn">Year 1</button>
+        <button class="uob-year-btn" id="year2-btn">Year 2</button>
+        <button class="uob-year-btn" id="year3-btn">Year 3</button>
+    </div>    <div class="uob-semester-labels">
+        <div class="uob-sem-label">Semester 1</div>
+        <div class="uob-sem-label">Semester 2</div>
+    </div>
+    <div class="uob-semester3-row">
+        <div class="uob-semester3-container" id="semester3-modules"></div>
+    </div>
+    <div class="uob-modules-row">
+        <div class="uob-modules-col" id="semester1-modules"></div>
+        <div class="uob-modules-col" id="semester2-modules"></div>
+    </div>    <div class="uob-info-section">
+        <div class="uob-info-main">
+            <div class="uob-info-readme" id="module-readme">Readme from Repo</div>
+        </div>
+        <div class="uob-module-sidebar">
+            <div class="uob-info-bullets">
+                <div class="uob-info-bullets-title">Module Content</div>
+                <ul id="module-bullets"></ul>
+            </div>
+            <button id="repo-link-btn" class="uob-repo-btn">
+                Go To Repository
+                <img src="EXTERNALLINK.png" alt="External Link" class="uob-repo-icon" />
+            </button>
+        </div>
+    </div>
+    <script type="module" src="js/uob.js"></script>
+</body>
+</html>
