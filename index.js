@@ -387,7 +387,7 @@ function populateExp_Edu(items, id) {
       article.addEventListener("click", function(e) {
         e.preventDefault();
         console.log("University of Brighton clicked!");
-        window.open("UOB.html", "_blank");
+        window.location.href = "UOB.html";
       });
       
       // Add hover effect to indicate it's clickable

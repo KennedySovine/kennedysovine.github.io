@@ -8,7 +8,7 @@ body {
 
 .uob-header { 
     text-align: center; 
-    font-size: 2.5rem; 
+    font-size: 4rem; 
     font-weight: bold; 
     margin-top: 32px; 
     margin-bottom: 24px; 
@@ -116,13 +116,15 @@ body {
 .uob-info-section { 
     display: flex; 
     justify-content: center; 
-    align-items: flex-start; 
+    align-items: flex-start; /* Changed from flex-start to center for vertical alignment */
     gap: 32px; 
     margin-top: 32px; 
     padding-left: 10px;
     padding-right: 10px;
     border-top: 1px solid #ddd;
     padding-top: 32px;
+    position: relative; /* Added for potential absolute positioning of children if needed */
+    flex-wrap: wrap; /* Allow items to wrap if space is tight, especially with the button */
 }
 
 .uob-info-main { 
@@ -194,6 +196,15 @@ body {
     color: #d73a49;
 }
 
+/* New wrapper for module content and repo button */
+.uob-module-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between module content and button */
+    min-width: 200px; /* Ensure it doesn't get too squished */
+}
+
 .uob-info-bullets { 
     flex: 1; 
     background: #f8f8ff; 
@@ -214,6 +225,34 @@ body {
 .uob-info-bullets ul { 
     padding-left: 18px; 
     margin: 0; 
+}
+
+.uob-repo-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    /* margin-top: 15px; */ /* Removed, handled by sidebar gap */
+    /* margin-bottom: 15px; */ /* Removed, handled by sidebar gap or parent */
+    background-color: #8a7bc8; 
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    /* flex-basis: 100%; */ /* No longer needed as it's in a column flex */
+}
+
+.uob-repo-btn:hover {
+    background-color: #7a6bb5; /* Slightly darker on hover */
+}
+
+.uob-repo-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
 }
 
 @media (max-width: 900px) {
