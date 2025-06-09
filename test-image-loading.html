@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Image Loading</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        img { max-width: 300px; margin: 10px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Image Loading Test</h1>
+    
+    <div class="test-section">
+        <h2>Test: HTML img tags with different paths</h2>
+        <div>
+            <h3>Relative path with ./IMAGES/</h3>
+            <img id="test1" src="./IMAGES/KARMA_KNIFE_CA_1.png" alt="Test 1">
+            <span id="result1"></span>
+        </div>
+        
+        <div>
+            <h3>Relative path with IMAGES/</h3>
+            <img id="test2" src="IMAGES/KARMA_KNIFE_CA_1.png" alt="Test 2">
+            <span id="result2"></span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test: Simulated README content processing</h2>
+        <div id="processed-content"></div>
+    </div>
+
+    <script type="module">
+        // Import the renderMarkdown function
+        import { modules } from './user-data/data.js';
+        
+        // Test image loading events
+        document.getElementById('test1').addEventListener('load', () => {
+            document.getElementById('result1').innerHTML = '<span class="success">✓ Loaded successfully</span>';
+        });
+        document.getElementById('test1').addEventListener('error', () => {
+            document.getElementById('result1').innerHTML = '<span class="error">✗ Failed to load</span>';
+        });
+        
+        document.getElementById('test2').addEventListener('load', () => {
+            document.getElementById('result2').innerHTML = '<span class="success">✓ Loaded successfully</span>';
+        });
+        document.getElementById('test2').addEventListener('error', () => {
+            document.getElementById('result2').innerHTML = '<span class="error">✗ Failed to load</span>';
+        });
+
+        // Test the actual renderMarkdown function
+        const testMarkdown = `
+        <img src="https://github.com/KennedySovine/CI474_Introduction_3D_Modeling_and_Animation/blob/main/Concept_Art_Assessment1/KARMA_PT_CA_1.png" width="300em" height="300em">
+        <img src="https://github.com/KennedySovine/CI474_Introduction_3D_Modeling_and_Animation/blob/main/Concept_Art_Assessment1/KARMA_KNIFE_CA_1.png" width="300em" height="300em">
+        <img src="https://github.com/KennedySovine/CI474_Introduction_3D_Modeling_and_Animation/blob/main/Concept_Art_Assessment1/KARMA_SHEATH_CA_1.png" width="300em" height="300em">
+        `;
+
+        // We need to copy the renderMarkdown function since it's not exported
+        function renderMarkdown(text, owner, repo, branch) {
+            let html = text;
+            
+            if (owner && repo && branch) {
+                // Handle HTML img tags with GitHub URLs
+                html = html.replace(/<img\\s+[^>]*src\\s*=\\s*["']([^"']+)["'][^>]*>/gi, (match, src) => {
+                    let resolvedUrl = src.trim();
+                    
+                    // Extract filename from the src URL
+                    const filename = resolvedUrl.split('/').pop();
+                    
+                    // List of local images available in IMAGES folder
+                    const localImages = ['KARMA_KNIFE_CA_1.png', 'KARMA_PT_CA_1.png', 'KARMA_SHEATH_CA_1.png'];
+                    
+                    // Check if this image exists locally
+                    if (localImages.includes(filename)) {
+                        resolvedUrl = `./IMAGES/${filename}`;
+                        // Replace the src attribute with the local path
+                        return match.replace(/src\\s*=\\s*["'][^"']+["']/i, `src="${resolvedUrl}"`);
+                    }
+                    
+                    // Return the original img tag if not found locally
+                    return match;
+                });
+            }
+            
+            return html;
+        }
+
+        // Process the test markdown
+        const processedContent = renderMarkdown(testMarkdown, 'KennedySovine', 'CI474_Introduction_3D_Modeling_and_Animation', 'main');
+        document.getElementById('processed-content').innerHTML = processedContent;
+        
+        console.log('Original markdown:', testMarkdown);
+        console.log('Processed content:', processedContent);
+    </script>
+</body>
+</html>

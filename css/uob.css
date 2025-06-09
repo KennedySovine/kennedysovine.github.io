@@ -4,9 +4,35 @@ body {
     font-family: 'Montserrat', Arial, sans-serif; 
     background: #fafbfc; 
     margin: 0; 
+    position: relative;
 }
 
-.uob-header { 
+.uob-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 2px solid #8a7bc8;
+    background: #fff;
+    color: #8a7bc8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.uob-back-btn:hover {
+    background: #8a7bc8;
+    color: #fff;
+    transform: translateX(-2px);
+}
+
+.uob-header {
     text-align: center; 
     font-size: 4rem; 
     font-weight: bold; 

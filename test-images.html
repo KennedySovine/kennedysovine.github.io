@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Test</title>
+</head>
+<body>
+    <h1>Image Loading Test</h1>
+    <p>Testing different image paths:</p>
+    
+    <h3>Path: IMAGES/KARMA_KNIFE_CA_1.png</h3>
+    <img src="IMAGES/KARMA_KNIFE_CA_1.png" alt="Test 1" style="max-width: 200px;">
+    
+    <h3>Path: ./IMAGES/KARMA_KNIFE_CA_1.png</h3>
+    <img src="./IMAGES/KARMA_KNIFE_CA_1.png" alt="Test 2" style="max-width: 200px;">
+    
+    <h3>Full path test</h3>
+    <img src="file:///c:/Users/thatc/Documents/GitHub/kennedysovine.github.io/IMAGES/KARMA_KNIFE_CA_1.png" alt="Test 3" style="max-width: 200px;">
+    
+    <script>
+        // Test if images load
+        const images = document.querySelectorAll('img');
+        images.forEach((img, index) => {
+            img.onload = () => console.log(`Image ${index + 1} loaded successfully`);
+            img.onerror = () => console.log(`Image ${index + 1} failed to load: ${img.src}`);
+        });
+    </script>
+</body>
+</html>

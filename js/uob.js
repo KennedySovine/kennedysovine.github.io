@@ -248,20 +248,57 @@ function generateReadmeContent(module) {
 */
 
 function renderMarkdown(text, owner, repo, branch) {
-    let html = text;
-
-    // Phase 1: Resolve URLs and convert Markdown images and links
+    let html = text;    // Phase 1: Resolve URLs and convert Markdown images and links
     if (owner && repo && branch) {
         // Convert relative Markdown image links: ![alt text](path/to/image.png)
         // Matches if URL does not start with a protocol like http:, mailto:, etc.
         html = html.replace(/!\[(.*?)\]\((?!([a-zA-Z]+:))(.*?)\)/g, (match, altText, protocol, imgUrl) => {
             let resolvedUrl = imgUrl.trim();
-            if (resolvedUrl.startsWith('/')) {
-                resolvedUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}${resolvedUrl}`;
+            
+            // Extract just the filename from the path
+            const filename = resolvedUrl.split('/').pop();
+            
+            // List of local images available in IMAGES folder
+            const localImages = ['KARMA_KNIFE_CA_1.png', 'KARMA_PT_CA_1.png', 'KARMA_SHEATH_CA_1.png'];            // Check if this image exists locally
+            if (localImages.includes(filename)) {
+                resolvedUrl = `./IMAGES/${filename}`;
             } else {
-                resolvedUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${resolvedUrl}`;
+                // Fallback to GitHub raw URL
+                if (resolvedUrl.startsWith('/')) {
+                    resolvedUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}${resolvedUrl}`;
+                } else {
+                    resolvedUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${resolvedUrl}`;
+                }
             }
-            return `<img src="${resolvedUrl}" alt="${altText || 'image'}" style="max-width: 100%; height: auto;">`;
+            return `<img src="${resolvedUrl}" alt="${altText || 'image'}" style="max-width: 100%; height: auto;">`;        });        // Handle HTML img tags with GitHub URLs
+        html = html.replace(/<img\s+[^>]*src\s*=\s*["']([^"']+)["'][^>]*>/gi, (match, src) => {
+            let resolvedUrl = src.trim();
+            
+            // Handle malformed src attributes that contain markdown link syntax
+            // Example: src="[/path/file.png](https://github.com/user/repo/blob/main/path/file.png)"
+            const markdownLinkMatch = resolvedUrl.match(/\[([^\]]+)\]\(([^)]+)\)/);
+            if (markdownLinkMatch) {
+                resolvedUrl = markdownLinkMatch[2]; // Use the URL part of the markdown link
+            }
+            
+            // Extract filename from the src URL
+            const filename = resolvedUrl.split('/').pop();
+            
+            // List of local images available in IMAGES folder
+            const localImages = ['KARMA_KNIFE_CA_1.png', 'KARMA_PT_CA_1.png', 'KARMA_SHEATH_CA_1.png'];
+            
+            // Check if this image exists locally
+            if (localImages.includes(filename)) {
+                resolvedUrl = `./IMAGES/${filename}`;
+                // Replace the src attribute with the local path
+                return match.replace(/src\s*=\s*["'][^"']+["']/i, `src="${resolvedUrl}"`);
+            }
+            
+            // Return the original img tag if not found locally (but with cleaned URL if it was malformed)
+            if (markdownLinkMatch) {
+                return match.replace(/src\s*=\s*["'][^"']+["']/i, `src="${resolvedUrl}"`);
+            }
+            return match;
         });
 
         // Convert relative Markdown links: [link text](path/to/document)

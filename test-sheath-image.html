@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sheath Image Loading</title>
+</head>
+<body>
+    <h1>Testing Sheath Image Loading</h1>
+    
+    <h2>Direct Local Path Test</h2>
+    <img src="./IMAGES/KARMA_SHEATH_CA_1.png" alt="Sheath - Direct Local" style="max-width: 300px; border: 2px solid green;">
+    
+    <h2>Simulated GitHub HTML img tag (what comes from README)</h2>
+    <div id="test-content"></div>
+    
+    <script type="module">
+        // Import the renderMarkdown function (simulated)
+        // Since we can't import directly, we'll recreate the key logic
+        
+        function testRenderMarkdown(htmlContent) {
+            let html = htmlContent;
+              // Handle HTML img tags with GitHub URLs (same logic as in uob.js)
+            html = html.replace(/<img\s+[^>]*src\s*=\s*["']([^"']+)["'][^>]*>/gi, (match, src) => {
+                let resolvedUrl = src.trim();
+                
+                // Handle malformed src attributes that contain markdown link syntax
+                // Example: src="[/path/file.png](https://github.com/user/repo/blob/main/path/file.png)"
+                const markdownLinkMatch = resolvedUrl.match(/\[([^\]]+)\]\(([^)]+)\)/);
+                if (markdownLinkMatch) {
+                    resolvedUrl = markdownLinkMatch[2]; // Use the URL part of the markdown link
+                }
+                
+                // Extract filename from the src URL
+                const filename = resolvedUrl.split('/').pop();
+                
+                // List of local images available in IMAGES folder
+                const localImages = ['KARMA_KNIFE_CA_1.png', 'KARMA_PT_CA_1.png', 'KARMA_SHEATH_CA_1.png'];
+                
+                // Check if this image exists locally
+                if (localImages.includes(filename)) {
+                    resolvedUrl = `./IMAGES/${filename}`;
+                    // Replace the src attribute with the local path
+                    return match.replace(/src\s*=\s*["'][^"']+["']/i, `src="${resolvedUrl}"`);
+                }
+                
+                // Return the original img tag if not found locally (but with cleaned URL if it was malformed)
+                if (markdownLinkMatch) {
+                    return match.replace(/src\s*=\s*["'][^"']+["']/i, `src="${resolvedUrl}"`);
+                }
+                return match;
+            });
+            
+            return html;
+        }
+          // Test with the actual malformed GitHub URL from the README
+        const malformedImgTag = '<img src="[/Concept_Art_Assessment1/KARMA_SHEATH_CA_1.png](https://github.com/KennedySovine/CI474_Introduction_3D_Modeling_and_Animation/blob/main/Concept_Art_Assessment1/KARMA_SHEATH_CA_1.png)" width="300em" height="300em">';
+        
+        const processedHtml = testRenderMarkdown(malformedImgTag);
+        
+        document.getElementById('test-content').innerHTML = processedHtml;
+        
+        console.log('Original HTML:', malformedImgTag);
+        console.log('Processed HTML:', processedHtml);
+        
+        // Test image loading events
+        setTimeout(() => {
+            const images = document.querySelectorAll('img');
+            images.forEach((img, index) => {
+                img.onload = () => console.log(`Image ${index + 1} loaded successfully: ${img.src}`);
+                img.onerror = () => console.log(`Image ${index + 1} failed to load: ${img.src}`);
+            });
+        }, 100);
+    </script>
+</body>
+</html>

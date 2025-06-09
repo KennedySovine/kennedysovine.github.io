@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>README Fetch Test</title>
+</head>
+<body>
+    <h1>Testing README Content Fetch</h1>
+    <div id="output"></div>
+    
+    <script>
+        async function testReadmeFetch() {
+            const owner = "KennedySovine";
+            const repo = "CI474_Introduction_3D_Modeling_and_Animation";
+            const branch = "main";
+            
+            const rawReadmeUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`;
+            
+            try {
+                const response = await fetch(rawReadmeUrl);
+                if (response.ok) {
+                    const content = await response.text();
+                    document.getElementById('output').innerHTML = `
+                        <h3>README Content:</h3>
+                        <pre>${content}</pre>
+                    `;
+                } else {
+                    document.getElementById('output').innerHTML = `<p>Failed to fetch README: ${response.status}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('output').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        testReadmeFetch();
+    </script>
+</body>
+</html>
