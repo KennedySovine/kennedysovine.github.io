@@ -373,19 +373,20 @@ function populateExp_Edu(items, id) {
 
     let divTimelineIcon = document.createElement("div");
     divTimelineIcon.className = "timeline-icon color-2";
-    divTimelineIcon.append(iFa);
-
-    let divTimelineEntryInner = document.createElement("div");
+    divTimelineIcon.append(iFa);    let divTimelineEntryInner = document.createElement("div");
     divTimelineEntryInner.className = "timeline-entry-inner";
     divTimelineEntryInner.append(divTimelineIcon);
-    divTimelineEntryInner.append(divTimelineLabel);    let article = document.createElement("article");
+    divTimelineEntryInner.append(divTimelineLabel);
+    
+    let article = document.createElement("article");
     article.className = "timeline-entry animate-box";
-    article.append(divTimelineEntryInner);
-
-    // Make University of Brighton card clickable to open UOB.html
+    article.append(divTimelineEntryInner);    // Make University of Brighton card clickable to open UOB.html
     if (items[i].title === "University of Brighton") {
+      console.log("Setting up click handler for University of Brighton");
       article.style.cursor = "pointer";
-      article.addEventListener("click", function() {
+      article.addEventListener("click", function(e) {
+        e.preventDefault();
+        console.log("University of Brighton clicked!");
         window.open("UOB.html", "_blank");
       });
       

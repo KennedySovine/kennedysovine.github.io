@@ -70,6 +70,7 @@ export const experience = [  {
 
 export const modules = [{
     title: "CI411 - Introduction to Games Programming",
+    year: "2022 - 2023",
     semester: "3",
     details: [],
     content: [
@@ -84,6 +85,7 @@ export const modules = [{
   },
   {
     title: "CI410  - Introduction to Game Design and Development",
+    year: "2022 - 2023",
     semester: "3",
     details: [],
     content: [
@@ -102,6 +104,7 @@ export const modules = [{
   },
   {
     title: "CI435 - Introduction to Web Development",
+    year: "2022 - 2023",
     semester: "3",
     details: [],
     content: [
@@ -132,6 +135,7 @@ export const modules = [{
   },
   {
     title: "CI474 - Introduction to 3D Modelling and Animation",
+    year: "2022 - 2023",
     semester: "3",
     details: [],
     content: [
@@ -152,6 +156,7 @@ export const modules = [{
   },
   {
     title:"CI465 - Working in the Digital and Games Industries",
+    year: "2022 - 2023",
     semester: "1",
     details: [],
     content: [
@@ -174,6 +179,7 @@ export const modules = [{
   },
   {
     title: "CI413 - Game Level and Asset Design",
+    year: "2022 - 2023",
     semester: "2",
     details: [],
     content: [
@@ -190,6 +196,7 @@ export const modules = [{
       "Designing and creating environments for game levels",
       "Designing level encounters and puzzles"
     ],
+    githubrepo: "https://github.com/KennedySovine/CI413-Game-Level-and-Asset-Design",
   }
 ];
 

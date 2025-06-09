@@ -268,12 +268,13 @@ figure figcaption {
 }
 
 #colorlib-main {
-  padding-left: 360px;
+  margin-left: 360px; /* Sidebar occupies 360px */
   transition: 0.5s;
+  /* Removed explicit width and float to allow natural fluid layout */
 }
 @media screen and (max-width: 768px) {
   #colorlib-main {
-    padding-left: 0;
+    margin-left: 0;
     padding: 0 1em;
   }
 }

@@ -1,0 +1,192 @@
+/* University of Brighton Modules Page Styles */
+
+body { 
+    font-family: 'Montserrat', Arial, sans-serif; 
+    background: #fafbfc; 
+    margin: 0; 
+}
+
+.uob-header { 
+    text-align: center; 
+    font-size: 2.5rem; 
+    font-weight: bold; 
+    margin-top: 32px; 
+    margin-bottom: 24px; 
+    letter-spacing: 1px; 
+}
+
+.uob-year-buttons { 
+    display: flex; 
+    justify-content: center; 
+    gap: 24px; 
+    margin-bottom: 24px; 
+}
+
+.uob-year-btn { 
+    padding: 16px 36px; 
+    font-size: 1.2rem; 
+    border-radius: 12px; 
+    border: 2px solid #bdbdbd; 
+    background: #fff; 
+    cursor: pointer; 
+    font-weight: 600; 
+    transition: background 0.2s, border 0.2s; 
+}
+
+.uob-year-btn.active, 
+.uob-year-btn:focus { 
+    background: #6a5acd; 
+    color: #fff; 
+    border-color: #6a5acd; 
+}
+
+.uob-semester-labels { 
+    display: flex; 
+    justify-content: center; 
+    gap: 120px; 
+    margin-bottom: 8px; 
+}
+
+.uob-sem-label { 
+    color: #b0b0b0; 
+    font-size: 1.1rem; 
+    font-weight: 500; 
+    letter-spacing: 0.5px; 
+}
+
+.uob-modules-row { 
+    display: flex; 
+    justify-content: center; 
+    gap: 32px; 
+    margin-bottom: 16px; 
+}
+
+.uob-modules-col { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    min-width: 220px; 
+}
+
+.uob-semester3-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.uob-semester3-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 472px; /* 220px + 220px + 32px gap */
+}
+
+.uob-module-btn { 
+    padding: 14px 18px; 
+    border-radius: 10px; 
+    border: 2px solid #bdbdbd; 
+    background: #f5f5f5; 
+    font-size: 1rem; 
+    font-weight: 500; 
+    cursor: pointer; 
+    text-align: left; 
+    transition: background 0.2s, border 0.2s; 
+    position: relative; 
+}
+
+.uob-module-btn.active, 
+.uob-module-btn:focus { 
+    background: #b19cd9; 
+    color: #fff; 
+    border-color: #6a5acd; 
+}
+
+.uob-module-btn.sem3 { 
+    background: #e6e6fa; 
+    border-color: #b19cd9; 
+    font-weight: 600;
+    width: 100%;
+}
+
+.uob-info-section { 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; 
+    gap: 32px; 
+    margin-top: 32px; 
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.uob-info-main { 
+    flex: 2; 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); 
+    padding: 24px; 
+    min-width: 320px; 
+}
+
+.uob-info-title { 
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    margin-bottom: 12px; 
+}
+
+.uob-info-readme { 
+    font-size: 1rem; 
+    color: #222; 
+    margin-bottom: 0; 
+    white-space: pre-line; 
+}
+
+.uob-info-bullets { 
+    flex: 1; 
+    background: #f8f8ff; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); 
+    padding: 20px 24px; 
+    min-width: 200px; 
+
+}
+
+.uob-info-bullets-title { 
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    margin-bottom: 10px; 
+    
+}
+
+.uob-info-bullets ul { 
+    padding-left: 18px; 
+    margin: 0; 
+}
+
+@media (max-width: 900px) {
+    .uob-info-section { 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 18px; 
+    }
+    
+    .uob-semester-labels { 
+        gap: 60px; 
+    }
+    
+    .uob-modules-row { 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 16px; 
+    }
+    
+    .uob-modules-col { 
+        width: 100%; 
+        max-width: 300px; 
+    }
+    
+    .uob-semester3-container {
+        max-width: 300px;
+    }
+}
