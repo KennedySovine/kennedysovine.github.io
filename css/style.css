@@ -2033,7 +2033,7 @@ hr {
 .repo-card {
     background-color: #fff;
     border-radius: 8px;
-    padding: 20px;
+    padding: 16px;
     /* Remove margin that could break flex row */
     margin: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -2043,8 +2043,8 @@ hr {
       opacity 0.4s;
     opacity: 0.7;
     z-index: 1;
-    width: 400px !important;
-    height: 240px !important;
+    width: 320px !important;
+    height: 200px !important;
     max-width: 90vw;
     max-height: 90vw;
     margin: 0 24px;
@@ -2058,34 +2058,34 @@ hr {
   flex-wrap: nowrap;
   overflow-x: auto;
   padding: 32px 0;
-  min-height: 260px;
+  min-height: 220px;
 }
 
 /* Responsive: On small screens, show 2 cards side by side, make them wider */
 @media (max-width: 900px) {
   .repo-card {
-    width: 48vw !important;
-    min-width: 240px;
-    max-width: 95vw;
-    height: 200px !important;
+    width: 40vw !important;
+    min-width: 180px;
+    max-width: 90vw;
+    height: 160px !important;
     margin: 0 8px;
-    font-size: 1em;
+    font-size: 0.9em;
   }
   #repos {
     flex-wrap: wrap;
     justify-content: center;
-    min-height: 220px;
+    min-height: 180px;
   }
 }
 
 @media (max-width: 600px) {
   .repo-card {
-    width: 48vw !important;
-    min-width: 160px;
-    max-width: 98vw;
-    height: 180px !important;
+    width: 42vw !important;
+    min-width: 140px;
+    max-width: 95vw;
+    height: 150px !important;
     margin: 0 4px 16px 4px;
-    font-size: 0.95em;
+    font-size: 0.85em;
   }
   #repos {
     flex-wrap: wrap;

@@ -239,9 +239,7 @@ function populateRepo(items, id) {
 
   for (let i = 0; i < count; i++) {
     const item = items[i];
-    if (!item) continue;
-
-    const repoCard = document.createElement("div");
+    if (!item) continue;    const repoCard = document.createElement("div");
     repoCard.className = "repo-card";
     repoCard.style = `
           flex: 1 0 48%;
@@ -249,8 +247,8 @@ function populateRepo(items, id) {
           flex-direction: column;
           justify-content: space-between;
           border-radius: 12px;
-          padding: 16px;
-          font-size: 14px;
+          padding: 14px;
+          font-size: 13px;
           background: linear-gradient(135deg, #b19cd9, #6a5acd);
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
           transition: transform 0.2s ease-in-out;
@@ -262,18 +260,14 @@ function populateRepo(items, id) {
     repoLink.target = "_blank";
     repoLink.style = "text-decoration: none; color: black; display: block; height: 100%;";
 
-    repoCard.appendChild(repoLink);
-
-    const repoName = document.createElement("h4");
+    repoCard.appendChild(repoLink);    const repoName = document.createElement("h4");
     repoName.className = "repo-heading";
     repoName.innerHTML = item.name || 'Unknown Repository';
-    repoName.style = "margin: 0; font-size: 18px; font-weight: bold;";
-    repoLink.appendChild(repoName);
-
-    const repoDescription = document.createElement("p");
+    repoName.style = "margin: 0; font-size: 16px; font-weight: bold;";
+    repoLink.appendChild(repoName);    const repoDescription = document.createElement("p");
     repoDescription.className = "repo-description";
     repoDescription.innerHTML = item.description || 'No description available';
-    repoDescription.style = "margin-top: 8px; font-size: 12px; color: #555;";
+    repoDescription.style = "margin-top: 6px; font-size: 11px; color: #555;";
     repoLink.appendChild(repoDescription);
 
     const statsRow = document.createElement("div");
@@ -691,52 +685,52 @@ async function fetchRepositories() {
 // NEW 3-CARD LAYERED CAROUSEL IMPLEMENTATION
 function displayRepositoryCarousel3Cards(repos) {
   const repoContainer = document.getElementById("repos");
-  let currentCenterIndex = 0;
-
-  // Create 3-card layered carousel container
+  let currentCenterIndex = 0;  // Create 3-card layered carousel container
   repoContainer.innerHTML = `
-    <div style="position: relative; width: 100%; margin: 0 auto;">
+    <div style="position: relative; width: 100%; margin: 0 auto; max-width: 1200px;">
       <div id="repo-carousel" style="
         width: 100%;
-        min-height: 320px;
+        min-height: ${window.innerWidth <= 768 ? '220px' : '280px'};
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
-        gap: 32px;
+        gap: 20px;
         perspective: 1000px;
-      "></div>
-      <div style="text-align: center; margin-top: 24px;">
+        padding: 0 20px;
+        box-sizing: border-box;
+      "></div><div style="text-align: center; margin-top: 20px;">
         <button id="prev-repo" style="
           background: #6a5acd;
           border: none;
           border-radius: 50%;
-          width: 50px;
-          height: 50px;
-          margin: 0 15px;
+          width: 45px;
+          height: 45px;
+          margin: 0 12px;
           cursor: pointer;
-          font-size: 20px;
+          font-size: 18px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: white;
         " onmouseover="this.style.transform='scale(1.1) rotate(-5deg)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.25)'" 
            onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">←</button>
-        <span id="repo-counter" style="margin: 0 20px; font-weight: bold; font-size: 16px;"></span>
+        <span id="repo-counter" style="margin: 0 16px; font-weight: bold; font-size: 15px; color: #333;"></span>
         <button id="next-repo" style="
           background: #6a5acd;
           border: none;
           border-radius: 50%;
-          width: 50px;
-          height: 50px;
-          margin: 0 15px;
+          width: 45px;
+          height: 45px;
+          margin: 0 12px;
           cursor: pointer;
-          font-size: 20px;
+          font-size: 18px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: white;
         " onmouseover="this.style.transform='scale(1.1) rotate(5deg)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.25)'" 
            onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">→</button>
-      </div>
-      <div style="text-align: center; margin-top: 16px;">
-        <div id="slide-indicators" style="display: flex; justify-content: center; gap: 8px;"></div>
+      </div>      <div style="text-align: center; margin-top: 12px;">
+        <div id="slide-indicators" style="display: flex; justify-content: center; gap: 6px;"></div>
       </div>
     </div>
   `;
@@ -745,27 +739,45 @@ function displayRepositoryCarousel3Cards(repos) {
   function createRepoCard(repo, position) {
     const card = document.createElement("div");
     card.className = `repo-card repo-card-${position}`;
-    card.dataset.repoUrl = repo.url;
-
-    // Responsive sizing
-    let cardWidth = 420;
-    let cardHeight = 260;
-    if (window.innerWidth < 900) {
-      cardWidth = Math.max(window.innerWidth * 0.48, 220);
+    card.dataset.repoUrl = repo.url;    // Responsive sizing - optimized for both desktop and mobile
+    let cardWidth = 320;
+    let cardHeight = 200;
+    let cardPadding = 20;
+    let fontSize = {
+      title: 20,
+      description: 14,
+      stats: 12
+    };
+    
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Mobile single-card layout: larger card for better visibility
+      cardWidth = Math.min(320, window.innerWidth * 0.9);
       cardHeight = 200;
-    }
-    if (window.innerWidth < 600) {
-      cardWidth = Math.max(window.innerWidth * 0.48, 160);
+      cardPadding = 20;
+      fontSize = {
+        title: 18,
+        description: 14,
+        stats: 12
+      };
+    } else if (window.innerWidth < 900) {
+      // Tablet size: smaller layered cards
+      cardWidth = Math.min(280, window.innerWidth * 0.75);
       cardHeight = 180;
-    }
-
-    // Base styles for all cards
+      cardPadding = 16;
+      fontSize = {
+        title: 18,
+        description: 13,
+        stats: 11
+      };
+    }// Base styles for all cards
     card.style.cssText = `
       position: absolute;
       width: ${cardWidth}px;
       height: ${cardHeight}px;
-      padding: 24px;
-      border-radius: 16px;
+      padding: ${cardPadding}px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #b19cd9, #6a5acd);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       overflow: hidden;
@@ -775,49 +787,60 @@ function displayRepositoryCarousel3Cards(repos) {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-    `;
-
-    // Position-specific styles and transitions
-    if (position === "left") {
-      card.style.cssText += `
-        left: 50px;
-        transform: translateY(-50%) scale(0.85);
-        opacity: 0.7;
-        z-index: 1;
-        cursor: default;
-        filter: blur(0.5px) brightness(0.95);
-      `;
-    } else if (position === "center") {
+      box-sizing: border-box;
+    `;    // Position-specific styles and transitions
+    if (isMobile && position === "center") {
+      // Mobile center card: no layered effect, just centered
       card.style.cssText += `
         left: 50%;
-        transform: translateX(-50%) translateY(-50%) scale(1.12) translateY(-10px);
+        transform: translateX(-50%) translateY(-50%);
         opacity: 1;
         z-index: 3;
         cursor: pointer;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         pointer-events: auto;
       `;
-    } else if (position === "right") {
-      card.style.cssText += `
-        right: 50px;
-        left: auto;
-        transform: translateY(-50%) scale(0.85);
-        opacity: 0.7;
-        z-index: 1;
-        cursor: default;
-        filter: blur(0.5px) brightness(0.95);
-      `;
-    }
-
-    card.innerHTML = `
-      <div style="font-size: 22px; font-weight: bold; margin-bottom: 10px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+    } else if (!isMobile) {
+      // Desktop layered layout
+      if (position === "left") {
+        card.style.cssText += `
+          left: 20px;
+          transform: translateY(-50%) scale(0.85);
+          opacity: 0.7;
+          z-index: 1;
+          cursor: default;
+          filter: blur(0.5px) brightness(0.95);
+        `;
+      } else if (position === "center") {
+        card.style.cssText += `
+          left: 50%;
+          transform: translateX(-50%) translateY(-50%) scale(1.05);
+          opacity: 1;
+          z-index: 3;
+          cursor: pointer;
+          box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+          pointer-events: auto;
+        `;
+      } else if (position === "right") {
+        card.style.cssText += `
+          right: 20px;
+          left: auto;
+          transform: translateY(-50%) scale(0.85);
+          opacity: 0.7;
+          z-index: 1;
+          cursor: default;
+          filter: blur(0.5px) brightness(0.95);
+        `;
+      }
+    }card.innerHTML = `
+      <div style="font-size: ${fontSize.title}px; font-weight: bold; margin-bottom: 8px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
         ${repo.name}
-        ${repo.isPinned ? '<span style="background: #4169e1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 8px;">📌</span>' : ''}
+        ${repo.isPinned ? '<span style="background: #4169e1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px;">📌</span>' : ''}
       </div>
-      <div style="font-size: 15px; color: #666; margin-bottom: 16px; height: 48px; overflow: hidden; line-height: 1.4;">${repo.description || "No description available"}</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #555;">
+      <div style="font-size: ${fontSize.description}px; color: #666; margin-bottom: 12px; flex-grow: 1; overflow: hidden; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${repo.description || "No description available"}</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: ${fontSize.stats}px; color: #555; margin-top: auto;">
         <span style="display: flex; align-items: center; gap: 4px;">
-          <span style="width: 10px; height: 10px; background: #4169e1; border-radius: 50%;"></span>
+          <span style="width: 8px; height: 8px; background: #4169e1; border-radius: 50%;"></span>
           ${repo.language || "N/A"}
         </span>
         <span style="display: flex; align-items: center; gap: 4px;">
@@ -831,8 +854,7 @@ function displayRepositoryCarousel3Cards(repos) {
 
     return card;
   }
-
-  // Update display with 3-card layout and smooth animations
+  // Update display with responsive layout - 3-card on desktop, 1-card on mobile
   function updateDisplay(direction = "none") {
     const carousel = document.getElementById("repo-carousel");
     carousel.innerHTML = "";
@@ -843,22 +865,31 @@ function displayRepositoryCarousel3Cards(repos) {
     const centerIndex = currentCenterIndex;
     const rightIndex = (currentCenterIndex + 1) % total;
 
-    // Always render left, center, right cards (even if only 1 or 2 repos)
-    if (total === 1) {
+    // Check if sidebar is collapsed (mobile view)
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Mobile: Show only center card (single card view)
       const centerCard = createRepoCard(repos[centerIndex], "center");
-      carousel.appendChild(centerCard);
-    } else if (total === 2) {
-      const leftCard = createRepoCard(repos[leftIndex], "left");
-      const centerCard = createRepoCard(repos[centerIndex], "center");
-      carousel.appendChild(leftCard);
       carousel.appendChild(centerCard);
     } else {
-      const leftCard = createRepoCard(repos[leftIndex], "left");
-      const centerCard = createRepoCard(repos[centerIndex], "center");
-      const rightCard = createRepoCard(repos[rightIndex], "right");
-      carousel.appendChild(leftCard);
-      carousel.appendChild(centerCard);
-      carousel.appendChild(rightCard);
+      // Desktop: Show 3-card layered layout
+      if (total === 1) {
+        const centerCard = createRepoCard(repos[centerIndex], "center");
+        carousel.appendChild(centerCard);
+      } else if (total === 2) {
+        const leftCard = createRepoCard(repos[leftIndex], "left");
+        const centerCard = createRepoCard(repos[centerIndex], "center");
+        carousel.appendChild(leftCard);
+        carousel.appendChild(centerCard);
+      } else {
+        const leftCard = createRepoCard(repos[leftIndex], "left");
+        const centerCard = createRepoCard(repos[centerIndex], "center");
+        const rightCard = createRepoCard(repos[rightIndex], "right");
+        carousel.appendChild(leftCard);
+        carousel.appendChild(centerCard);
+        carousel.appendChild(rightCard);
+      }
     }
 
     // Update counter
@@ -900,7 +931,6 @@ function displayRepositoryCarousel3Cards(repos) {
     currentCenterIndex = (currentCenterIndex + 1) % repos.length;
     updateDisplay("right");
   };
-
   // Keyboard navigation
   document.addEventListener("keydown", function (e) {
     if (e.key === "ArrowLeft") {
@@ -910,6 +940,15 @@ function displayRepositoryCarousel3Cards(repos) {
       currentCenterIndex = (currentCenterIndex + 1) % repos.length;
       updateDisplay("right");
     }
+  });
+  // Window resize listener to update card sizes and layout
+  window.addEventListener("resize", function() {
+    // Update carousel container height based on screen size
+    const carousel = document.getElementById("repo-carousel");
+    if (carousel) {
+      carousel.style.minHeight = window.innerWidth <= 768 ? '220px' : '280px';
+    }
+    updateDisplay();
   });
 }
 
