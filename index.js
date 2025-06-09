@@ -384,6 +384,49 @@ function populateExp_Edu(items, id) {
     if (items[i].title === "University of Brighton") {
       console.log("Setting up click handler for University of Brighton");
       article.style.cursor = "pointer";
+      
+      // Add visual indicator for clickability
+      let clickIndicator = document.createElement("div");
+      clickIndicator.className = "click-indicator";
+      clickIndicator.innerHTML = `
+        <i class="fas fa-arrow-right"></i>
+        <span>Click to view modules & coursework</span>
+      `;
+      divTimelineLabel.appendChild(clickIndicator);
+      
+      // Add styling for the click indicator
+      let style = document.createElement("style");
+      style.textContent = `
+        .click-indicator {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 10px;
+          padding: 8px 12px;
+          background: linear-gradient(45deg, #2c98f0, #2c98f0);
+          color: white;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          box-shadow: 0 2px 8px rgba(44, 152, 240, 0.3);
+          transition: all 0.3s ease;
+        }
+        .timeline-entry:hover .click-indicator {
+          background: linear-gradient(45deg, #1e7db8, #2c98f0);
+          transform: translateX(5px);
+          box-shadow: 0 4px 12px rgba(44, 152, 240, 0.4);
+        }
+        .click-indicator i {
+          font-size: 0.8rem;
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+      `;
+      document.head.appendChild(style);
+      
       article.addEventListener("click", function(e) {
         e.preventDefault();
         console.log("University of Brighton clicked!");
