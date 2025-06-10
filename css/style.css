@@ -2,11 +2,6 @@
   box-sizing: border-box;
 }
 
-.dark-mode {
-  background-color: black;
-  color: white;
-}
-
 /* =======================================================
 *
 * 	Template Style 
@@ -262,8 +257,9 @@ figure figcaption {
   color: black;
 }
 
+/* Fixed issue of stuff being too small */
 .container-wrap {
-  max-width: 1370px;
+  max-width: auto;
   margin: 0 auto;
 }
 
@@ -1928,6 +1924,70 @@ span {
   }
 }
 
+/* Skills and GitHub Card Side-by-Side Layout */
+.skills-github-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0 auto;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.skills-github-row > section {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.skills-github-row .colorlib-skills {
+  flex: 0 0 60%; /* Takes up 60% of the width */
+  width: 60% !important;
+}
+
+.skills-github-row .colorlib-profile {
+  flex: 0 0 35%; /* Takes up 35% of the width */
+  width: 35% !important;
+  margin-top: 0; /* Align with skills section */
+}
+
+/* Responsive: Stack vertically on smaller screens */
+@media (max-width: 1400px) {
+  .skills-github-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .skills-github-row .colorlib-skills,
+  .skills-github-row .colorlib-profile {
+    flex: 1 1 100%;
+    width: 100% !important;
+  }
+}
+
+/* Ensure GitHub card fits properly in the profile section */
+.skills-github-row .colorlib-profile .github-card {
+  max-width: 100%;
+  width: 100% !important;
+  box-sizing: border-box;
+  overflow: auto;
+  /* Set maximum dimensions to prevent the card from growing too large */
+  max-height: 600px;
+  max-width: 450px;
+}
+
+.skills-github-row .colorlib-profile .profile-cards {
+  width: 100%;
+  max-width: 100%;
+}
+
+.skills-github-row .colorlib-profile .col {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
 	--footer-bg: linear-gradient(135deg, rgb(177, 156, 217), rgb(133, 119, 230));
 	--color: #000;
@@ -2059,6 +2119,23 @@ hr {
   overflow-x: auto;
   padding: 32px 0;
   min-height: 220px;
+}
+
+/* Large screens: Make repository cards wider and more spaced out */
+@media (min-width: 1273px) {
+  .repo-card {
+    width: 420px !important;
+    height: 220px !important;
+    margin: 0 32px;
+    font-size: 1.2em;
+  }
+  
+  #repos {
+    padding: 40px 0;
+    min-height: 260px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 }
 
 /* Responsive: On small screens, show 2 cards side by side, make them wider */
