@@ -158,7 +158,7 @@
               </div>
               <p>
                 Feel free to email me at
-                <strong>KennedySovine@gmail.com</strong> for tech
+                <strong>Kennedy.Sovine@gmail.com</strong> for tech
                 discussions, business opportunities, or just to say hello—I’d
                 love to hear from you!
               </p>
@@ -181,43 +181,6 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/jquery.waypoints.min.js"></script>
   <script src="js/main.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-      import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyBM5-cQema1PzjpTPtCxIdmvTrWH2p1nc8",
-        authDomain: "vinaysomawat-portfolio.firebaseapp.com",
-        projectId: "vinaysomawat-portfolio",
-        storageBucket: "vinaysomawat-portfolio.firebasestorage.app",
-        messagingSenderId: "996992279996",
-        appId: "1:996992279996:web:f296555eef216d501337b9",
-        measurementId: "G-8PVX0MLGSK",
-      };
-
-      const app = initializeApp(firebaseConfig);
-      getAnalytics(app);
-      const db = getFirestore(app);
-      const counterRef = doc(db, "visitors", "counter");
-
-      async function updateVisitorCount() {
-        try {
-          const docSnap = await getDoc(counterRef);
-          if (docSnap.exists()) {
-            const newCount = docSnap.data().count + 1;
-            await updateDoc(counterRef, { count: newCount });
-            document.getElementById("visitorCount").innerText = `Visitor Count: ${newCount}`;
-          } else {
-            await setDoc(counterRef, { count: 1 });
-            document.getElementById("visitorCount").innerText = "Visitor Count: 1";
-          }
-        } catch (error) {
-          console.error("Error updating visitor count:", error);
-        }
-      }
-      updateVisitorCount();
-    </script>
 </body>
 
 </html>
