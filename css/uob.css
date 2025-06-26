@@ -442,3 +442,56 @@ body {
         padding-right: 15px;
     }
 }
+
+/* Assignment Grades Styles */
+.uob-assignments {
+    background: #f8f8ff; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); 
+    padding: 20px 24px; 
+    min-width: 200px;
+}
+
+.uob-assignments-title {
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    margin-bottom: 10px; 
+}
+
+#assignment-grades {
+    margin: 0;
+}
+
+.grade-item {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: #fff;
+    border-radius: 8px;
+    border-left: 4px solid #8a7bc8;
+}
+
+.grade-assignment {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.grade-score {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.grade-final {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #8a7bc8;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.grade-letter {
+    font-weight: bold;
+    color: #8a7bc8;
+}

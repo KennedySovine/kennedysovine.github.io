@@ -1,12 +1,12 @@
 // UOB Modules Page Functionality
-import { modules } from '../user-data/data.js';
+import { modules, moduleGrades } from '../user-data/data.js';
 
 // State management
 let currentYear = "2022 - 2023";
 let selectedModule = null;
 
 // DOM elements
-let yearButtons, moduleContainers, moduleReadme, moduleBullets;
+let yearButtons, moduleContainers, moduleReadme, moduleBullets, assignmentGrades;
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     moduleReadme = document.getElementById('module-readme');
     moduleBullets = document.getElementById('module-bullets');
+    assignmentGrades = document.getElementById('assignment-grades');
     
     // Add event listeners
     setupYearButtons();
@@ -165,6 +166,9 @@ function selectFirstModule() {
         if (moduleBullets) {
             moduleBullets.innerHTML = "";
         }
+        if (assignmentGrades) {
+            assignmentGrades.innerHTML = "";
+        }
         const repoBtn = document.getElementById('repo-link-btn');
         if (repoBtn) {
             repoBtn.style.display = 'none';
@@ -227,6 +231,9 @@ function updateModuleInfo(module) {
     
     // Update bullet points
     updateBulletPoints(module.content);
+
+    // Update assignment grades
+    updateAssignmentGrades(module);
 
     // Update repo link button
     const repoBtn = document.getElementById('repo-link-btn');
@@ -383,6 +390,67 @@ function updateBulletPoints(content) {
         const li = document.createElement('li');
         li.textContent = 'Module content details to be updated';
         moduleBullets.appendChild(li);
+    }
+}
+
+function updateAssignmentGrades(module) {
+    // Clear existing grades
+    if (!assignmentGrades){
+        assignmentGrades.innerHTML = '<div class="grade-final">No grades available</div>';
+        console.error("Assignment grades DOM element not found.");
+        return;
+    }
+    assignmentGrades.innerHTML = '';
+    
+    // Find matching grade data for this module
+    const gradeData = moduleGrades.find(grade => grade.module === module.title);
+    
+    if (!gradeData) {
+        // Add default message if no grade data found
+        const noGradesDiv = document.createElement('div');
+        noGradesDiv.textContent = 'Grade information not available';
+        noGradesDiv.style.fontStyle = 'italic';
+        noGradesDiv.style.color = '#666';
+        assignmentGrades.appendChild(noGradesDiv);
+        return;
+    }
+    
+    // Handle modules with simple grade format (like CI465)
+    if (gradeData.grade) {
+        const gradeDiv = document.createElement('div');
+        gradeDiv.className = 'grade-final';
+        gradeDiv.innerHTML = `Final Grade: <span class="grade-letter">${gradeData.grade}</span>`;
+        assignmentGrades.appendChild(gradeDiv);
+        return;
+    }
+    
+    // Handle modules with detailed assignment breakdown
+    if (gradeData.assignmentOne) {
+        const assignment1Div = document.createElement('div');
+        assignment1Div.className = 'grade-item';
+        assignment1Div.innerHTML = `
+            <div class="grade-assignment">${gradeData.assignmentOne}</div>
+            <div class="grade-score">${gradeData.gradeOne}%</div>
+        `;
+        assignmentGrades.appendChild(assignment1Div);
+    }
+    
+    if (gradeData.assignmentTwo) {
+        const assignment2Div = document.createElement('div');
+        assignment2Div.className = 'grade-item';
+        assignment2Div.innerHTML = `
+            <div class="grade-assignment">${gradeData.assignmentTwo}</div>
+            <div class="grade-score">${gradeData.gradeTwo}%</div>
+        `;
+        assignmentGrades.appendChild(assignment2Div);
+    }
+    
+    // Add final grade
+    if (gradeData.finalGrade) {
+        const finalGradeDiv = document.createElement('div');
+        finalGradeDiv.className = 'grade-final';
+        finalGradeDiv.innerHTML = `Final Grade: ${gradeData.finalGrade}%`;
+        assignmentGrades.appendChild(finalGradeDiv);
     }
 }
 
