@@ -3,9 +3,7 @@ import {
   skills,
   education,
   experience,
-  passes,
   footer,
-  trekking,
   certifications,
 } from "./user-data/data.js";
 

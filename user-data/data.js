@@ -412,7 +412,20 @@ export const certifications = [
     icon: "gamepad",
     verificationUrl: "https://courses.edx.org/certificates/4a3490195128403ab3f27709f6c6ed08"
   },
-  // Add more certifications here
+  {
+    title: "Learn React Course",
+    issuer: "Codecademy",
+    duration: "June 2025 - No Expiry",
+    credentialId: "3BB1154C-B",
+    details: [
+      "This certificate verifies the completion of the Learn React course on Codecademy.",
+      "It covers the fundamentals of React, including components, state management, and lifecycle methods.",
+      "The course is designed to provide a solid understanding of building user interfaces with React."
+    ],
+    tags: ["React", "JavaScript", "Frontend Development"],
+    icon: "react",
+    verificationUrl: "https://www.codecademy.com/profiles/KennedySofine/certificates/af00e5032d0a68cc84879983f5d8333b"
+  }
 ];
 
 export const education = [
