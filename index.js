@@ -1033,7 +1033,47 @@ function createProjectModal(project) {
   modal.className = 'project-modal';
   modal.id = 'project-modal';
   
+  // Function to extract YouTube video ID from URL
+  function getYouTubeVideoId(url) {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  }
+  
+  // Determine whether to show video or image
+  let mediaContent;
+  if (project.youtubeUrl) {
+    const videoId = getYouTubeVideoId(project.youtubeUrl);
+    if (videoId) {
+      mediaContent = `
+        <div class="project-modal-video">
+          <iframe 
+            src="https://www.youtube.com/embed/${videoId}" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      `;
+    } else {
+      // Fallback to image if YouTube URL is invalid
+      mediaContent = `
+        <div class="project-modal-image">
+          <img src="${project.image}" alt="${project.title}">
+        </div>
+      `;
+    }
+  } else {
+    // Show image if no YouTube URL
+    mediaContent = `
+      <div class="project-modal-image">
+        <img src="${project.image}" alt="${project.title}">
+      </div>
+    `;
+  }
+  
   modal.innerHTML = `
+    <div class="project-modal-backdrop" id="project-modal-backdrop"></div>
     <div class="project-modal-content">
       <div class="project-modal-header">
         <h2>${project.title}</h2>
@@ -1042,9 +1082,7 @@ function createProjectModal(project) {
         </button>
       </div>
       <div class="project-modal-body">
-        <div class="project-modal-image">
-          <img src="${project.image}" alt="${project.title}">
-        </div>
+        ${mediaContent}
         <div class="project-modal-info">
           ${project.fullDescription}
           <div class="project-modal-tags">
@@ -1059,7 +1097,6 @@ function createProjectModal(project) {
         </div>
       </div>
     </div>
-    <div class="project-modal-backdrop" id="project-modal-backdrop"></div>
   `;
   
   return modal;

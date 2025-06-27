@@ -1247,6 +1247,7 @@ body.offcanvas .colorlib-nav-toggle {
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(5px);
+  z-index: 9999; /* Backdrop behind content */
 }
 
 .project-modal-content {
@@ -1260,6 +1261,7 @@ body.offcanvas .colorlib-nav-toggle {
   transform: scale(0.9);
   transition: transform var(--transition);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10000; /* Ensure content is above backdrop */
 }
 
 .project-modal.active .project-modal-content {
@@ -1311,6 +1313,26 @@ body.offcanvas .colorlib-nav-toggle {
   width: 100%;
   height: 300px;
   object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+.project-modal-video {
+  margin-bottom: var(--spacing-lg);
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.project-modal-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
   border-radius: var(--border-radius);
 }
 
