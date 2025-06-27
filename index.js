@@ -337,12 +337,8 @@ function populateExp_Edu(items, id) {
       spanTimelineSublabel.append(spanTimelineLocation);
     }
 
-    let spanh2 = document.createElement("span");
-    spanh2.innerHTML = items[i].duration;
-
     let h2TimelineLabel = document.createElement("h2");
-    h2TimelineLabel.innerHTML = items[i].title;
-    h2TimelineLabel.append(spanh2);
+    h2TimelineLabel.innerHTML = items[i].title + ' <span>' + items[i].duration + '</span>';
 
     let divTimelineLabel = document.createElement("div");
     divTimelineLabel.className = "timeline-label";
