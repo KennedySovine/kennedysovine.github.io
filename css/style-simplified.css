@@ -450,52 +450,56 @@ a:hover, a:active, a:focus {
  * ======================================================= */
 
 .btn {
-  margin-right: 4px;
-  margin-bottom: 4px;
+  margin-right: 6px;
+  margin-bottom: 8px;
   font-family: var(--font-tertiary);
   font-size: var(--font-size-sm);
-  font-weight: 400;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  border-radius: var(--border-radius-sm);
-  transition: var(--transition-slow);
-  padding: 8px 15px;
+  letter-spacing: 0.5px;
+  border-radius: var(--border-radius-lg);
+  transition: var(--transition);
+  padding: 10px 16px;
   border: none;
   cursor: pointer;
   display: inline-block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn:hover,
 .btn:active,
 .btn:focus {
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   outline: none;
+  transform: translateY(-1px);
 }
 
 .btn-primary {
-  background: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), #1e7db8);
   color: var(--white);
-  border: 2px solid var(--primary-color);
+  border: none;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-  background: #44a4f2;
-  border-color: #44a4f2;
+  background: linear-gradient(135deg, #44a4f2, var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(44, 152, 240, 0.3);
 }
 
 .btn-warning {
-  background: var(--secondary-color);
+  background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
   color: var(--white);
-  border: 2px solid var(--secondary-color);
+  border: none;
 }
 
 .btn-warning:hover,
 .btn-warning:focus,
 .btn-warning:active {
-  background: var(--accent-color);
-  border-color: var(--accent-color);
+  background: linear-gradient(135deg, var(--accent-color), #5a4bb8);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(133, 119, 230, 0.3);
 }
 
 /* =======================================================
@@ -735,15 +739,25 @@ footer ul {
 .badge {
   display: inline-block;
   min-width: 10px;
-  padding: 3px 7px;
+  padding: 6px 12px;
   font-size: var(--font-size-sm);
   color: var(--white);
   line-height: 1;
   vertical-align: middle;
   white-space: nowrap;
   text-align: center;
-  background-color: var(--color-2);
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--color-2), #3a5dd9);
+  border-radius: var(--border-radius-lg);
+  margin: 2px 4px 2px 0;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(65, 105, 225, 0.3);
+  transition: all var(--transition);
+  cursor: default;
+}
+
+.badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(65, 105, 225, 0.4);
 }
 
 hr {

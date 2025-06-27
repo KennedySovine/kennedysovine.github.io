@@ -361,12 +361,25 @@ function populateExp_Edu(items, id) {
     }
     divTimelineLabel.append(divTags);
 
-    let iFa = document.createElement("i");
-    iFa.className = "fa fa-" + items[i].icon;
-
     let divTimelineIcon = document.createElement("div");
     divTimelineIcon.className = "timeline-icon color-2";
-    divTimelineIcon.append(iFa);    let divTimelineEntryInner = document.createElement("div");
+    
+    // Check if icon is an image path or FontAwesome class
+    if (items[i].icon && (items[i].icon.startsWith('./') || items[i].icon.startsWith('/') || items[i].icon.includes('.'))) {
+      // It's an image path
+      let imgIcon = document.createElement("img");
+      imgIcon.src = items[i].icon;
+      imgIcon.alt = items[i].title + " icon";
+      imgIcon.style.width = "24px";
+      imgIcon.style.height = "24px";
+      imgIcon.style.objectFit = "contain";
+      divTimelineIcon.append(imgIcon);
+    } else {
+      // It's a FontAwesome icon
+      let iFa = document.createElement("i");
+      iFa.className = "fa fa-" + items[i].icon;
+      divTimelineIcon.append(iFa);
+    }    let divTimelineEntryInner = document.createElement("div");
     divTimelineEntryInner.className = "timeline-entry-inner";
     divTimelineEntryInner.append(divTimelineIcon);
     divTimelineEntryInner.append(divTimelineLabel);
@@ -1669,11 +1682,25 @@ function populateCertifications(items, id) {
     }
 
     // Create icon
-    const iconEl = document.createElement("i");
-    iconEl.className = "fa fa-" + item.icon;
     const divIcon = document.createElement("div");
     divIcon.className = "timeline-icon color-2";
-    divIcon.append(iconEl);
+    
+    // Check if icon is an image path or FontAwesome class
+    if (item.icon && (item.icon.startsWith('./') || item.icon.startsWith('/') || item.icon.includes('.'))) {
+      // It's an image path
+      const imgIcon = document.createElement("img");
+      imgIcon.src = item.icon;
+      imgIcon.alt = item.title + " icon";
+      imgIcon.style.width = "24px";
+      imgIcon.style.height = "24px";
+      imgIcon.style.objectFit = "contain";
+      divIcon.append(imgIcon);
+    } else {
+      // It's a FontAwesome icon
+      const iconEl = document.createElement("i");
+      iconEl.className = "fa fa-" + item.icon;
+      divIcon.append(iconEl);
+    }
 
     // Create timeline entry
     const inner = document.createElement("div");
