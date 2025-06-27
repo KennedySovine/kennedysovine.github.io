@@ -611,3 +611,7 @@ export const moduleGrades = [
     finalGrade: 42,
   },
 ];
+
+export const projects = [
+
+];

@@ -5,6 +5,7 @@ import {
   experience,
   footer,
   certifications,
+  projects,
 } from "./user-data/data.js";
 
 import { URLs } from "./user-data/urls.js";
@@ -16,6 +17,10 @@ import LinkedInIntegration, {
 } from "./js/linkedin-integration.js";
 
 const { medium, gitConnected, gitRepo } = URLs;
+
+// Projects carousel functionality - Global variables
+let currentProjectIndex = 0;
+let projectsPerPage = 3;
 
 async function fetchGitConnectedData(url) {
   try {
@@ -517,6 +522,7 @@ populateExp_Edu(education, "education");
 populateCertifications(certifications, "certifications");
 populateLinks(footer, "footer");
 loadGitHubContributions();
+initializeProjects();
 
 // Initialize LinkedIn integration if enabled
 if (config.LINKEDIN?.AUTO_FETCH) {
@@ -949,6 +955,366 @@ function displayRepositoryCarousel3Cards(repos) {
     updateDisplay();
   });
 }
+
+function createProjectCard(project, index) {
+  console.log(`🔨 Creating project card for: ${project.title}`);
+  
+  const card = document.createElement('div');
+  card.className = 'project-card animate-box';
+  card.setAttribute('data-animate-effect', 'fadeInUp');
+  
+  // Professional card styling
+  card.style.cssText = `
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  `;
+  
+  // Add hover effect
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-5px)';
+    card.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+  });
+  
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(0)';
+    card.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)';
+  });
+  
+  card.innerHTML = `
+    <div class="project-card-inner" style="height: 100%; display: flex; flex-direction: column;">
+      <div class="project-image" style="position: relative; overflow: hidden;">
+        <img src="${project.image}" alt="${project.title}" loading="lazy" style="width: 100%; height: 200px; object-fit: cover;">
+        <div class="project-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(106, 90, 205, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+          <button class="project-expand-btn" data-project-index="${index}" style="background: white; color: #6a5acd; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s ease;">
+            <i class="fa fa-expand"></i>
+          </button>
+        </div>
+      </div>
+      <div class="project-content" style="padding: 20px; flex-grow: 1; display: flex; flex-direction: column;">
+        <h3 class="project-title" style="color: #333; margin: 0 0 12px 0; font-size: 1.4rem; font-weight: 600;">${project.title}</h3>
+        <p class="project-description" style="color: #666; margin: 0 0 16px 0; line-height: 1.6; flex-grow: 1;">${project.description}</p>
+        <div class="project-tags" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto;">
+          ${project.tags.map(tag => `<span class="project-tag" style="background: linear-gradient(135deg, #6a5acd, #8a7fd8); color: white; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: 500;">${tag}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add click handler for the entire card to expand
+  card.addEventListener('click', (e) => {
+    if (!e.target.closest('.project-expand-btn')) {
+      showProjectModal(index);
+    }
+  });
+  
+  // Show overlay on hover
+  const overlay = card.querySelector('.project-overlay');
+  card.addEventListener('mouseenter', () => {
+    overlay.style.opacity = '1';
+  });
+  
+  card.addEventListener('mouseleave', () => {
+    overlay.style.opacity = '0';
+  });
+  
+  console.log('✅ Project card created successfully');
+  return card;
+}
+
+function createProjectModal(project) {
+  const modal = document.createElement('div');
+  modal.className = 'project-modal';
+  modal.id = 'project-modal';
+  
+  modal.innerHTML = `
+    <div class="project-modal-content">
+      <div class="project-modal-header">
+        <h2>${project.title}</h2>
+        <button class="project-modal-close" id="project-modal-close">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="project-modal-body">
+        <div class="project-modal-image">
+          <img src="${project.image}" alt="${project.title}">
+        </div>
+        <div class="project-modal-info">
+          ${project.fullDescription}
+          <div class="project-modal-tags">
+            ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+          </div>
+          <div class="project-modal-actions">
+            <a href="${project.sourceCodeUrl}" target="_blank" class="project-source-btn">
+              <i class="fa fa-external-link"></i>
+              Go to source code
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="project-modal-backdrop" id="project-modal-backdrop"></div>
+  `;
+  
+  return modal;
+}
+
+function showProjectModal(projectIndex) {
+  const project = projects[projectIndex];
+  const existingModal = document.getElementById('project-modal');
+  
+  if (existingModal) {
+    existingModal.remove();
+  }
+  
+  const modal = createProjectModal(project);
+  document.body.appendChild(modal);
+  
+  // Show modal with animation
+  setTimeout(() => {
+    modal.classList.add('active');
+  }, 10);
+  
+  // Add event listeners
+  const closeBtn = modal.querySelector('#project-modal-close');
+  const backdrop = modal.querySelector('#project-modal-backdrop');
+  
+  closeBtn.addEventListener('click', closeProjectModal);
+  backdrop.addEventListener('click', closeProjectModal);
+  
+  // Close on Escape key
+  document.addEventListener('keydown', handleModalKeydown);
+}
+
+function closeProjectModal() {
+  const modal = document.getElementById('project-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    setTimeout(() => {
+      modal.remove();
+    }, 300);
+  }
+  document.removeEventListener('keydown', handleModalKeydown);
+}
+
+function handleModalKeydown(event) {
+  if (event.key === 'Escape') {
+    closeProjectModal();
+  }
+}
+
+function updateProjectsDisplay() {
+  console.log('🖼️ Updating projects display...');
+  const container = document.getElementById('projects');
+  if (!container) {
+    console.warn('❌ Projects container not found in updateProjectsDisplay');
+    return;
+  }
+  
+  console.log('✅ Container found, clearing content...');
+  
+  // Clear existing content and remove debug styling
+  container.innerHTML = '';
+  container.style.cssText = '';
+  
+  // Calculate which projects to show
+  const startIndex = currentProjectIndex;
+  const endIndex = Math.min(startIndex + projectsPerPage, projects.length);
+  
+  console.log(`📋 Displaying projects ${startIndex} to ${endIndex - 1} of ${projects.length}`);
+  console.log(`📱 Projects per page: ${projectsPerPage}`);
+  
+  // Create project cards directly in the container
+  for (let i = startIndex; i < endIndex; i++) {
+    console.log(`🔨 Creating card for project ${i}:`, projects[i].title);
+    const card = createProjectCard(projects[i], i);
+    container.appendChild(card);
+  }
+  
+  // Add project counter below the grid
+  const projectCounter = document.createElement('div');
+  projectCounter.style.cssText = `
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+  `;
+  projectCounter.innerHTML = `Showing ${startIndex + 1}-${endIndex} of ${projects.length} projects`;
+  container.appendChild(projectCounter);
+  
+  console.log(`✅ Added ${endIndex - startIndex} project cards to container`);
+  
+  // Add event listeners to expand buttons
+  container.querySelectorAll('.project-expand-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const projectIndex = parseInt(btn.getAttribute('data-project-index'));
+      showProjectModal(projectIndex);
+    });
+  });
+  
+  // Update navigation button states
+  updateProjectNavButtons();
+  
+  console.log('🎉 Projects display update complete!');
+}
+
+function updateProjectNavButtons() {
+  const prevBtn = document.getElementById('project-prev-btn');
+  const nextBtn = document.getElementById('project-next-btn');
+  
+  if (prevBtn && nextBtn) {
+    const isFirstPage = currentProjectIndex === 0;
+    const isLastPage = currentProjectIndex + projectsPerPage >= projects.length;
+    
+    prevBtn.disabled = isFirstPage;
+    nextBtn.disabled = isLastPage;
+    
+    // Update button opacity and cursor based on state
+    prevBtn.style.opacity = isFirstPage ? '0.3' : '1';
+    nextBtn.style.opacity = isLastPage ? '0.3' : '1';
+    prevBtn.style.cursor = isFirstPage ? 'not-allowed' : 'pointer';
+    nextBtn.style.cursor = isLastPage ? 'not-allowed' : 'pointer';
+    
+    console.log(`🔄 Navigation buttons updated - Prev: ${!isFirstPage}, Next: ${!isLastPage}`);
+  } else {
+    console.warn('⚠️ Navigation buttons not found in DOM');
+  }
+}
+
+function navigateProjects(direction) {
+  const maxIndex = Math.max(0, projects.length - projectsPerPage);
+  
+  if (direction === 'next' && currentProjectIndex < maxIndex) {
+    currentProjectIndex = Math.min(currentProjectIndex + projectsPerPage, maxIndex);
+  } else if (direction === 'prev' && currentProjectIndex > 0) {
+    currentProjectIndex = Math.max(currentProjectIndex - projectsPerPage, 0);
+  }
+  
+  updateProjectsDisplay();
+}
+
+function updateProjectsPerPage() {
+  const screenWidth = window.innerWidth;
+  
+  // More responsive breakpoints to match CSS
+  // When sidebar collapses (768px), show only 1 project
+  if (screenWidth <= 768) {
+    projectsPerPage = 1;
+  } else if (screenWidth >= 1200) {
+    projectsPerPage = 3;
+  } else if (screenWidth >= 600) {
+    projectsPerPage = 2;
+  } else {
+    projectsPerPage = 1;
+  }
+  
+  // Update grid columns based on projects per page
+  const projectsGrid = document.getElementById('projects');
+  if (projectsGrid) {
+    if (projectsPerPage === 1) {
+      projectsGrid.style.gridTemplateColumns = '1fr';
+    } else if (projectsPerPage === 2) {
+      projectsGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    } else {
+      projectsGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    }
+  }
+  
+  // Reset to first page and update display
+  currentProjectIndex = 0;
+  if (typeof updateProjectsDisplay === 'function') {
+    updateProjectsDisplay();
+  }
+}
+
+function initializeProjects() {
+  console.log('🎨 Initializing projects...');
+  console.log('📊 Projects data:', projects);
+  console.log('📊 Projects length:', projects ? projects.length : 'undefined');
+  
+  // Check if projects data exists
+  if (!projects || projects.length === 0) {
+    console.error('❌ No projects data found');
+    const container = document.getElementById('projects');
+    if (container) {
+      container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No projects available</p>';
+    }
+    return;
+  }
+  
+  // Check if container exists
+  const container = document.getElementById('projects');
+  if (!container) {
+    console.error('❌ Projects container element not found');
+    return;
+  }
+  
+  console.log('✅ Projects container found');
+  
+  // Reset variables to initial state
+  currentProjectIndex = 0;
+  
+  // Set initial projects per page based on screen size
+  const screenWidth = window.innerWidth;
+  if (screenWidth <= 768) {
+    projectsPerPage = 1; // Single project when sidebar collapses
+  } else if (screenWidth >= 1200) {
+    projectsPerPage = 3;
+  } else if (screenWidth >= 600) {
+    projectsPerPage = 2;
+  } else {
+    projectsPerPage = 1;
+  }
+  
+  console.log(`📱 Set projects per page to: ${projectsPerPage} (screen width: ${screenWidth}px)`);
+  
+  // Add event listeners to navigation buttons
+  const prevBtn = document.getElementById('project-prev-btn');
+  const nextBtn = document.getElementById('project-next-btn');
+  
+  if (prevBtn && nextBtn) {
+    console.log('✅ Found navigation buttons, adding event listeners');
+    
+    // Remove any existing listeners first
+    prevBtn.onclick = null;
+    nextBtn.onclick = null;
+    
+    prevBtn.addEventListener('click', () => {
+      console.log('⬅️ Previous button clicked');
+      navigateProjects('prev');
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      console.log('➡️ Next button clicked');
+      navigateProjects('next');
+    });
+  } else {
+    console.warn('⚠️ Navigation buttons not found');
+    console.log('prevBtn element:', prevBtn);
+    console.log('nextBtn element:', nextBtn);
+  }
+  
+  // Add resize listener to update projects per page
+  window.addEventListener('resize', updateProjectsPerPage);
+  
+  // Initial display
+  console.log('🚀 Starting initial projects display...');
+  updateProjectsDisplay();
+  
+  console.log('🎉 Projects initialization complete!');
+}
+
+// =======================================================
+// END PROJECTS FUNCTIONALITY
+// =======================================================
 
 /**
  * Update profile data with LinkedIn information
