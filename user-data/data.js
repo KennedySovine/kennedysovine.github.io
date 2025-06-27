@@ -423,7 +423,7 @@ export const certifications = [
       "The course is designed to provide a solid understanding of building user interfaces with React."
     ],
     tags: ["React", "JavaScript", "Frontend Development"],
-    icon: "react",
+    icon: "./icons/React-icon.png",
     verificationUrl: "https://www.codecademy.com/profiles/KennedySofine/certificates/af00e5032d0a68cc84879983f5d8333b"
   }
 ];
@@ -686,18 +686,14 @@ export const projects = [
       <h3>Research Focus</h3>
       <ul>
         <li>Analysis of Riot Games' balancing methodology</li>
-        <li>Mathematical models for game balance</li>
         <li>Player behavior and meta evolution</li>
         <li>Data-driven balance decisions</li>
-        <li>Community feedback integration</li>
       </ul>
       
       <h3>Demo Features</h3>
       <ul>
         <li>Interactive balance testing environment</li>
         <li>Real-time parameter adjustment</li>
-        <li>Visual representation of balance changes</li>
-        <li>Multiple balancing technique demonstrations</li>
         <li>Performance metrics and analytics</li>
       </ul>
       
@@ -705,9 +701,7 @@ export const projects = [
       <ul>
         <li>Unity Engine for demo development</li>
         <li>C# scripting for balance algorithms</li>
-        <li>Data visualization tools</li>
         <li>Statistical analysis integration</li>
-        <li>Modular system architecture</li>
       </ul>
       
       <h3>Academic Contribution</h3>
