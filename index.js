@@ -965,12 +965,40 @@ function displayRepositoryCarousel3Cards(repos) {
   });
 }
 
+// Function to extract YouTube video ID from URL
+function getYouTubeVideoId(url) {
+  if (!url || typeof url !== 'string' || url.trim() === '') {
+    return null;
+  }
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+// Function to get the appropriate image URL for a project
+function getProjectImageUrl(project) {
+  // Check if project has a valid YouTube URL
+  if (project.youtubeUrl && project.youtubeUrl.trim() !== '') {
+    const videoId = getYouTubeVideoId(project.youtubeUrl);
+    if (videoId) {
+      // Use high quality YouTube thumbnail
+      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    }
+  }
+  
+  // Fallback to the original image
+  return project.image || 'https://via.placeholder.com/400x300/8577e6/ffffff?text=No+Image';
+}
+
 function createProjectCard(project, index) {
   console.log(`🔨 Creating project card for: ${project.title}`);
   
   const card = document.createElement('div');
   card.className = 'project-card animate-box';
   card.setAttribute('data-animate-effect', 'fadeInUp');
+  
+  // Get the appropriate image URL (YouTube thumbnail or original image)
+  const imageUrl = getProjectImageUrl(project);
   
   // Professional card styling
   card.style.cssText = `
@@ -998,7 +1026,7 @@ function createProjectCard(project, index) {
   card.innerHTML = `
     <div class="project-card-inner" style="height: 100%; display: flex; flex-direction: column;">
       <div class="project-image" style="position: relative !important; height: 200px !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: #f8f8f8 !important; float: none !important; overflow: hidden !important; border-radius: 12px 12px 0 0 !important;">
-        <img src="${project.image}" alt="${project.title}" loading="lazy" style="max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; display: block !important;">
+        <img src="${imageUrl}" alt="${project.title}" loading="lazy" style="max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; display: block !important;">
         <div class="project-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(106, 90, 205, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
           <button class="project-expand-btn" data-project-index="${index}" style="background: white; color: #6a5acd; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s ease;">
             <i class="fa fa-expand"></i>
@@ -1041,16 +1069,9 @@ function createProjectModal(project) {
   modal.className = 'project-modal';
   modal.id = 'project-modal';
   
-  // Function to extract YouTube video ID from URL
-  function getYouTubeVideoId(url) {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  }
-  
   // Determine whether to show video or image
   let mediaContent;
-  if (project.youtubeUrl) {
+  if (project.youtubeUrl && project.youtubeUrl.trim() !== '') {
     const videoId = getYouTubeVideoId(project.youtubeUrl);
     if (videoId) {
       mediaContent = `
@@ -1065,17 +1086,19 @@ function createProjectModal(project) {
       `;
     } else {
       // Fallback to image if YouTube URL is invalid
+      const imageUrl = getProjectImageUrl(project);
       mediaContent = `
         <div class="project-modal-image">
-          <img src="${project.image}" alt="${project.title}">
+          <img src="${imageUrl}" alt="${project.title}">
         </div>
       `;
     }
   } else {
-    // Show image if no YouTube URL
+    // Show image if no YouTube URL - use the same logic as project cards
+    const imageUrl = getProjectImageUrl(project);
     mediaContent = `
       <div class="project-modal-image">
-        <img src="${project.image}" alt="${project.title}">
+        <img src="${imageUrl}" alt="${project.title}">
       </div>
     `;
   }

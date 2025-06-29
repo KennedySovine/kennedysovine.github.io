@@ -1154,7 +1154,7 @@ body.offcanvas .colorlib-nav-toggle {
 .project-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform var(--transition);
 }
 
@@ -1335,7 +1335,7 @@ body.offcanvas .colorlib-nav-toggle {
 .project-modal-image img {
   width: 100%;
   height: 300px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--border-radius);
 }
 

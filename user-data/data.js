@@ -647,7 +647,7 @@ export const projects = [
     tags: ["Unity", "C#", "Game Design", "Research", "MMO", "Game Balance", "Data Analysis"],
     sourceCodeUrl: "https://github.com/KennedySovine/Final-Project",
     image: "https://via.placeholder.com/400x300/8577e6/ffffff?text=MMO+Balance+Demo",
-    youtubeUrl: "https://youtu.be/VYK1bcIwPtE", // Example YouTube link
+    youtubeUrl: "https://youtu.be/VYK1bcIwPtE",
   },
   {
     title: "Crossing Roads - Integrated Group Project",
@@ -681,7 +681,7 @@ export const projects = [
     tags: ["Unity", "C#", "Game Design", "Education", "Accessibility", "Team Project"],
     sourceCodeUrl: "https://github.com/KennedySovine/Integrated-Group-Project",
     image: "https://via.placeholder.com/400x300/4169e1/ffffff?text=Road+Safety+Game",
-    youtubeUrl: "https://youtu.be/rmytk9X6hKg", // Example YouTube link
+    youtubeUrl: "https://youtu.be/rmytk9X6hKg",
   },
   {
     title: "Web Dev Suika Game",
