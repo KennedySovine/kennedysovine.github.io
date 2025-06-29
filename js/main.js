@@ -17,44 +17,15 @@
   };
 
   var counterWayPoint = function () {
-    if ($("#colorlib-counter").length > 0) {
-      $("#colorlib-counter").waypoint(
-        function (direction) {
-          if (direction === "down" && !$(this.element).hasClass("animated")) {
-            setTimeout(counter, 400);
-            $(this.element).addClass("animated");
-          }
-        },
-        { offset: "90%" }
-      );
+    // Counter animations disabled
+    if ($("#colorlib-counter").length > 0 && typeof counter === 'function') {
+      counter();
     }
   };
 
   var contentWayPoint = function () {
-    var i = 0;
-    $(".animate-box").waypoint(
-      function (direction) {
-        if (direction === "down" && !$(this.element).hasClass("animated")) {
-          i++;
-          $(this.element).addClass("item-animate");
-          setTimeout(function () {
-            $("body .animate-box.item-animate").each(function (k) {
-              var el = $(this);
-              setTimeout(
-                function () {
-                  var effect = el.data("animate-effect");
-                  el.addClass(effect ? `${effect} animated` : "fadeInUp animated");
-                  el.removeClass("item-animate");
-                },
-                k * 200,
-                "easeInOutExpo"
-              );
-            });
-          }, 100);
-        }
-      },
-      { offset: "85%" }
-    );
+    // Animation system disabled - content shows immediately
+    $(".animate-box").css("opacity", "1");
   };
 
   var burgerMenu = function () {
@@ -147,7 +118,8 @@
     );
   };
 
-  $(function () {    fullHeight();
+  $(function () {
+    fullHeight();
     counterWayPoint();
     contentWayPoint();
     burgerMenu();

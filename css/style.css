@@ -1718,8 +1718,10 @@ body.offcanvas .colorlib-nav-toggle {
 	padding: 10px !important;
 }
 
+/* Animations disabled - all elements visible by default */
 .js .animate-box {
-	opacity: 0;
+	opacity: 1;
+	visibility: visible;
 }
 
 .bmc-div {

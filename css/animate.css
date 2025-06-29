@@ -3,8 +3,9 @@
 /* Animate.css optimized: removed vendor prefixes for modern browsers, deduplicated keyframes, and reduced redundancy. Only standard CSS properties and keyframes are kept for maintainability. */
 
 .animated {
-  animation-duration: 1s;
+  animation-duration: 0.6s;
   animation-fill-mode: both;
+  animation-timing-function: ease-out;
 }
 .animated.infinite { animation-iteration-count: infinite; }
 .animated.hinge { animation-duration: 2s; }
@@ -425,11 +426,11 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translate3d(0, 40px, 0);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: translate3d(0, 0, 0);
   }
 }
 .fadeInUp { animation-name: fadeInUp; }

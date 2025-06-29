@@ -90,7 +90,7 @@ function populateSkills(items, id) {
     const divProgressWrap = getElement("div", "progress-wrap");
     divProgressWrap.append(h3);
 
-    const divAnimateBox = getElement("div", "col-md-12 animate-box");
+    const divAnimateBox = getElement("div", "col-md-12");
     divAnimateBox.append(divProgressWrap);
 
     skillsTag.append(divAnimateBox);
@@ -385,7 +385,7 @@ function populateExp_Edu(items, id) {
     divTimelineEntryInner.append(divTimelineLabel);
     
     let article = document.createElement("article");
-    article.className = "timeline-entry animate-box";
+    article.className = "timeline-entry";
     article.append(divTimelineEntryInner);    // Make University of Brighton card clickable to open UOB.html
     if (items[i].title === "University of Brighton") {
       console.log("Setting up click handler for University of Brighton");
@@ -461,7 +461,7 @@ function populateExp_Edu(items, id) {
   divTimelineEntryInner.append(divTimelineIcon);
 
   let article = document.createElement("article");
-  article.className = "timeline-entry begin animate-box";
+  article.className = "timeline-entry begin";
   article.append(divTimelineEntryInner);
 
   mainContainer.append(article);
@@ -994,8 +994,8 @@ function createProjectCard(project, index) {
   console.log(`🔨 Creating project card for: ${project.title}`);
   
   const card = document.createElement('div');
-  card.className = 'project-card animate-box';
-  card.setAttribute('data-animate-effect', 'fadeInUp');
+  card.className = 'project-card';
+  // Removed animation attributes for immediate display
   
   // Get the appropriate image URL (YouTube thumbnail or original image)
   const imageUrl = getProjectImageUrl(project);
@@ -1730,7 +1730,7 @@ function populateCertifications(items, id) {
     inner.append(divIcon, divLabel);
 
     const article = document.createElement("article");
-    article.className = "timeline-entry animate-box";
+    article.className = "timeline-entry";
     article.append(inner);
     main.append(article);
   });
@@ -1742,7 +1742,7 @@ function populateCertifications(items, id) {
   endInner.className = "timeline-entry-inner";
   endInner.append(endIcon);
   const endArticle = document.createElement("article");
-  endArticle.className = "timeline-entry begin animate-box";
+  endArticle.className = "timeline-entry begin";
   endArticle.append(endInner);
   main.append(endArticle);
 }
