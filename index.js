@@ -978,7 +978,6 @@ function createProjectCard(project, index) {
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    overflow: hidden;
     cursor: pointer;
     height: 100%;
     display: flex;
@@ -998,8 +997,8 @@ function createProjectCard(project, index) {
   
   card.innerHTML = `
     <div class="project-card-inner" style="height: 100%; display: flex; flex-direction: column;">
-      <div class="project-image" style="position: relative; overflow: hidden;">
-        <img src="${project.image}" alt="${project.title}" loading="lazy" style="width: 100%; height: 200px; object-fit: cover;">
+      <div class="project-image" style="position: relative !important; height: 200px !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: #f8f8f8 !important; float: none !important; overflow: hidden !important; border-radius: 12px 12px 0 0 !important;">
+        <img src="${project.image}" alt="${project.title}" loading="lazy" style="max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; display: block !important;">
         <div class="project-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(106, 90, 205, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
           <button class="project-expand-btn" data-project-index="${index}" style="background: white; color: #6a5acd; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s ease;">
             <i class="fa fa-expand"></i>

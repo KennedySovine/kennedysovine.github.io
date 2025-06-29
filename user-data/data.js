@@ -614,33 +614,40 @@ export const moduleGrades = [
 
 export const projects = [
   {
-    title: "Web Dev Suika Game",
-    description: "A web-based game inspired by the Suika Game, developed using HTML, CSS, and JavaScript. The game features a unique gameplay mechanic where players combine fruits to create new items, aiming to achieve high scores.",
+    title: "Final Project - Balancing in MMOs Demo",
+    description: "A demo project for the final year, focusing on balancing mechanics in Massively Multiplayer Online (MMO) games. The project explores various balancing techniques and their impact on gameplay, with research focused on League of Legends.",
     fullDescription: `
       <h3>Project Overview</h3>
-      <p>A web-based implementation of the popular Suika Game (Watermelon Game), developed as part of a web development for games project. This project demonstrates proficiency in frontend technologies and game development concepts.</p>
+      <p>A comprehensive research and development project examining game balance in MMOs, specifically analyzing Riot Games' approach to balancing League of Legends. The project includes both theoretical research and a practical demonstration.</p>
       
-      <h3>Key Features</h3>
+      <h3>Research Focus</h3>
       <ul>
-        <li>Physics-based fruit dropping mechanics</li>
-        <li>Fruit combination system with scoring</li>
-        <li>Responsive design for various screen sizes</li>
-        <li>Clean, intuitive user interface</li>
-        <li>High score tracking</li>
+        <li>Analysis of Riot Games' balancing methodology</li>
+        <li>Player behavior and meta evolution</li>
+        <li>Data-driven balance decisions</li>
+      </ul>
+      
+      <h3>Demo Features</h3>
+      <ul>
+        <li>Interactive balance testing environment</li>
+        <li>Real-time parameter adjustment</li>
+        <li>Performance metrics and analytics</li>
       </ul>
       
       <h3>Technical Implementation</h3>
       <ul>
-        <li>Pure JavaScript for game logic and physics simulation</li>
-        <li>HTML5 Canvas for rendering graphics</li>
-        <li>CSS3 for styling and responsive layout</li>
-        <li>Local storage for score persistence</li>
+        <li>Unity Engine for demo development</li>
+        <li>C# scripting for balance algorithms</li>
+        <li>Statistical analysis integration</li>
       </ul>
+      
+      <h3>Academic Contribution</h3>
+      <p>This project contributes to the understanding of game balance theory and provides practical tools for game developers to implement and test balance changes.</p>
     `,
-    tags: ["HTML", "CSS", "JavaScript", "Game Development", "Canvas"],
-    sourceCodeUrl: "https://github.com/KennedySovine/Web-Dev-for-Games-Project",
-    image: "https://via.placeholder.com/400x300/6a5acd/ffffff?text=Suika+Game",
-    youtubeUrl: "", // Example YouTube link
+    tags: ["Unity", "C#", "Game Design", "Research", "MMO", "Game Balance", "Data Analysis"],
+    sourceCodeUrl: "https://github.com/KennedySovine/Final-Project",
+    image: "https://via.placeholder.com/400x300/8577e6/ffffff?text=MMO+Balance+Demo",
+    youtubeUrl: "https://youtu.be/VYK1bcIwPtE", // Example YouTube link
   },
   {
     title: "Crossing Roads - Integrated Group Project",
@@ -677,39 +684,60 @@ export const projects = [
     youtubeUrl: "https://youtu.be/rmytk9X6hKg", // Example YouTube link
   },
   {
-    title: "Final Project - Balancing in MMOs Demo",
-    description: "A demo project for the final year, focusing on balancing mechanics in Massively Multiplayer Online (MMO) games. The project explores various balancing techniques and their impact on gameplay, with research focused on League of Legends.",
+    title: "Web Dev Suika Game",
+    description: "A web-based game inspired by the Suika Game, developed using HTML, CSS, and JavaScript. The game features a unique gameplay mechanic where players combine fruits to create new items, aiming to achieve high scores.",
     fullDescription: `
       <h3>Project Overview</h3>
-      <p>A comprehensive research and development project examining game balance in MMOs, specifically analyzing Riot Games' approach to balancing League of Legends. The project includes both theoretical research and a practical demonstration.</p>
+      <p>A web-based implementation of the popular Suika Game (Watermelon Game), developed as part of a web development for games project. This project demonstrates proficiency in frontend technologies and game development concepts.</p>
       
-      <h3>Research Focus</h3>
+      <h3>Key Features</h3>
       <ul>
-        <li>Analysis of Riot Games' balancing methodology</li>
-        <li>Player behavior and meta evolution</li>
-        <li>Data-driven balance decisions</li>
-      </ul>
-      
-      <h3>Demo Features</h3>
-      <ul>
-        <li>Interactive balance testing environment</li>
-        <li>Real-time parameter adjustment</li>
-        <li>Performance metrics and analytics</li>
+        <li>Physics-based fruit dropping mechanics</li>
+        <li>Fruit combination system with scoring</li>
+        <li>Responsive design for various screen sizes</li>
+        <li>Clean, intuitive user interface</li>
+        <li>High score tracking</li>
       </ul>
       
       <h3>Technical Implementation</h3>
       <ul>
-        <li>Unity Engine for demo development</li>
-        <li>C# scripting for balance algorithms</li>
-        <li>Statistical analysis integration</li>
+        <li>Pure JavaScript for game logic and physics simulation</li>
+        <li>HTML5 Canvas for rendering graphics</li>
+        <li>CSS3 for styling and responsive layout</li>
+        <li>Local storage for score persistence</li>
+      </ul>
+    `,
+    tags: ["HTML", "CSS", "JavaScript", "Game Development", "Canvas"],
+    sourceCodeUrl: "https://github.com/KennedySovine/Web-Dev-for-Games-Project",
+    image: "./IMAGES/ProjectPreviewImages/SUIKAGAMEPREVIEW.png",
+    youtubeUrl: "", // Example YouTube link
+  },
+  {
+    title: "Project: New World",
+    description: "Group Project Visual Novel for CI520 - Narrative Game Design.",
+    fullDescription: `
+      <h3>Project Overview</h3>
+      <p>A group project that combines narrative design with visual novel mechanics, focusing on storytelling and player choices. The project showcases the ability to create engaging narratives in a game format.</p>
+      
+      <h3>Key Features</h3>
+      <ul>
+        <li>Interactive storytelling with player choices</li>
+        <li>Character development and dialogue systems</li>
+        <li>Visual novel style graphics and animations</li>
       </ul>
       
-      <h3>Academic Contribution</h3>
-      <p>This project contributes to the understanding of game balance theory and provides practical tools for game developers to implement and test balance changes.</p>
+      <h3>Technical Implementation</h3>
+      <ul>
+        <li>Ren'Py for development</li>
+        <li>Python scripting for game logic</li>
+        <li>Visual assets created using digital art tools</li>
+      </ul>
+
+      <p>Though the game was not fully visually completed, the narrative and gameplay mechanics were fully implemented, showcasing the ability to create engaging narratives in a game format.</p>
     `,
-    tags: ["Unity", "C#", "Game Design", "Research", "MMO", "Game Balance", "Data Analysis"],
-    sourceCodeUrl: "https://github.com/KennedySovine/Final-Project",
-    image: "https://via.placeholder.com/400x300/8577e6/ffffff?text=MMO+Balance+Demo",
-    youtubeUrl: "https://youtu.be/VYK1bcIwPtE", // Example YouTube link
+    tags: ["Ren'Py", "Python", "Game Design", "Narrative", "Visual Novel"],
+    sourceCodeUrl: "https://github.com/KennedySovine/Project-new-world",
+    image: "./IMAGES/ProjectPreviewImages/NEWWORLDGAMEPREVIEW.png",
+    youtubeUrl: "", // Example YouTube link
   },
 ];  
