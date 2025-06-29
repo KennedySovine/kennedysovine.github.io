@@ -491,6 +491,11 @@ function populateLinks(items, id) {
           a.href = data.link;
           a.target = "_blank";
         }
+        if (data.download) {
+          a.setAttribute("download", data.download);
+          // Remove target="_blank" for downloads to prevent opening in new tab
+          a.removeAttribute("target");
+        }
         if (data.func) {
           a.setAttribute("onclick", data.func);
         }
