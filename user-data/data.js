@@ -487,6 +487,11 @@ export const footer = [
     label: "Resources",
      data: [
  {
+ text: "Download CV",
+ link: "./CV_KennedySovineATS.pdf",
+ download: "Kennedy_Sovine_CV.pdf",
+ },
+ {
  text: "Enable Dark/Light Mode",
 func: "enableDarkMode()",
  },

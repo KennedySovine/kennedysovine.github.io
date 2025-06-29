@@ -1103,7 +1103,7 @@ body.offcanvas .colorlib-nav-toggle {
   gap: var(--spacing-lg);
   padding: var(--spacing-lg) 0;
   transition: opacity var(--transition);
-  min-height: 200px; /* Ensure container has minimum height */
+  min-height: 280px; /* Ensure container has minimum height */
   width: 100%;
 }
 
@@ -1163,7 +1163,7 @@ body.offcanvas .colorlib-nav-toggle {
 /* Project image */
 .project-image {
   position: relative;
-  height: 200px;
+  height: 250px;
   overflow: hidden;
 }
 
@@ -1455,7 +1455,7 @@ body.offcanvas .colorlib-nav-toggle {
 /* Project responsive adjustments */
 @media (max-width: 1400px) {
   .project-image {
-    height: 180px; /* Slightly smaller image on medium screens */
+    height: 220px; /* Slightly smaller image on medium screens */
   }
   
   .project-content {
@@ -1469,7 +1469,7 @@ body.offcanvas .colorlib-nav-toggle {
 
 @media (max-width: 999px) {
   .project-image {
-    height: 160px; /* Even smaller image on smaller screens */
+    height: 200px; /* Even smaller image on smaller screens */
   }
   
   .project-content {
