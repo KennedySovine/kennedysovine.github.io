@@ -1124,6 +1124,12 @@ function createProjectModal(project) {
               <i class="fa fa-external-link"></i>
               Go to source code
             </a>
+            ${project.playableURL && project.playableURL.trim() !== '' ? 
+              `<a href="${project.playableURL}" target="_blank" class="project-play-btn">
+                <i class="fa fa-play"></i>
+                Play Game
+              </a>` : ''
+            }
           </div>
         </div>
       </div>

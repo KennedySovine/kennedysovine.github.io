@@ -674,9 +674,18 @@ export const projects = [
         <li>Agile development methodology</li>
         <li>Team collaboration and version control</li>
       </ul>
-      
-      <h3>Educational Impact</h3>
-      <p>The game successfully teaches road safety concepts through interactive gameplay, making learning engaging and memorable for young users.</p>
+
+      <h3>My Role</h3>
+      <p>In the team, I took on the role of the leader, delegating tasks to those in the group that I knew were most suited for the role. These roles included: </p>
+      <ul>
+        <li>2D Artist</li>
+        <li>3D Artist</li>
+        <li>Game Designer</li>
+        <li>Game Developer</li>
+        <li>UI/UX Designer</li>
+      </ul>
+      <p>In this project, I was responsible for the coding and implementation of the game mechanics, ensuring that the game was accessible and educational. I also contributed to the design of the user interface and the overall user experience.</p>
+      <p>From sound mechanics to camera changes, I worked on various aspects of the game to ensure a smooth and engaging experience for players.</p>
     `,
     tags: ["Unity", "C#", "Game Design", "Education", "Accessibility", "Team Project"],
     sourceCodeUrl: "https://github.com/KennedySovine/Integrated-Group-Project",
@@ -709,6 +718,7 @@ export const projects = [
     `,
     tags: ["HTML", "CSS", "JavaScript", "Game Development", "Canvas"],
     sourceCodeUrl: "https://github.com/KennedySovine/Web-Dev-for-Games-Project",
+    playableURL: "https://kennedysovine.github.io/Web-Dev-for-Games-Project/",
     image: "./IMAGES/ProjectPreviewImages/SUIKAGAMEPREVIEW.png",
     youtubeUrl: "", // Example YouTube link
   },
@@ -734,9 +744,11 @@ export const projects = [
       </ul>
 
       <p>Though the game was not fully visually completed, the narrative and gameplay mechanics were fully implemented, showcasing the ability to create engaging narratives in a game format.</p>
+      <p>In this project, I was responsible for the coding and implementation of the game mechanics, ensuring that the narrative flowed smoothly and that player choices had meaningful impacts on the story.</p>
     `,
-    tags: ["Ren'Py", "Python", "Game Design", "Narrative", "Visual Novel"],
+    tags: ["Ren'Py", "Python", "Game Design", "Narrative", "Visual Novel", "Team Project"],
     sourceCodeUrl: "https://github.com/KennedySovine/Project-new-world",
+    playableURL: "https://kennedysovine.github.io/Project-new-world/",
     image: "./IMAGES/ProjectPreviewImages/NEWWORLDGAMEPREVIEW.png",
     youtubeUrl: "", // Example YouTube link
   },

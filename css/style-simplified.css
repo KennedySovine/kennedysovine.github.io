@@ -396,6 +396,22 @@ a:hover, a:active, a:focus {
   padding: var(--spacing-md);
   margin-left: 60px;
   border-radius: 10px;
+  transition: none !important;
+  transform: none !important;
+}
+
+.timeline-label:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.timeline-entry:hover {
+  transform: none !important;
+}
+
+.timeline-entry:hover .timeline-label {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .timeline-label:after {
@@ -422,7 +438,7 @@ a:hover, a:active, a:focus {
 }
 
 .timeline-label h2 span {
-  opacity: 0.4;
+  opacity: 0.7;
   font-size: 16px;
   color: #ffffff;
   font-weight: 500;
@@ -1293,16 +1309,20 @@ body.offcanvas .colorlib-nav-toggle {
 
 .project-modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--background-alt);
+  position: relative;
 }
 
 .project-modal-header h2 {
   margin: 0;
+  margin-top: 8px;
   color: var(--text-color);
   font-size: var(--font-size-xl);
+  text-align: center;
+  flex: 1;
 }
 
 .project-modal-close {
@@ -1317,6 +1337,8 @@ body.offcanvas .colorlib-nav-toggle {
   justify-content: center;
   color: var(--text-light);
   transition: all var(--transition);
+  position: absolute;
+  right: var(--spacing-lg);
 }
 
 .project-modal-close:hover {
@@ -1403,6 +1425,31 @@ body.offcanvas .colorlib-nav-toggle {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   color: var(--white);
+}
+
+.project-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: var(--white);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all var(--transition);
+  margin-left: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--font-size-sm);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.project-play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+  color: var(--white);
+  background: linear-gradient(135deg, #34ce57, #28a745);
 }
 
 /* Project responsive adjustments */
