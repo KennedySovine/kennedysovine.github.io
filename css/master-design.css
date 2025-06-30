@@ -5,31 +5,24 @@
 
 :root {
   /* =======================================================
-   * RESPONSIVE FONT SIZES - INCREASED FOR BETTER READABILITY
-   * Scales automatically with screen resolution
+   * RESPONSIVE FONT SIZES - OPTIMIZED FOR READABILITY
+   * Matches the original portfolio design system
    * ======================================================= */
   
-  --font-size-xs: clamp(0.85rem, 1vw, 1rem);
-  --font-size-sm: clamp(1rem, 1.2vw, 1.15rem);
-  --font-size-base: clamp(1.15rem, 1.4vw, 1.3rem);
-  --font-size-md: clamp(1.25rem, 1.5vw, 1.4rem);
-  --font-size-lg: clamp(1.4rem, 1.6vw, 1.55rem);
-  --font-size-xl: clamp(1.5rem, 1.8vw, 1.7rem);
-  --font-size-2xl: clamp(1.8rem, 2.2vw, 2.1rem);
-  --font-size-3xl: clamp(2.1rem, 2.8vw, 2.6rem);
-  --font-size-4xl: clamp(2.4rem, 3.2vw, 3rem);
-  --font-size-5xl: clamp(3rem, 4.5vw, 4rem);
-  --font-size-6xl: clamp(3.5rem, 5.5vw, 5rem);
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-base: 15px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-xxl: 38px;
   
-  /* Legacy font sizes for portfolio compatibility - INCREASED */
-  --font-size-legacy-xs: clamp(13px, 1vw, 15px);
-  --font-size-legacy-sm: clamp(15px, 1.2vw, 17px);
-  --font-size-legacy-base: clamp(18px, 1.4vw, 21px);
-  --font-size-legacy-lg: clamp(22px, 1.6vw, 26px);
-  --font-size-legacy-xl: clamp(26px, 2vw, 32px);
-  --font-size-legacy-2xl: clamp(32px, 2.5vw, 38px);
-  --font-size-legacy-3xl: clamp(38px, 3.2vw, 46px);
-  --font-size-legacy-4xl: clamp(44px, 3.5vw, 54px);
+  /* Modern font scale using clamp() for responsive scaling */
+  --font-size-md: clamp(16px, 1.5vw, 18px);
+  --font-size-2xl: clamp(24px, 2.2vw, 28px);
+  --font-size-3xl: clamp(28px, 2.8vw, 32px);
+  --font-size-4xl: clamp(32px, 3.2vw, 38px);
+  --font-size-5xl: clamp(38px, 4vw, 44px);
+  --font-size-6xl: clamp(44px, 5vw, 50px);
 
   /* =======================================================
    * CONSISTENT COLOR THEMES
@@ -98,13 +91,10 @@
 
   /* =======================================================
    * ESSENTIAL SPACING & TRANSITIONS FOR PORTFOLIO
-   * Minimal variables needed for portfolio functionality
+   * Core variables needed for portfolio functionality
    * ======================================================= */
   
-  /* Essential spacing (for portfolio compatibility) */
-  --space-2: clamp(0.5rem, 1vw, 1rem);
-  --space-5: clamp(1.25rem, 2.5vw, 2.5rem);
-  --space-6: clamp(1.5rem, 3vw, 3rem);
+  /* Essential spacing - matches original portfolio */
   --spacing-xs: 0.5em;
   --spacing-sm: 1em;
   --spacing-md: 1.5em;
@@ -112,8 +102,29 @@
   --spacing-xl: 3em;
   --spacing-xxl: 4em;
   
-  /* Essential transitions (for portfolio compatibility) */
+  /* Additional responsive spacing */
+  --space-2: clamp(0.5rem, 1vw, 1rem);
+  --space-5: clamp(1.25rem, 2.5vw, 2.5rem);
+  --space-6: clamp(1.5rem, 3vw, 3rem);
+  
+  /* Essential transitions - matches original portfolio */
   --transition: 0.3s ease;
   --transition-fast: 0.2s ease;
   --transition-slow: 0.5s ease;
+  
+  /* Typography families - core fonts */
+  --font-primary: "Montserrat", sans-serif;
+  --font-secondary: "Playfair Display", Georgia, serif;
+  --font-tertiary: "Quicksand", Arial, sans-serif;
+  
+  /* Layout dimensions - matches original sidebar design */
+  --sidebar-width: 300px;
+  --main-margin: 360px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 12px;
+  
+  /* Effects - matches original shadows */
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
