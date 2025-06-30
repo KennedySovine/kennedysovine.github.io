@@ -1,47 +1,54 @@
-// Art portfolio data - structure for your artwork
-export const artworks = [
-    // Add your actual artwork here or use the admin panel to upload
-    // Each artwork should follow this structure:
-    // {
-    //     id: "unique-id",
-    //     title: "Artwork Title",
-    //     description: "Description of the artwork",
-    //     category: "Category name",
-    //     medium: "Medium used",
-    //     imageUrl: "path/to/image.jpg",
-    //     thumbnailUrl: "path/to/thumbnail.jpg",
-    //     tags: ["tag1", "tag2"],
-    //     createdDate: "YYYY-MM-DD",
-    //     uploadDate: "YYYY-MM-DDTHH:mm:ssZ",
-    //     dimensions: "widthxheight",
-    //     fileSize: "file size",
-    //     projectUrl: "optional project URL",
-    //     repository: "optional repository URL",
-    //     metadata: {
-    //         camera: "camera info",
-    //         software: "software used",
-    //         timeSpent: "time spent",
-    //         inspiration: "inspiration or description"
-    //     }
-    // }
+// Art portfolio data
+// This file is automatically updated by the admin panel
+
+const artData = [
+  {
+    "id": 1751322066427,
+    "title": "Unnamed Protagonist",
+    "description": "Art piece for a protagonist for a game I may one day make.",
+    "category": "digital",
+    "date": "2025-06",
+    "datePrecision": "month",
+    "formattedDate": "June 2025",
+    "tags": [
+      "ConceptArt",
+      "Concept Art",
+      "Greyscale",
+      "Procreate",
+      "Prism of Light"
+    ],
+    "linkedProject": {
+      "title": "prism of light",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "image": "IMAGES/art/digital-UNNAMEDPROTAG-2025-06-30T22-21-06-427Z.png",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-UNNAMEDPROTAG-2025-06-30T22-21-06-427Z.png",
+    "uploadDate": "2025-06-30T22:21:08.066Z",
+    "featured": false
+  },
+  {
+    "id": 1751322214165,
+    "title": "Unnamed Protagonist Sprite Sheet",
+    "description": "Sprite Sheet for My Guy",
+    "category": "digital",
+    "date": "2025-06",
+    "datePrecision": "month",
+    "formattedDate": "June 2025",
+    "tags": [
+      "Prism of Light",
+      "greyscale",
+      "protag",
+      "procreate"
+    ],
+    "linkedProject": null,
+    "image": "IMAGES/art/digital-01d5f0952238d0ed8bd0176c08b8024583f8b3f476-2025-06-30T22-23-34-165Z.jpg",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01d5f0952238d0ed8bd0176c08b8024583f8b3f476-2025-06-30T22-23-34-165Z.jpg",
+    "uploadDate": "2025-06-30T22:23:35.306Z",
+    "featured": false
+  }
 ];
 
-// You can add more art-related data exports here
-export const artCategories = [
-    "Digital Art",
-    "Traditional Art", 
-    "Sketches",
-    "Paintings",
-    "Character Design",
-    "Concept Art"
-];
-
-export const artMediums = [
-    "Digital",
-    "Pencil",
-    "Ink",
-    "Watercolor",
-    "Oil Paint",
-    "Acrylic",
-    "Mixed Media"
-];
+// Make data available globally for your portfolio to use
+window.artData = artData;
