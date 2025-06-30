@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art  Portfolio</title>
+    <link rel="stylesheet" href="css/gallery.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="gallery-container">
+        <!-- Header -->
+        <header class="gallery-header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='index.html'">← Back to Portfolio</button>
+                <h1>Art Portfolio</h1>
+                <a href="admin/index.html" class="admin-link">Admin Panel</a>
+            </div>
+        </header>
+
+        <!-- Main Gallery Content -->
+        <div class="gallery-main">
+            <!-- Left Sidebar - Search & Filters -->
+            <aside class="gallery-sidebar">
+                <div class="search-section">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Search artwork...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Filter by Type</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" value="all" checked>
+                                <span>All Types</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" value="digital">
+                                <span>Digital Art</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" value="painting">
+                                <span>Painting</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" value="drawing">
+                                <span>Drawing</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" value="traditional">
+                                <span>Traditional</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" value="3d">
+                                <span>3D Art</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3>Tags</h3>
+                        <div class="tags-filter" id="tags-filter">
+                            <!-- Dynamic tags will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3>Projects</h3>
+                        <div class="projects-filter" id="projects-filter">
+                            <!-- Dynamic projects will be populated here -->
+                        </div>
+                    </div>
+
+                    <button class="clear-filters" onclick="clearAllFilters()">Clear All Filters</button>
+                </div>
+            </aside>
+
+            <!-- Right Content Area -->
+            <main class="gallery-content">
+                <!-- Sort Controls -->
+                <div class="gallery-controls">
+                    <div class="results-info">
+                        <span id="results-count">Loading artwork...</span>
+                    </div>
+                    <div class="sort-controls">
+                        <label>Sort by:</label>
+                        <select id="sort-select">
+                            <option value="newest-upload">Newest (Upload Date) ↓</option>
+                            <option value="oldest-upload">Oldest (Upload Date) ↑</option>
+                            <option value="newest-created" selected>Newest (Created Date) ↓</option>
+                            <option value="oldest-created">Oldest (Created Date) ↑</option>
+                            <option value="alphabetical">Alphabetical ↓</option>
+                            <option value="reverse-alphabetical">Alphabetical ↑</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- Artwork items will be dynamically populated here -->
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-state" id="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading your artwork...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-icon">🎨</div>
+                    <h3>No artwork found</h3>
+                    <p>Try adjusting your search or filters, or <a href="admin/index.html">upload some artwork</a>!</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Artwork Modal -->
+    <div class="artwork-modal" id="artwork-modal" style="display: none;">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modal-img" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-title"></h2>
+                    <p id="modal-description"></p>
+                    <div class="modal-metadata">
+                        <div class="metadata-item">
+                            <label>Category:</label>
+                            <span id="modal-category"></span>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Date:</label>
+                            <span id="modal-date"></span>
+                        </div>
+                        <div class="metadata-item" id="modal-project-container" style="display: none;">
+                            <label>Project:</label>
+                            <a id="modal-project" href="" target="_blank"></a>
+                        </div>
+                    </div>
+                    <div class="modal-tags" id="modal-tags">
+                        <!-- Tags will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/gallery.js"></script>
+</body>
+</html>

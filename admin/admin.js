@@ -18,6 +18,11 @@
 // Tags are displayed as removable bubbles in the UI
 let tags = [];
 
+// Project management variables
+let selectedProject = null;     // Currently selected project for linking
+let existingProjects = [];      // Predefined projects from portfolio
+let githubRepositories = [];    // Repositories fetched from GitHub API
+
 // ==============================================
 // SECURITY CONFIGURATION
 // ==============================================
@@ -466,53 +471,6 @@ function loadConfig() {
     return false;
 }
 
-// ==============================================
-// PROJECT SEARCH & MANAGEMENT SYSTEM
-// ==============================================
-
-/**
- * Project management variables
- * The system supports three types of projects:
- * 1. Existing projects (from your main portfolio)
- * 2. GitHub repositories (fetched via API)
- * 3. Admin projects (created during upload session)
- */
-let selectedProject = null;    // Currently selected project for linking
-let existingProjects = [];     // Pre-existing portfolio projects
-let adminProjects = [];        // Temporary projects created during session
-let githubRepos = [];          // Cached GitHub repositories
-
-/**
- * Initialize project search functionality
- * Sets up the dropdown search system for linking artwork to projects
- * Loads existing projects and GitHub repositories for selection
- */
-async function initializeProjectSearch() {
-    const searchInput = document.getElementById('project-search');
-    const dropdown = document.getElementById('project-dropdown');
-    
-    // Load all available projects and repositories
-    loadExistingProjects();
-    await loadGitHubRepositories();
-    
-    // Show dropdown when user types in search box
-    searchInput.addEventListener('input', function() {
-        const query = this.value.trim();
-        if (query.length > 0) {
-            showProjectDropdown(query);
-        } else {
-            dropdown.style.display = 'none';
-        }
-    });
-    
-    // Hide dropdown when clicking outside the search area
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.form-group')) {
-            dropdown.style.display = 'none';
-        }
-    });
-}
-
 /**
  * Load existing projects from your main portfolio
  * These are the projects already featured on your website
@@ -809,6 +767,190 @@ function renderTags() {
         `;
         container.appendChild(tagBubble);
     });
+}
+
+// ==============================================
+// PROJECT MANAGEMENT SYSTEM
+// ==============================================
+
+/**
+ * Initialize project search and linking functionality
+ * Sets up the project dropdown and search capabilities
+ */
+async function initializeProjectSearch() {
+    // Load existing projects and GitHub repositories
+    loadExistingProjects();
+    await loadGitHubRepositories();
+    
+    const searchInput = document.getElementById('project-search');
+    const dropdown = document.getElementById('project-dropdown');
+    
+    if (!searchInput || !dropdown) {
+        console.warn('Project search elements not found - skipping project initialization');
+        return;
+    }
+    
+    // Handle search input
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        showProjectDropdown(query);
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.form-group')) {
+            dropdown.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Load existing projects from your main portfolio
+ * These are the projects already featured on your website
+ */
+function loadExistingProjects() {
+    existingProjects = [
+        { title: "Final Project - Balancing in MMOs Demo", type: "project" },
+        { title: "Crossing Roads - Integrated Group Project", type: "project" },
+        { title: "Web Dev Suika Game", type: "project" },
+        { title: "Project: New World", type: "project" }
+    ];
+}
+
+/**
+ * Load GitHub repositories via GitHub API
+ * Fetches your repositories and caches them for project linking
+ */
+async function loadGitHubRepositories() {
+    // Skip if GitHub token is not configured
+    if (!GITHUB_TOKEN) {
+        showStatus('GitHub token not configured. Project linking will work with manual entries only.', 'warning');
+        return;
+    }
+    
+    try {
+        showStatus('Loading GitHub repositories...', 'info');
+        
+        // Fetch repositories from GitHub API
+        const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.ok) {
+            const repos = await response.json();
+            githubRepositories = repos.map(repo => ({
+                title: repo.name,
+                description: repo.description || 'No description',
+                url: repo.html_url,
+                language: repo.language,
+                stars: repo.stargazers_count,
+                type: 'repository'
+            }));
+            showStatus('GitHub repositories loaded successfully', 'success');
+        } else {
+            console.warn('Could not load GitHub repositories:', response.status);
+            showStatus('Could not load GitHub repositories. Manual project entry still available.', 'warning');
+        }
+    } catch (error) {
+        console.error('Error loading GitHub repositories:', error);
+        showStatus('Error loading GitHub repositories. Manual project entry still available.', 'warning');
+    }
+}
+
+/**
+ * Show project dropdown with filtered results
+ */
+function showProjectDropdown(query) {
+    const dropdown = document.getElementById('project-dropdown');
+    
+    // Combine existing projects and GitHub repositories
+    const allProjects = [...existingProjects, ...githubRepositories];
+    
+    // Filter projects based on query
+    const filtered = allProjects.filter(project => 
+        project.title.toLowerCase().includes(query)
+    );
+    
+    // Clear and populate dropdown
+    dropdown.innerHTML = '';
+    
+    if (query && filtered.length > 0) {
+        filtered.forEach(project => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.innerHTML = `
+                <div class="project-title">${project.title}</div>
+                <div class="project-type">${project.type}</div>
+                ${project.description ? `<div class="project-description">${project.description}</div>` : ''}
+            `;
+            item.addEventListener('click', () => selectProject(project));
+            dropdown.appendChild(item);
+        });
+        dropdown.style.display = 'block';
+    } else if (query) {
+        // Show option to create new project
+        const item = document.createElement('div');
+        item.className = 'dropdown-item create-new';
+        item.innerHTML = `<div class="project-title">Create "${query}" as new project</div>`;
+        item.addEventListener('click', () => createNewProject(query));
+        dropdown.appendChild(item);
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+/**
+ * Select a project for linking
+ */
+function selectProject(project) {
+    selectedProject = project;
+    document.getElementById('project-search').value = '';
+    document.getElementById('project-dropdown').style.display = 'none';
+    updateSelectedProject();
+}
+
+/**
+ * Create a new project entry
+ */
+function createNewProject(title) {
+    const newProject = {
+        title: title,
+        type: 'custom',
+        isTemporary: true
+    };
+    selectProject(newProject);
+}
+
+/**
+ * Update the selected project display
+ */
+function updateSelectedProject() {
+    const container = document.getElementById('selected-project');
+    const nameSpan = document.getElementById('project-name');
+    
+    if (selectedProject) {
+        let displayText = selectedProject.title;
+        if (selectedProject.isTemporary) {
+            displayText += ' (temporary)';
+        } else {
+            displayText += ` (${selectedProject.type})`;
+        }
+        
+        nameSpan.textContent = displayText;
+        container.style.display = 'flex';
+    }
+}
+
+/**
+ * Clear the selected project
+ */
+function clearProject() {
+    selectedProject = null;
+    document.getElementById('selected-project').style.display = 'none';
 }
 
 // Initialize form handler
@@ -1176,8 +1318,41 @@ async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
         });
         
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`GitHub API error: ${response.status} - ${errorData.message}`);
+            const errorData = await response.json().catch(() => ({}));
+            
+            // Enhanced error reporting for common issues
+            let errorMessage = `GitHub API error: ${response.status} - ${errorData.message || response.statusText}`;
+            
+            if (response.status === 403) {
+                console.error('🔒 403 Forbidden Error Details:');
+                console.error('   - Token permissions insufficient');
+                console.error('   - Required: "repo" scope for full repository access');
+                console.error('   - Current repository:', `${GITHUB_USERNAME}/kennedysovine.github.io`);
+                console.error('   - Attempting to write to:', path);
+                
+                errorMessage = `GitHub API access denied (403). Your personal access token needs "repo" permissions. Please:\n\n` +
+                             `1. Go to GitHub Settings → Developer settings → Personal access tokens\n` +
+                             `2. Delete your current token\n` +
+                             `3. Create a new token with "repo" scope (full repository access)\n` +
+                             `4. Update your config.js with the new token`;
+            } else if (response.status === 404) {
+                console.error('🔍 404 Not Found Error Details:');
+                console.error('   - Repository may not exist or be accessible');
+                console.error('   - Check repository name:', `${GITHUB_USERNAME}/kennedysovine.github.io`);
+                console.error('   - Verify username is correct');
+                
+                errorMessage = `Repository not found (404). Please verify:\n` +
+                             `- Repository exists: ${GITHUB_USERNAME}/kennedysovine.github.io\n` +
+                             `- Username is correct in config.js\n` +
+                             `- Repository is public or token has access to private repos`;
+            } else if (response.status === 401) {
+                errorMessage = `Authentication failed (401). Please check:\n` +
+                             `- Token is correct in config.js\n` +
+                             `- Token hasn't expired\n` +
+                             `- No extra spaces in token string`;
+            }
+            
+            throw new Error(errorMessage);
         }
         
         // Step 5: Return useful information about the uploaded file
@@ -1190,7 +1365,17 @@ async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
         };
         
     } catch (error) {
-        console.error('File upload error:', error);
+        console.error('📋 File upload error details:', error);
+        
+        // Log additional debugging information
+        console.error('🔧 Debug Information:');
+        console.error('   - GitHub Username:', GITHUB_USERNAME);
+        console.error('   - Repository:', `${GITHUB_USERNAME}/kennedysovine.github.io`);
+        console.error('   - Upload Path:', path);
+        console.error('   - File Size:', file.size, 'bytes');
+        console.error('   - Token Present:', !!GITHUB_TOKEN);
+        console.error('   - Token Length:', GITHUB_TOKEN ? GITHUB_TOKEN.length : 0);
+        
         throw error; // Re-throw so calling function can handle it
     }
 }
