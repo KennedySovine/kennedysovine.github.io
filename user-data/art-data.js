@@ -1,3 +1,4 @@
+
 // Art portfolio data - structure for your artwork
 export const artworks = [
     {
