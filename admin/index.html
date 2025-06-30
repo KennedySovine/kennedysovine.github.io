@@ -12,12 +12,21 @@
         
         <!-- Simple auth section -->
         <div id="auth-section">
-            <input type="password" id="admin-password" placeholder="Enter admin password">
-            <button onclick="authenticate()">Login</button>
+            <div class="auth-form">
+                <input type="password" id="admin-password" placeholder="Enter admin password" maxlength="100">
+                <button onclick="authenticate()">Login</button>
+                <div class="auth-help">
+                    <small>Need to generate a password hash? Open browser console and run: <code>generatePasswordHash('your_password')</code></small>
+                </div>
+            </div>
         </div>
         
         <!-- Upload form (hidden until authenticated) -->
         <form id="upload-form" style="display: none;">
+            <div class="admin-header">
+                <h2>Upload Artwork</h2>
+                <button type="button" onclick="logout()" class="logout-btn">Logout</button>
+            </div>
             <div class="form-group">
                 <label>Image:</label>
                 <input type="file" id="art-image" accept="image/*" required>
@@ -60,7 +69,21 @@
 
             <div class="form-group">
                 <label>Date:</label>
-                <input type="date" id="art-date" required>
+                <div class="date-input-group">
+                    <input type="month" id="art-date-month" placeholder="YYYY-MM">
+                    <input type="date" id="art-date-full" placeholder="YYYY-MM-DD" style="display: none;">
+                    <div class="date-toggle">
+                        <label class="toggle-option">
+                            <input type="radio" name="date-precision" value="month" checked>
+                            <span>Month/Year only</span>
+                        </label>
+                        <label class="toggle-option">
+                            <input type="radio" name="date-precision" value="full">
+                            <span>Full date</span>
+                        </label>
+                    </div>
+                </div>
+                <small class="date-help">Choose month/year for general timeframe or full date for specific day</small>
             </div>
 
             <div class="form-group">

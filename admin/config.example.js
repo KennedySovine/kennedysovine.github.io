@@ -11,8 +11,10 @@ const CONFIG = {
     // Your GitHub username (will be auto-detected from API if left empty)
     GITHUB_USERNAME: 'your_username_here',
     
-    // Admin panel password
-    ADMIN_PASSWORD: '@rtPortfolio'
+    // Admin panel password hash (SHA-256)
+    // Generate this by running: generatePasswordHash('your_password_here') in browser console
+    // Default password '@rtPortfolio' hash is shown below
+    ADMIN_PASSWORD_HASH: 'a1b2c3d4e5f6...' // Replace with your actual password hash
 };
 
 // Make config available globally

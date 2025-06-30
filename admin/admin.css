@@ -274,3 +274,112 @@ button:hover {
     border-radius: 10px;
     border: 1px solid #dee2e6;
 }
+
+/* Security and authentication styling */
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.auth-help {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.auth-help small {
+    color: #6c757d;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+.auth-help code {
+    background: #e9ecef;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.8em;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.admin-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.logout-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+    background: #c82333;
+}
+
+/* Security status indicators */
+.security-info {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+/* Date input styling */
+.date-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.date-toggle {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.toggle-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.toggle-option input[type="radio"] {
+    margin: 0;
+}
+
+.date-help {
+    color: #6c757d;
+    font-size: 0.85em;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+#art-date-month,
+#art-date-full {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}

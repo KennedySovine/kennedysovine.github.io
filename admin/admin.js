@@ -3,6 +3,14 @@
 // Array to store tags
 let tags = [];
 
+// Security features
+let loginAttempts = 0;
+let lastLoginAttempt = 0;
+let sessionTimeout = null;
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_TIME = 5 * 60 * 1000; // 5 minutes
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
 // Show status messages
 function showStatus(message, type) {
     const status = document.getElementById('status');
@@ -10,8 +18,15 @@ function showStatus(message, type) {
     setTimeout(() => status.innerHTML = '', 5000);
 }
 
-// Simple authentication
+// Simple authentication with secure password hashing
 async function authenticate() {
+    // Check if locked out
+    const lockoutMinutes = isLockedOut();
+    if (lockoutMinutes > 0) {
+        showStatus(`Too many failed attempts. Try again in ${lockoutMinutes} minutes.`, 'error');
+        return;
+    }
+    
     // Load configuration first
     if (!loadConfig()) {
         showStatus('Configuration not loaded! Make sure config.js exists.', 'error');
@@ -20,16 +35,48 @@ async function authenticate() {
     
     const password = document.getElementById('admin-password').value;
     
-    if (password === ADMIN_PASSWORD) {
+    if (!password) {
+        showStatus('Please enter a password.', 'error');
+        return;
+    }
+    
+    const passwordHash = await sha256(password);
+    
+    if (passwordHash === ADMIN_PASSWORD_HASH) {
+        // Successful login - reset attempts
+        loginAttempts = 0;
+        lastLoginAttempt = 0;
+        
         document.getElementById('auth-section').style.display = 'none';
         document.getElementById('upload-form').style.display = 'block';
         showStatus('Authenticated successfully!', 'success');
+        
+        // Start session timeout
+        startSessionTimeout();
+        
         initializeTagInput();
         initializeImagePreview();
+        initializeDateInput();
         await initializeProjectSearch();
         initializeFormHandler();
+        initializeDateInput();
+        
+        // Clear the password field for security
+        document.getElementById('admin-password').value = '';
     } else {
-        showStatus('Incorrect password!', 'error');
+        // Failed login
+        loginAttempts++;
+        lastLoginAttempt = Date.now();
+        
+        const attemptsLeft = MAX_LOGIN_ATTEMPTS - loginAttempts;
+        if (attemptsLeft > 0) {
+            showStatus(`Incorrect password! ${attemptsLeft} attempts remaining.`, 'error');
+        } else {
+            showStatus('Too many failed attempts. Account locked for 5 minutes.', 'error');
+        }
+        
+        // Clear the password field
+        document.getElementById('admin-password').value = '';
     }
 }
 
@@ -113,14 +160,30 @@ function formatFileSize(bytes) {
 // Note: config.js is excluded from git for security
 let GITHUB_TOKEN = '';
 let GITHUB_USERNAME = '';
-let ADMIN_PASSWORD = '';
+let ADMIN_PASSWORD_HASH = '';
+
+// Utility function to generate SHA-256 hash
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+// Helper function to generate password hash (for setup)
+async function generatePasswordHash(password) {
+    const hash = await sha256(password);
+    console.log(`Password hash for "${password}": ${hash}`);
+    return hash;
+}
 
 // Load configuration
 function loadConfig() {
     if (window.CONFIG) {
         GITHUB_TOKEN = window.CONFIG.GITHUB_TOKEN;
         GITHUB_USERNAME = window.CONFIG.GITHUB_USERNAME;
-        ADMIN_PASSWORD = window.CONFIG.ADMIN_PASSWORD;
+        ADMIN_PASSWORD_HASH = window.CONFIG.ADMIN_PASSWORD_HASH;
         return true;
     }
     return false;
@@ -329,11 +392,11 @@ function clearProject() {
     document.getElementById('selected-project').style.display = 'none';
 }
 
-// Format date for display
-function formatDateForDisplay(dateString) {
+// Format date for display with flexible precision
+function formatDateForDisplay(dateString, precision = 'auto') {
     if (!dateString) return '';
     
-    const date = new Date(dateString);
+    const date = new Date(dateString + (dateString.length === 7 ? '-01' : '')); // Add day if month-only
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
                    'July', 'August', 'September', 'October', 'November', 'December'];
     
@@ -341,12 +404,60 @@ function formatDateForDisplay(dateString) {
     const month = months[date.getMonth()];
     const year = date.getFullYear();
     
-    // If day is 1, just show "Month Year"
-    if (day === 1) {
+    // If precision is month or if it's auto and day is 1, just show "Month Year"
+    if (precision === 'month' || (precision === 'auto' && day === 1)) {
         return `${month} ${year}`;
     } else {
         return `${day} ${month} ${year}`;
     }
+}
+
+// Initialize date input functionality
+function initializeDateInput() {
+    const monthInput = document.getElementById('art-date-month');
+    const fullInput = document.getElementById('art-date-full');
+    const precisionRadios = document.querySelectorAll('input[name="date-precision"]');
+    
+    if (!monthInput || !fullInput) {
+        console.error('Date inputs not found!');
+        return;
+    }
+    
+    // Handle precision toggle
+    precisionRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'month') {
+                monthInput.style.display = 'block';
+                fullInput.style.display = 'none';
+                fullInput.value = '';
+            } else {
+                monthInput.style.display = 'none';
+                fullInput.style.display = 'block';
+                monthInput.value = '';
+            }
+        });
+    });
+}
+
+// Get the current date value and precision
+function getCurrentDateValue() {
+    const monthInput = document.getElementById('art-date-month');
+    const fullInput = document.getElementById('art-date-full');
+    const precision = document.querySelector('input[name="date-precision"]:checked')?.value;
+    
+    if (precision === 'month' && monthInput.value) {
+        return {
+            value: monthInput.value,
+            precision: 'month'
+        };
+    } else if (precision === 'full' && fullInput.value) {
+        return {
+            value: fullInput.value,
+            precision: 'full'
+        };
+    }
+    
+    return { value: '', precision: 'month' };
 }
 
 // Add a tag
@@ -403,8 +514,8 @@ function initializeFormHandler() {
         const title = document.getElementById('art-title').value;
         const description = document.getElementById('art-description').value;
         const category = document.querySelector('input[name="art-category"]:checked')?.value;
-        const date = document.getElementById('art-date').value;
-        const formattedDate = formatDateForDisplay(date);
+        const dateData = getCurrentDateValue();
+        const formattedDate = formatDateForDisplay(dateData.value, dateData.precision);
         
         if (!imageFile) {
             showStatus('Please select an image!', 'error');
@@ -416,13 +527,19 @@ function initializeFormHandler() {
             return;
         }
         
+        if (!dateData.value) {
+            showStatus('Please enter a date!', 'error');
+            return;
+        }
+        
         // Prepare the art data object
         const artData = {
             id: Date.now(),
             title: title || 'Untitled',
             description: description || '',
             category: category,
-            date: date,
+            date: dateData.value,
+            datePrecision: dateData.precision,
             formattedDate: formattedDate,
             tags: [...tags],
             linkedProject: selectedProject ? {
@@ -452,6 +569,83 @@ function initializeFormHandler() {
         });
     });
 }
+
+// Check if user is locked out
+function isLockedOut() {
+    if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+        const timeSinceLastAttempt = Date.now() - lastLoginAttempt;
+        if (timeSinceLastAttempt < LOCKOUT_TIME) {
+            const remainingTime = Math.ceil((LOCKOUT_TIME - timeSinceLastAttempt) / 60000);
+            return remainingTime;
+        } else {
+            // Reset attempts after lockout period
+            loginAttempts = 0;
+        }
+    }
+    return 0;
+}
+
+// Start session timeout
+function startSessionTimeout() {
+    if (sessionTimeout) {
+        clearTimeout(sessionTimeout);
+    }
+    
+    sessionTimeout = setTimeout(() => {
+        logout();
+        showStatus('Session expired for security. Please log in again.', 'warning');
+    }, SESSION_TIMEOUT);
+}
+
+// Logout function
+function logout() {
+    document.getElementById('auth-section').style.display = 'block';
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('admin-password').value = '';
+    
+    if (sessionTimeout) {
+        clearTimeout(sessionTimeout);
+        sessionTimeout = null;
+    }
+    
+    // Clear any sensitive data
+    selectedProject = null;
+    tags = [];
+    renderTags();
+    
+    showStatus('Logged out successfully.', 'info');
+}
+
+// Add keyboard support for login
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('admin-password');
+    if (passwordInput) {
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                authenticate();
+            }
+        });
+    }
+    
+    // Make generatePasswordHash available globally for console use
+    window.generatePasswordHash = generatePasswordHash;
+});
+
+// Activity tracking for session timeout
+let lastActivity = Date.now();
+
+function trackActivity() {
+    lastActivity = Date.now();
+    // Extend session if user is active
+    if (sessionTimeout) {
+        startSessionTimeout();
+    }
+}
+
+// Track user activity
+document.addEventListener('mousemove', trackActivity);
+document.addEventListener('keypress', trackActivity);
+document.addEventListener('click', trackActivity);
 
 // GitHub API integration complete!
 // Configuration is now loaded from config.js for security
