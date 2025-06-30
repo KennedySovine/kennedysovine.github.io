@@ -199,6 +199,8 @@ function handleTypeFilter(event) {
     const value = event.target.value;
     const checked = event.target.checked;
     
+    console.log('Type filter changed:', value, checked); // Debug log
+    
     if (value === 'all') {
         if (checked) {
             currentFilters.types = ['all'];
@@ -225,6 +227,7 @@ function handleTypeFilter(event) {
         }
     }
     
+    console.log('Current filters:', currentFilters); // Debug log
     applyFiltersAndSort();
 }
 
@@ -232,14 +235,16 @@ function handleTypeFilter(event) {
  * Toggle tag filter
  */
 function toggleTagFilter(tag) {
-    const tagElement = document.querySelector(`.filter-tag[textContent="${tag}"]`);
+    // Find the tag element by checking text content
+    const tagElements = document.querySelectorAll('.filter-tag');
+    const tagElement = Array.from(tagElements).find(el => el.textContent === tag);
     
     if (currentFilters.tags.includes(tag)) {
         currentFilters.tags = currentFilters.tags.filter(t => t !== tag);
-        tagElement.classList.remove('active');
+        if (tagElement) tagElement.classList.remove('active');
     } else {
         currentFilters.tags.push(tag);
-        tagElement.classList.add('active');
+        if (tagElement) tagElement.classList.add('active');
     }
     
     applyFiltersAndSort();
@@ -249,14 +254,16 @@ function toggleTagFilter(tag) {
  * Toggle project filter
  */
 function toggleProjectFilter(project) {
-    const projectElement = document.querySelector(`.filter-project[textContent="${project}"]`);
+    // Find the project element by checking text content
+    const projectElements = document.querySelectorAll('.filter-project');
+    const projectElement = Array.from(projectElements).find(el => el.textContent === project);
     
     if (currentFilters.projects.includes(project)) {
         currentFilters.projects = currentFilters.projects.filter(p => p !== project);
-        projectElement.classList.remove('active');
+        if (projectElement) projectElement.classList.remove('active');
     } else {
         currentFilters.projects.push(project);
-        projectElement.classList.add('active');
+        if (projectElement) projectElement.classList.add('active');
     }
     
     applyFiltersAndSort();
@@ -285,9 +292,37 @@ function applyFiltersAndSort() {
     
     // Apply type filter
     if (!currentFilters.types.includes('all')) {
+        console.log('Applying type filter:', currentFilters.types); // Debug log
+        const beforeFilter = filteredArtworks.length;
+        
         filteredArtworks = filteredArtworks.filter(artwork => {
-            return currentFilters.types.includes(artwork.category);
+            // Map filter values to possible category values
+            const categoryMappings = {
+                'digital': ['Digital Art', 'Digital'],
+                'painting': ['Painting', 'Paintings', 'Oil Paint', 'Acrylic', 'Watercolor'],
+                'drawing': ['Drawing', 'Sketches', 'Pencil', 'Ink'],
+                'traditional': ['Traditional Art', 'Traditional', 'Pencil', 'Ink', 'Watercolor', 'Oil Paint', 'Acrylic'],
+                '3d': ['3D Art', '3D', 'Three Dimensional']
+            };
+            
+            const matches = currentFilters.types.some(type => {
+                const possibleCategories = categoryMappings[type] || [type];
+                return possibleCategories.some(cat => 
+                    artwork.category === cat || 
+                    artwork.category.toLowerCase() === cat.toLowerCase() ||
+                    artwork.medium === cat ||
+                    artwork.medium.toLowerCase() === cat.toLowerCase()
+                );
+            });
+            
+            if (matches) {
+                console.log('Artwork matches filter:', artwork.title, artwork.category, artwork.medium); // Debug log
+            }
+            
+            return matches;
         });
+        
+        console.log(`Type filter: ${beforeFilter} -> ${filteredArtworks.length} artworks`); // Debug log
     }
     
     // Apply tag filter
@@ -416,11 +451,17 @@ function formatCategory(category) {
         'digital': 'Digital Art',
         'painting': 'Painting',
         'drawing': 'Drawing',
-        'traditional': 'Traditional',
+        'traditional': 'Traditional Art',
         '3d': '3D Art'
     };
     
-    return categoryMap[category] || category;
+    // If it's already a display name, return as is
+    if (Object.values(categoryMap).includes(category)) {
+        return category;
+    }
+    
+    // Otherwise, map from lowercase to display name
+    return categoryMap[category.toLowerCase()] || category;
 }
 
 /**
