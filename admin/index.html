@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Portfolio Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Art Portfolio Admin</h1>
+        
+        <!-- Simple auth section -->
+        <div id="auth-section">
+            <input type="password" id="admin-password" placeholder="Enter admin password">
+            <button onclick="authenticate()">Login</button>
+        </div>
+        
+        <!-- Upload form (hidden until authenticated) -->
+        <form id="upload-form" style="display: none;">
+            <div class="form-group">
+                <label>Image:</label>
+                <input type="file" id="art-image" accept="image/*" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" id="art-title" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea id="art-description"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Tags:</label>
+                <input type="text" id="tag-input" placeholder="Type a tag and press Enter or comma">
+                <div class="tags-container" id="tags-container">
+                    <!-- Tag bubbles will appear here -->
+                </div>
+            </div>
+            
+            <button type="submit">Upload Artwork</button>
+        </form>
+        
+        <div id="status"></div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>
