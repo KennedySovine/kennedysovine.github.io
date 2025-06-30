@@ -10,6 +10,9 @@
 // - Flexible date input (month/year or full date)
 // ================================================================
 
+// Import project management functions
+import { adminProjects, addTemporaryProject, makeProjectPermanent } from './admin-projects.js';
+
 // ==============================================
 // GLOBAL STATE VARIABLES
 // ==============================================
@@ -56,7 +59,7 @@ async function authenticate() {
     
     // Load configuration first
     if (!loadConfig()) {
-        showStatus('Configuration not loaded! Make sure config.js exists.', 'error');
+        showStatus('Configuration not loaded! Make sure config-fallback.js is loaded.', 'error');
         return;
     }
     
@@ -462,6 +465,14 @@ async function generatePasswordHash(password) {
  * @returns {boolean} - True if config loaded successfully
  */
 function loadConfig() {
+    // Try to load from CONFIG_FALLBACK first (from config-fallback.js)
+    if (window.CONFIG_FALLBACK) {
+        GITHUB_TOKEN = window.CONFIG_FALLBACK.GITHUB_TOKEN;
+        GITHUB_USERNAME = window.CONFIG_FALLBACK.GITHUB_USERNAME;
+        ADMIN_PASSWORD_HASH = window.CONFIG_FALLBACK.ADMIN_PASSWORD_HASH;
+        return true;
+    }
+    // Fallback to old CONFIG for backwards compatibility
     if (window.CONFIG) {
         GITHUB_TOKEN = window.CONFIG.GITHUB_TOKEN;
         GITHUB_USERNAME = window.CONFIG.GITHUB_USERNAME;
@@ -537,124 +548,6 @@ async function loadGitHubRepositories() {
         showStatus('Could not load GitHub repositories. Project linking will still work with manual entries.', 'warning');
         githubRepos = []; // Ensure it's an empty array on failure
     }
-}
-
-function showProjectDropdown(query) {
-    const dropdown = document.getElementById('project-dropdown');
-    const results = searchProjects(query);
-    
-    dropdown.innerHTML = '';
-    
-    // Show matching projects (existing projects first)
-    const existingMatches = results.filter(p => p.type === 'project');
-    const repoMatches = results.filter(p => p.type === 'repository');
-    const adminMatches = results.filter(p => p.type === 'admin-project');
-    
-    // Add existing projects
-    existingMatches.forEach(project => {
-        const item = document.createElement('div');
-        item.className = 'dropdown-item';
-        item.innerHTML = `
-            <div class="project-item">
-                <span class="project-title">${project.title}</span>
-                <span class="project-type">(${project.type})</span>
-            </div>
-        `;
-        item.onclick = () => selectProject(project);
-        dropdown.appendChild(item);
-    });
-    
-    // Add GitHub repositories
-    repoMatches.forEach(repo => {
-        const item = document.createElement('div');
-        item.className = 'dropdown-item';
-        item.innerHTML = `
-            <div class="project-item">
-                <span class="project-title">${repo.title}</span>
-                <span class="project-type">(GitHub repository)</span>
-                ${repo.language ? `<span class="project-language">${repo.language}</span>` : ''}
-                ${repo.private ? '<span class="project-private">Private</span>' : ''}
-                ${repo.stars > 0 ? `<span class="project-stars">★ ${repo.stars}</span>` : ''}
-            </div>
-            ${repo.description ? `<div class="project-description">${repo.description}</div>` : ''}
-        `;
-        item.onclick = () => selectProject(repo);
-        dropdown.appendChild(item);
-    });
-    
-    // Add admin projects
-    adminMatches.forEach(project => {
-        const item = document.createElement('div');
-        item.className = 'dropdown-item';
-        item.innerHTML = `
-            <div class="project-item">
-                <span class="project-title">${project.title}</span>
-                <span class="project-type">(temporary)</span>
-            </div>
-        `;
-        item.onclick = () => selectProject(project);
-        dropdown.appendChild(item);
-    });
-    
-    // Add "Add new project" option
-    const addNew = document.createElement('div');
-    addNew.className = 'dropdown-item add-new';
-    addNew.innerHTML = `<div class="add-new-text">+ Add new project: "${query}"</div>`;
-    addNew.onclick = () => addNewProject(query);
-    dropdown.appendChild(addNew);
-    
-    dropdown.style.display = 'block';
-}
-
-function searchProjects(query) {
-    const allProjects = [...existingProjects, ...githubRepos, ...adminProjects];
-    return allProjects.filter(project => 
-        project.title.toLowerCase().includes(query.toLowerCase()) ||
-        (project.description && project.description.toLowerCase().includes(query.toLowerCase()))
-    ).slice(0, 10); // Limit to 10 results
-}
-
-function selectProject(project) {
-    selectedProject = project;
-    document.getElementById('project-search').value = '';
-    document.getElementById('project-dropdown').style.display = 'none';
-    showSelectedProject();
-}
-
-function addNewProject(title) {
-    const newProject = {
-        title: title,
-        type: "admin-project",
-        id: Date.now(),
-        isTemporary: true
-    };
-    
-    adminProjects.push(newProject);
-    selectProject(newProject);
-}
-
-function showSelectedProject() {
-    const container = document.getElementById('selected-project');
-    const nameSpan = document.getElementById('project-name');
-    
-    if (selectedProject) {
-        let displayText = selectedProject.title;
-        if (selectedProject.type === 'repository') {
-            displayText += ' (GitHub repository)';
-        } else if (selectedProject.type === 'admin-project') {
-            displayText += ' (temporary)';
-        } else {
-            displayText += ` (${selectedProject.type})`;
-        }
-        
-        nameSpan.textContent = displayText;
-        container.style.display = 'flex';
-    }
-}
-
-function clearProject() {
-    selectedProject = null;
-    document.getElementById('selected-project').style.display = 'none';
 }
 
 // Format date for display with flexible precision
@@ -792,8 +685,9 @@ async function initializeProjectSearch() {
     
     // Handle search input
     searchInput.addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        showProjectDropdown(query);
+        const query = this.value.trim(); // Keep original case
+        const queryLower = query.toLowerCase(); // For searching
+        showProjectDropdown(query, queryLower);
     });
     
     // Hide dropdown when clicking outside
@@ -863,27 +757,32 @@ async function loadGitHubRepositories() {
 /**
  * Show project dropdown with filtered results
  */
-function showProjectDropdown(query) {
+function showProjectDropdown(query, queryLower) {
     const dropdown = document.getElementById('project-dropdown');
     
-    // Combine existing projects and GitHub repositories
-    const allProjects = [...existingProjects, ...githubRepositories];
+    if (!query) {
+        dropdown.style.display = 'none';
+        return;
+    }
     
-    // Filter projects based on query
+    // Combine all project sources: existing, GitHub repos, and admin projects
+    const allProjects = [...existingProjects, ...githubRepositories, ...adminProjects];
+    
+    // Filter projects based on query (case-insensitive search)
     const filtered = allProjects.filter(project => 
-        project.title.toLowerCase().includes(query)
+        project.title.toLowerCase().includes(queryLower)
     );
     
     // Clear and populate dropdown
     dropdown.innerHTML = '';
     
-    if (query && filtered.length > 0) {
+    if (filtered.length > 0) {
         filtered.forEach(project => {
             const item = document.createElement('div');
             item.className = 'dropdown-item';
             item.innerHTML = `
                 <div class="project-title">${project.title}</div>
-                <div class="project-type">${project.type}</div>
+                <div class="project-type">${project.type}${project.isTemporary ? ' (temporary)' : ''}</div>
                 ${project.description ? `<div class="project-description">${project.description}</div>` : ''}
             `;
             item.addEventListener('click', () => selectProject(project));
@@ -891,7 +790,7 @@ function showProjectDropdown(query) {
         });
         dropdown.style.display = 'block';
     } else if (query) {
-        // Show option to create new project
+        // Show option to create new project (using original case)
         const item = document.createElement('div');
         item.className = 'dropdown-item create-new';
         item.innerHTML = `<div class="project-title">Create "${query}" as new project</div>`;
@@ -918,11 +817,15 @@ function selectProject(project) {
  */
 function createNewProject(title) {
     const newProject = {
-        title: title,
+        title: title, // Preserve original capitalization
         type: 'custom',
         isTemporary: true
     };
-    selectProject(newProject);
+    
+    // Add to persistent storage and get the project with ID
+    const persistedProject = addTemporaryProject(newProject);
+    
+    selectProject(persistedProject);
 }
 
 /**
@@ -1046,8 +949,9 @@ function initializeFormHandler() {
         
         // If there's a temporary project, make it permanent
         if (selectedProject && selectedProject.isTemporary) {
+            makeProjectPermanent(selectedProject.id);
             selectedProject.isTemporary = false;
-            // In a real implementation, you'd save this to admin-projects.js
+            showStatus('Project has been made permanent and can be reused for future uploads.', 'success');
         }
         
         // ==============================================

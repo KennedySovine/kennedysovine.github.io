@@ -1,4 +1,3 @@
-
 // Art portfolio data - structure for your artwork
 export const artworks = [
     // Add your actual artwork here or use the admin panel to upload
