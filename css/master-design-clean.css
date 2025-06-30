@@ -95,25 +95,4 @@
   /* Gallery glass effects */
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.2);
-
-  /* =======================================================
-   * ESSENTIAL SPACING & TRANSITIONS FOR PORTFOLIO
-   * Minimal variables needed for portfolio functionality
-   * ======================================================= */
-  
-  /* Essential spacing (for portfolio compatibility) */
-  --space-2: clamp(0.5rem, 1vw, 1rem);
-  --space-5: clamp(1.25rem, 2.5vw, 2.5rem);
-  --space-6: clamp(1.5rem, 3vw, 3rem);
-  --spacing-xs: 0.5em;
-  --spacing-sm: 1em;
-  --spacing-md: 1.5em;
-  --spacing-lg: 2em;
-  --spacing-xl: 3em;
-  --spacing-xxl: 4em;
-  
-  /* Essential transitions (for portfolio compatibility) */
-  --transition: 0.3s ease;
-  --transition-fast: 0.2s ease;
-  --transition-slow: 0.5s ease;
 }
