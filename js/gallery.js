@@ -2,7 +2,7 @@
 // Handles search, filtering, sorting, and display of artwork
 
 // Import art data
-import { artworks } from '../user-data/art-data.js';
+import { artworks, artCategories } from '../user-data/art-data.js';
 
 // State management
 let filteredArtworks = [];
@@ -107,6 +107,35 @@ function extractMetadata() {
  * Initialize filter UI components
  */
 function initializeFilters() {
+    // Populate type filters
+    const typeFilterOptions = document.getElementById('type-filter-options');
+    typeFilterOptions.innerHTML = '';
+    
+    // Add "All Types" option first
+    const allTypesLabel = document.createElement('label');
+    allTypesLabel.className = 'filter-option';
+    allTypesLabel.innerHTML = `
+        <input type="checkbox" value="all" checked>
+        <span>All Types</span>
+    `;
+    const allTypesCheckbox = allTypesLabel.querySelector('input');
+    allTypesCheckbox.addEventListener('change', handleTypeFilter);
+    typeFilterOptions.appendChild(allTypesLabel);
+    
+    // Add category filters based on artCategories
+    artCategories.forEach(category => {
+        const categoryValue = category.toLowerCase().replace(/\s+/g, '');
+        const label = document.createElement('label');
+        label.className = 'filter-option';
+        label.innerHTML = `
+            <input type="checkbox" value="${categoryValue}">
+            <span>${category}</span>
+        `;
+        const checkbox = label.querySelector('input');
+        checkbox.addEventListener('change', handleTypeFilter);
+        typeFilterOptions.appendChild(label);
+    });
+    
     // Populate tags filter
     const tagsFilter = document.getElementById('tags-filter');
     tagsFilter.innerHTML = '';
@@ -140,11 +169,7 @@ function initializeEventListeners() {
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', handleSearch);
     
-    // Type filters
-    const typeCheckboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
-    typeCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handleTypeFilter);
-    });
+    // Type filters are now handled dynamically in initializeFilters()
     
     // Sort dropdown
     const sortSelect = document.getElementById('sort-select');

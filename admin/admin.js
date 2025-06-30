@@ -1381,10 +1381,30 @@ async function updateArtDataFile(newArtData, sha) {
         const fileContent = `// Art portfolio data
 // This file is automatically updated by the admin panel
 
-const artData = ${JSON.stringify(newArtData, null, 2)};
+export const artworks = ${JSON.stringify(newArtData, null, 2)};
 
-// Make data available globally for your portfolio to use
-window.artData = artData;
+// Also make data available globally for backward compatibility
+window.artData = artworks;
+
+// You can add more art-related data exports here
+export const artCategories = [
+    "Digital Art",
+    "Traditional Art", 
+    "Sketches",
+    "Paintings",
+    "Character Design",
+    "Concept Art"
+];
+
+export const artMediums = [
+    "Digital",
+    "Pencil",
+    "Ink",
+    "Watercolor",
+    "Oil Paint",
+    "Acrylic",
+    "Mixed Media"
+];
 `;
         
         // Encode content as base64 (GitHub API requirement)

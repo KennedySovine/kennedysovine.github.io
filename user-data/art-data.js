@@ -1,7 +1,7 @@
 // Art portfolio data
 // This file is automatically updated by the admin panel
 
-const artData = [
+export const artworks = [
   {
     "id": 1751322066427,
     "title": "Unnamed Protagonist",
@@ -18,7 +18,7 @@ const artData = [
       "Prism of Light"
     ],
     "linkedProject": {
-      "title": "prism of light",
+      "title": "Prism of Light",
       "type": "custom",
       "url": null,
       "language": null
@@ -50,5 +50,12 @@ const artData = [
   }
 ];
 
-// Make data available globally for your portfolio to use
-window.artData = artData;
+// Also make data available globally for backward compatibility
+window.artData = artworks;
+
+// You can add more art-related data exports here
+export const artCategories = [
+    "Digital Art",
+    "Painting",
+    "Drawing",
+];
