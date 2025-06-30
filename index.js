@@ -9,7 +9,7 @@ import {
 } from "./user-data/data.js";
 
 import { URLs } from "./user-data/urls.js";
-import { config } from "./user-data/config.js";
+import { config } from "./user-data/config-loader.js";
 import LinkedInIntegration, {
   initializeLinkedInIntegration,
   updateBioFromLinkedIn,

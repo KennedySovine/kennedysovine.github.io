@@ -4,6 +4,23 @@ A modern, responsive portfolio website built with JavaScript and lit-html templa
 
 ![Portfolio Preview](assets/preview.png)
 
+## ⚠️ First Time Setup
+
+**Important:** This repository excludes sensitive configuration files for security. Before running:
+
+1. **Copy configuration templates:**
+   ```bash
+   cp user-data/config.example.js user-data/config.js
+   cp admin/config.example.js admin/config.js  # (if using admin panel)
+   ```
+
+2. **Configure your tokens:**
+   - Edit `user-data/config.js` with your GitHub token and LinkedIn info
+   - Edit `admin/config.js` with admin credentials (if needed)
+   - See `SETUP.md` for detailed instructions
+
+3. **Never commit your config.js files** - they contain sensitive data
+
 ## Features
 
 - 📱 Responsive Design
