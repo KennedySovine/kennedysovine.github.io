@@ -383,3 +383,316 @@ button:hover {
     border-radius: 4px;
     font-size: 1em;
 }
+
+/* Upload progress styling */
+#upload-progress {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+
+.progress-text {
+    text-align: center;
+    font-size: 0.9em;
+    color: #495057;
+    font-weight: 500;
+}
+
+#upload-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ==============================================
+   DRAG & DROP INTERFACE STYLING
+   ============================================== */
+
+/* Main drop zone container */
+.drop-zone {
+    border: 2px dashed #cbd5e0;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hover state for drop zone */
+.drop-zone:hover {
+    border-color: #007bff;
+    background: #e3f2fd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+/* Active drag state - when file is being dragged over */
+.drop-zone.drag-over {
+    border-color: #28a745;
+    background: #e8f5e8;
+    border-style: solid;
+    animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+/* Error state for invalid files */
+.drop-zone.error {
+    border-color: #dc3545;
+    background: #f8d7da;
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Drop zone content container */
+.drop-zone-content {
+    width: 100%;
+}
+
+/* Large file icon */
+.drop-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.drop-zone:hover .drop-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Main drop text */
+.drop-text {
+    margin-bottom: 12px;
+}
+
+.drop-text strong {
+    font-size: 18px;
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.drop-text p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* Browse files button */
+.browse-btn {
+    background: transparent;
+    color: #007bff;
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+}
+
+.browse-btn:hover {
+    color: #0056b3;
+    background: transparent;
+}
+
+/* File type hint */
+.drop-hint {
+    font-size: 12px;
+    color: #868e96;
+    font-style: italic;
+}
+
+/* Enhanced image preview */
+.image-preview {
+    margin-top: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto 15px auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Preview info section */
+.preview-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.file-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.file-details span {
+    font-size: 14px;
+    color: #495057;
+}
+
+#file-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+#file-size {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+/* Change image button */
+.change-image-btn {
+    background: #6c757d;
+    color: white;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.change-image-btn:hover {
+    background: #5a6268;
+}
+
+/* ==============================================
+   ANIMATIONS FOR DRAG & DROP
+   ============================================== */
+
+/* Pulse animation for drag over state */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Fade in animation for preview */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.image-preview {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN FOR DRAG & DROP
+   ============================================== */
+
+@media (max-width: 768px) {
+    .drop-zone {
+        padding: 30px 15px;
+        min-height: 140px;
+    }
+    
+    .drop-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+    
+    .drop-text strong {
+        font-size: 16px;
+    }
+    
+    .preview-info {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .change-image-btn {
+        margin-top: 10px;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================== */
+
+/* Focus styles for keyboard navigation */
+.drop-zone:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.browse-btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 1px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .drop-zone {
+        border-width: 3px;
+    }
+    
+    .drop-zone:hover {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .drop-zone,
+    .drop-icon,
+    .image-preview {
+        transition: none;
+        animation: none;
+    }
+    
+    .drop-zone:hover {
+        transform: none;
+    }
+}
