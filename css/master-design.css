@@ -1,0 +1,130 @@
+/* =======================================================
+ * MASTER DESIGN SYSTEM
+ * ONLY font sizes and colors - nothing else!
+ * ======================================================= */
+
+:root {
+  /* =======================================================
+   * RESPONSIVE FONT SIZES - OPTIMIZED FOR READABILITY
+   * Matches the original portfolio design system
+   * ======================================================= */
+  
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-base: 15px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-xxl: 38px;
+  
+  /* Modern font scale using clamp() for responsive scaling */
+  --font-size-md: clamp(16px, 1.5vw, 18px);
+  --font-size-2xl: clamp(24px, 2.2vw, 28px);
+  --font-size-3xl: clamp(28px, 2.8vw, 32px);
+  --font-size-4xl: clamp(32px, 3.2vw, 38px);
+  --font-size-5xl: clamp(38px, 4vw, 44px);
+  --font-size-6xl: clamp(44px, 5vw, 50px);
+
+  /* =======================================================
+   * CONSISTENT COLOR THEMES
+   * Shared across portfolio and gallery
+   * ======================================================= */
+  
+  /* Primary brand colors */
+  --primary-color: #2c98f0;
+  --secondary-color: #8577e6;
+  --accent-color: #6a5acd;
+  
+  /* Gallery blue accent */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
+  
+  /* Neutral grays */
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --black: #000000;
+  
+  /* Text colors */
+  --text-color: #000000;
+  --text-light: #666666;
+  --text-muted: #999999;
+  
+  /* Background colors */
+  --background: #fafbfc;
+  --background-alt: #f2f3f7;
+  
+  /* Status colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Portfolio specific color variants */
+  --color-2: #4169e1;
+  --color-3: #8577e6;
+  --color-4: #a84cb8;
+  --color-5: #2fa499;
+  --color-6: #4054b2;
+  
+  /* Portfolio gradient */
+  --gradient-primary: linear-gradient(135deg, rgb(177, 156, 217), rgb(133, 119, 230));
+  
+  /* Gallery glass effects */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+
+  /* =======================================================
+   * ESSENTIAL SPACING & TRANSITIONS FOR PORTFOLIO
+   * Core variables needed for portfolio functionality
+   * ======================================================= */
+  
+  /* Essential spacing - matches original portfolio */
+  --spacing-xs: 0.5em;
+  --spacing-sm: 1em;
+  --spacing-md: 1.5em;
+  --spacing-lg: 2em;
+  --spacing-xl: 3em;
+  --spacing-xxl: 4em;
+  
+  /* Additional responsive spacing */
+  --space-2: clamp(0.5rem, 1vw, 1rem);
+  --space-5: clamp(1.25rem, 2.5vw, 2.5rem);
+  --space-6: clamp(1.5rem, 3vw, 3rem);
+  
+  /* Essential transitions - matches original portfolio */
+  --transition: 0.3s ease;
+  --transition-fast: 0.2s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Typography families - core fonts */
+  --font-primary: "Montserrat", sans-serif;
+  --font-secondary: "Playfair Display", Georgia, serif;
+  --font-tertiary: "Quicksand", Arial, sans-serif;
+  
+  /* Layout dimensions - matches original sidebar design */
+  --sidebar-width: 300px;
+  --main-margin: 360px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 12px;
+  
+  /* Effects - matches original shadows */
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

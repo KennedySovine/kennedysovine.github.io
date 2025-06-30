@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Portfolio Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Main Portfolio</button>
+        <h1>Art Portfolio Admin</h1>
+        
+        <!-- Simple auth section -->
+        <div id="auth-section">
+            <div class="auth-form">
+                <input type="password" id="admin-password" placeholder="Enter admin password" maxlength="100">
+                <button onclick="authenticate()">Login</button>
+                <div class="auth-help">
+                    <small>Need to generate a password hash? Open browser console and run: <code>generatePasswordHash('your_password')</code></small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upload form (hidden until authenticated) -->
+        <form id="upload-form" style="display: none;">
+            <div class="admin-header">
+                <h2>Upload Artwork</h2>
+                <button type="button" onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+            <div class="form-group">
+                <label>Image:</label>
+                
+                <!-- Drag & Drop Zone -->
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-zone-content">
+                        <div class="drop-icon">📁</div>
+                        <div class="drop-text">
+                            <strong>Drag & drop your image here</strong>
+                            <p>or <button type="button" class="browse-btn" onclick="document.getElementById('art-image').click()">browse files</button></p>
+                        </div>
+                        <div class="drop-hint">Supports: JPG, PNG, GIF, WebP (max 10MB)</div>
+                    </div>
+                    
+                    <!-- Hidden file input -->
+                    <input type="file" id="art-image" accept="image/*" required style="display: none;">
+                </div>
+                
+                <!-- Image Preview -->
+                <div class="image-preview" id="image-preview" style="display: none;">
+                    <img id="preview-img" src="" alt="Preview">
+                    <div class="preview-info">
+                        <div class="file-details">
+                            <span id="file-name"></span>
+                            <span id="file-size"></span>
+                        </div>
+                        <button type="button" class="change-image-btn" onclick="changeImage()">Change Image</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" id="art-title" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea id="art-description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Category:</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="art-category" value="painting" required>
+                        <span>Painting</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="art-category" value="drawing" required>
+                        <span>Drawing</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="art-category" value="digital" required>
+                        <span>Digital Art</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Date:</label>
+                <div class="date-input-group">
+                    <input type="month" id="art-date-month" placeholder="YYYY-MM">
+                    <input type="date" id="art-date-full" placeholder="YYYY-MM-DD" style="display: none;">
+                    <div class="date-toggle">
+                        <label class="toggle-option">
+                            <input type="radio" name="date-precision" value="month" checked>
+                            <span>Month/Year only</span>
+                        </label>
+                        <label class="toggle-option">
+                            <input type="radio" name="date-precision" value="full">
+                            <span>Full date</span>
+                        </label>
+                    </div>
+                </div>
+                <small class="date-help">Choose month/year for general timeframe or full date for specific day</small>
+            </div>
+
+            <div class="form-group">
+                <label>Link to Project (optional):</label>
+                <input type="text" id="project-search" placeholder="Search projects or repositories...">
+                <div class="dropdown-results" id="project-dropdown" style="display: none;">
+                    <!-- Search results will appear here -->
+                </div>
+                <div class="selected-project" id="selected-project" style="display: none;">
+                    <span id="project-name"></span>
+                    <button type="button" class="remove-project" onclick="clearProject()">&times;</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Tags:</label>
+                <input type="text" id="tag-input" placeholder="Type a tag and press Enter or comma">
+                <div class="tags-container" id="tags-container">
+                    <!-- Tag bubbles will appear here -->
+                </div>
+            </div>
+            
+            <button type="submit" id="upload-btn">Upload Artwork</button>
+            
+            <!-- Upload progress indicator -->
+            <div id="upload-progress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">Preparing upload...</div>
+            </div>
+        </form>
+        
+        <div id="status"></div>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
