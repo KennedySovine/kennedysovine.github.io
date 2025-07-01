@@ -52,7 +52,7 @@ export const artworks = [
     "uploadDate": "2025-06-30T22:23:35.306Z",
     "featured": false
   },
-   {
+  {
     "id": 1751335335596,
     "title": "Chapter 2 End Deltarune",
     "description": "That epic moment when Kris opens a dark fountain in their living room.",
@@ -77,7 +77,7 @@ export const artworks = [
   },
   {
     "id": 1751335395046,
-    "title": "FleurÂ·ParaibaÂ·Underhill",
+    "title": "Fleur·Paraiba·Underhill",
     "description": "https://artfight.net/attack/7232203.fleurparaibaunderhill",
     "category": "digital",
     "date": "2024-07-18",
@@ -90,12 +90,34 @@ export const artworks = [
     "linkedProject": {
       "title": "Art Fight",
       "type": "custom",
-      "url":  null,
+      "url": null,
       "language": null
     },
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01956813bc782037d15fadd38454d2a3a4727eef3e_00001-2025-07-01T02-03-15-046Z.jpg",
     "imagePath": "IMAGES/art/digital-01956813bc782037d15fadd38454d2a3a4727eef3e_00001-2025-07-01T02-03-15-046Z.jpg",
     "uploadDate": "2025-07-01T02:03:16.366Z"
+  },
+  {
+    "id": 1751336155196,
+    "title": "Gas Station in Utah",
+    "description": "",
+    "category": "digital",
+    "date": "2022-09-04",
+    "datePrecision": "full",
+    "formattedDate": "4 September 2022",
+    "tags": [
+      "DreamSMP",
+      "Fan Art"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-010afab06699ca171c1ea39d9e1424a0b501dfb767-2025-07-01T02-15-55-196Z.jpg",
+    "imagePath": "IMAGES/art/digital-010afab06699ca171c1ea39d9e1424a0b501dfb767-2025-07-01T02-15-55-196Z.jpg",
+    "uploadDate": "2025-07-01T02:15:56.681Z"
   }
 ];
 
