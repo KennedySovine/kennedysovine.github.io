@@ -98,26 +98,21 @@ export const artworks = [
     "uploadDate": "2025-07-01T02:03:16.366Z"
   },
   {
-    "id": 1751336193899,
-    "title": "Ghostbur with Friend",
+    "id": 1751336238849,
+    "title": "Pantalone: Number 9 of the Fatui Harbingers",
     "description": "",
     "category": "digital",
-    "date": "2022-09-03",
+    "date": "2022-07-28",
     "datePrecision": "full",
-    "formattedDate": "3 September 2022",
+    "formattedDate": "28 July 2022",
     "tags": [
       "Fan art",
-      "DreamSMP"
+      "Genshin Impact"
     ],
-    "linkedProject": {
-      "title": "Dream SMP",
-      "type": "custom",
-      "url": null,
-      "language": null
-    },
-    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
-    "imagePath": "IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
-    "uploadDate": "2025-07-01T02:16:34.947Z"
+    "linkedProject": null,
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01af29f7243995c9284064c1462334b1ac7f3552ce-2025-07-01T02-17-18-849Z.jpg",
+    "imagePath": "IMAGES/art/digital-01af29f7243995c9284064c1462334b1ac7f3552ce-2025-07-01T02-17-18-849Z.jpg",
+    "uploadDate": "2025-07-01T02:17:20.222Z"
   }
 ];
 
