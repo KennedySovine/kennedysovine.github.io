@@ -1452,8 +1452,24 @@ async function uploadArtwork(artData) {
             uploadDate: new Date().toISOString()
         };
         
-        // Step 4: Update artwork list and save
-        artworkList.push(artworkEntry);
+        // Step 4: Load existing artwork data first to prevent overwriting
+        console.log('Loading existing artwork data...');
+        await loadArtworkData();
+        
+        // Check if artwork with same ID already exists
+        const existingIndex = artworkList.findIndex(item => item.id === artworkEntry.id);
+        if (existingIndex !== -1) {
+            // Update existing artwork
+            artworkList[existingIndex] = artworkEntry;
+            console.log(`Updated existing artwork with ID: ${artworkEntry.id}`);
+        } else {
+            // Add new artwork to the list
+            artworkList.push(artworkEntry);
+            console.log(`Added new artwork with ID: ${artworkEntry.id}`);
+        }
+        
+        console.log(`Total artworks after operation: ${artworkList.length}`);
+        
         showStatus('Saving artwork data...', 'info');
         await saveArtworkData();
         
@@ -1532,6 +1548,41 @@ function showManageView() {
 }
 
 /**
+ * Load artwork data from art-data.js file
+ * This function ensures artworkList is always up-to-date with the file
+ */
+async function loadArtworkData() {
+    try {
+        console.log('Loading artwork data from art-data.js...');
+        
+        // Fetch artwork data from art-data.js
+        const response = await fetch('../user-data/art-data.js?t=' + Date.now()); // Add timestamp to prevent caching
+        if (!response.ok) {
+            throw new Error(`Failed to fetch art-data.js: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        
+        // Extract artworks array from the module
+        const artworksMatch = text.match(/export const artworks = (\[[\s\S]*?\]);/);
+        if (artworksMatch) {
+            artworkList = JSON.parse(artworksMatch[1]);
+            console.log(`Loaded ${artworkList.length} artworks from file`);
+        } else {
+            artworkList = [];
+            console.log('No artworks found in file, initializing empty array');
+        }
+        
+        return artworkList;
+        
+    } catch (error) {
+        console.error('Error loading artwork data:', error);
+        artworkList = []; // Initialize as empty array on error
+        throw error;
+    }
+}
+
+/**
  * Load and display the artwork list
  */
 async function loadArtworkList() {
@@ -1544,17 +1595,8 @@ async function loadArtworkList() {
     tableBody.innerHTML = '';
     
     try {
-        // Fetch artwork data from art-data.js
-        const response = await fetch('../user-data/art-data.js');
-        const text = await response.text();
-        
-        // Extract artworks array from the module
-        const artworksMatch = text.match(/export const artworks = (\[[\s\S]*?\]);/);
-        if (artworksMatch) {
-            artworkList = JSON.parse(artworksMatch[1]);
-        } else {
-            artworkList = [];
-        }
+        // Load artwork data first
+        await loadArtworkData();
         
         loadingEl.style.display = 'none';
         
@@ -1986,7 +2028,10 @@ async function deleteArtwork() {
  * Save artwork data to file
  */
 async function saveArtworkData() {
-    const artworkDataContent = `// Art portfolio data
+    try {
+        console.log('Saving artwork data...', artworkList.length, 'artworks');
+        
+        const artworkDataContent = `// Art portfolio data
 // This file is automatically updated by the admin panel
 
 export const artworks = ${JSON.stringify(artworkList, null, 2)};
@@ -2001,21 +2046,41 @@ export const artCategories = [
     "Drawing",
 ];`;
 
-    const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/user-data/art-data.js`, {
-        method: 'PUT',
-        headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            message: 'Update artwork data via admin panel',
-            content: btoa(artworkDataContent),
-            sha: await getFileSha('user-data/art-data.js')
-        })
-    });
+        // Get current file SHA
+        console.log('Getting file SHA for art-data.js...');
+        const sha = await getFileSha('user-data/art-data.js');
+        console.log('File SHA:', sha);
+        
+        if (!sha) {
+            throw new Error('Could not get file SHA - check authentication and file existence');
+        }
 
-    if (!response.ok) {
-        throw new Error('Failed to save artwork data');
+        console.log('Updating art-data.js via GitHub API...');
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/user-data/art-data.js`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: 'Update artwork data via admin panel',
+                content: btoa(artworkDataContent),
+                sha: sha
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('GitHub API Error:', response.status, errorData);
+            throw new Error(`Failed to save artwork data: ${response.status} - ${errorData}`);
+        }
+        
+        const responseData = await response.json();
+        console.log('Successfully saved artwork data:', responseData);
+        
+    } catch (error) {
+        console.error('Error saving artwork data:', error);
+        throw error;
     }
 }
 
