@@ -1052,7 +1052,7 @@ function initializeFormHandler() {
         // ==============================================
         
         const artData = {
-            id: Date.now(),
+            id: Date.now() + Math.floor(Math.random() * 1000), // More unique ID generation
             title: title || 'Untitled',
             description: description || '',
             category: category,
@@ -1563,11 +1563,36 @@ async function loadArtworkData() {
         
         const text = await response.text();
         
-        // Extract artworks array from the module
-        const artworksMatch = text.match(/export const artworks = (\[[\s\S]*?\]);/);
-        if (artworksMatch) {
-            artworkList = JSON.parse(artworksMatch[1]);
-            console.log(`Loaded ${artworkList.length} artworks from file`);
+        // Extract artworks array from the module - improved regex to handle nested arrays
+        const startPattern = 'export const artworks = ';
+        const startIndex = text.indexOf(startPattern);
+        
+        if (startIndex !== -1) {
+            let arrayStart = startIndex + startPattern.length;
+            let bracketCount = 0;
+            let arrayEnd = -1;
+            
+            // Find the matching closing bracket for the main array
+            for (let i = arrayStart; i < text.length; i++) {
+                if (text[i] === '[') {
+                    bracketCount++;
+                } else if (text[i] === ']') {
+                    bracketCount--;
+                    if (bracketCount === 0) {
+                        arrayEnd = i + 1;
+                        break;
+                    }
+                }
+            }
+            
+            if (arrayEnd !== -1) {
+                const arrayText = text.substring(arrayStart, arrayEnd);
+                artworkList = JSON.parse(arrayText);
+                console.log(`Loaded ${artworkList.length} artworks from file`);
+            } else {
+                artworkList = [];
+                console.log('Could not find complete artworks array, initializing empty array');
+            }
         } else {
             artworkList = [];
             console.log('No artworks found in file, initializing empty array');

@@ -77,7 +77,7 @@ export const artworks = [
   },
   {
     "id": 1751335395046,
-    "title": "Fleur·Paraiba·Underhill",
+    "title": "Fleur:Paraiba:Underhill",
     "description": "https://artfight.net/attack/7232203.fleurparaibaunderhill",
     "category": "digital",
     "date": "2024-07-18",
@@ -119,6 +119,67 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01567b8f3973ba1a36055212b3c3aa50d0483b246c-2025-07-01T02-17-58-971Z.jpg",
     "imagePath": "IMAGES/art/digital-01567b8f3973ba1a36055212b3c3aa50d0483b246c-2025-07-01T02-17-58-971Z.jpg",
     "uploadDate": "2025-07-01T02:18:00.262Z"
+  },
+  {
+    "id": 1751336238849,
+    "title": "Pantalone: Number 9 of the Fatui Harbingers",
+    "description": "",
+    "category": "digital",
+    "date": "2022-07-28",
+    "datePrecision": "full",
+    "formattedDate": "28 July 2022",
+    "tags": [
+      "Fan art",
+      "Genshin Impact"
+    ],
+    "linkedProject": null,
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01af29f7243995c9284064c1462334b1ac7f3552ce-2025-07-01T02-17-18-849Z.jpg",
+    "imagePath": "IMAGES/art/digital-01af29f7243995c9284064c1462334b1ac7f3552ce-2025-07-01T02-17-18-849Z.jpg",
+    "uploadDate": "2025-07-01T02:17:20.222Z"
+  },
+  {
+    "id": 1751336155196,
+    "title": "Gas Station in Utah",
+    "description": "",
+    "category": "digital",
+    "date": "2022-09-04",
+    "datePrecision": "full",
+    "formattedDate": "4 September 2022",
+    "tags": [
+      "DreamSMP",
+      "Fan Art"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-010afab06699ca171c1ea39d9e1424a0b501dfb767-2025-07-01T02-15-55-196Z.jpg",
+    "imagePath": "IMAGES/art/digital-010afab06699ca171c1ea39d9e1424a0b501dfb767-2025-07-01T02-15-55-196Z.jpg",
+    "uploadDate": "2025-07-01T02:15:56.681Z"
+  },
+  {
+    "id": 1751336193899,
+    "title": "Ghostbur with Friend",
+    "description": "",
+    "category": "digital",
+    "date": "2022-09-03",
+    "datePrecision": "full",
+    "formattedDate": "3 September 2022",
+    "tags": [
+      "Fan art",
+      "DreamSMP"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
+    "imagePath": "IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
+    "uploadDate": "2025-07-01T02:16:34.947Z"
   }
 ];
 
