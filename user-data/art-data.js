@@ -393,6 +393,28 @@ export const artworks = [
     "imagePath": "IMAGES/art/1751386380103-01775fb3118723385b27345f521ebf3399ee796775.jpg",
     "fullImagePath": "c:\\Users\\thatc\\OneDrive\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751386380103-01775fb3118723385b27345f521ebf3399ee796775.jpg",
     "uploadDate": "2025-07-01T16:13:00.107Z"
+  },
+  {
+    "id": 1751407444680,
+    "title": "Abbie Crouching",
+    "description": "Art fight attack! https://artfight.net/attack/8795573.abbie-crouching",
+    "category": "Digital Art",
+    "date": "1 July 2025",
+    "tags": [
+      "Artfight 2025"
+    ],
+    "linkedProject": {
+      "title": "Art Fight",
+      "type": "custom",
+      "url": null,
+      "language": null,
+      "description": "Annual art challenge"
+    },
+    "dateCreated": "2025-07-01",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751407444149-010e7ad4be06890c0717aea4861d8a553a2351e9d8.jpg",
+    "imagePath": "IMAGES/art/1751407444149-010e7ad4be06890c0717aea4861d8a553a2351e9d8.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\OneDrive\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751407444149-010e7ad4be06890c0717aea4861d8a553a2351e9d8.jpg",
+    "uploadDate": "2025-07-01T22:04:04.150Z"
   }
 ];
 
