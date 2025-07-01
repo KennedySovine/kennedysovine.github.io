@@ -294,6 +294,23 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-46-17-960Z.jpg",
     "imagePath": "IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-46-17-960Z.jpg",
     "uploadDate": "2025-07-01T07:46:18.990Z"
+  },
+  {
+    "id": 1751356218421,
+    "title": "Sea Fairy Cookie",
+    "description": "",
+    "category": "digital",
+    "date": "2021-11-11",
+    "datePrecision": "full",
+    "formattedDate": "11 November 2021",
+    "tags": [
+      "Fan art",
+      "CookieRun:Kingdom"
+    ],
+    "linkedProject": null,
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01cf4afb5689050681205953f0fcbfaabfabe5cc19-2025-07-01T07-50-13-361Z.jpg",
+    "imagePath": "IMAGES/art/digital-01cf4afb5689050681205953f0fcbfaabfabe5cc19-2025-07-01T07-50-13-361Z.jpg",
+    "uploadDate": "2025-07-01T07:50:14.698Z"
   }
 ];
 
