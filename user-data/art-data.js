@@ -248,6 +248,52 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0120073264dba4a24a0aa0b332c2f8f5cd4b3b7217-2025-07-01T07-06-58-166Z.jpg",
     "imagePath": "IMAGES/art/digital-0120073264dba4a24a0aa0b332c2f8f5cd4b3b7217-2025-07-01T07-06-58-166Z.jpg",
     "uploadDate": "2025-07-01T07:06:59.386Z"
+  },
+  {
+    "id": 1751354434456,
+    "title": "GhostBoo",
+    "description": "",
+    "category": "digital",
+    "date": "2021-12-01",
+    "datePrecision": "full",
+    "formattedDate": "1 December 2021",
+    "tags": [
+      "DreamSMP",
+      "Fan art",
+      "Ranboo"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01b815bee9c3cf6bf6031bb839623e476226d2f64e-2025-07-01T07-20-34-408Z.jpg",
+    "imagePath": "IMAGES/art/digital-01b815bee9c3cf6bf6031bb839623e476226d2f64e-2025-07-01T07-20-34-408Z.jpg",
+    "uploadDate": "2025-07-01T07:20:35.699Z"
+  },
+  {
+    "id": 1751355092843,
+    "title": "Falling Through L'Manberg",
+    "description": "",
+    "category": "digital",
+    "date": "2021-11-15",
+    "datePrecision": "full",
+    "formattedDate": "15 November 2021",
+    "tags": [
+      "DreamSMP",
+      "Fan art",
+      "TommyInnit"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-31-30-538Z.jpg",
+    "imagePath": "IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-31-30-538Z.jpg",
+    "uploadDate": "2025-07-01T07:31:31.941Z"
   }
 ];
 

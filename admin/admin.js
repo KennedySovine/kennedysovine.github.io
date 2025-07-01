@@ -1469,12 +1469,12 @@ async function uploadArtwork(artData) {
         
         console.log(`Total artworks after operation: ${artworkList.length}`);
         
-        showStatus('Saving artwork data locally...', 'info');
-        await saveArtworkDataLocally();
-        
         // Step 5: Reset form and show success
         resetUploadForm();
-        showStatus('Artwork uploaded successfully! Image saved to GitHub, data updated locally. 🎉', 'success');
+        showStatus('Artwork uploaded successfully! Image saved to GitHub, data stored in memory. Use "Commit to GitHub" to save changes. 🎉', 'success');
+        
+        // Update UI to show there are uncommitted changes
+        updateCommitButtonState();
         
         console.log('Artwork uploaded:', artworkEntry);
         
@@ -1994,12 +1994,12 @@ async function saveArtworkChanges() {
             artworkList[index] = updatedArtwork;
         }
         
-        // Save to file locally
-        await saveArtworkDataLocally();
-        
         closeEditModal();
         displayArtworkList(artworkList);
-        showStatus('Artwork updated successfully! Please save the downloaded file.', 'success');
+        showStatus('Artwork updated successfully! Changes stored in memory. Use "Commit to GitHub" to save.', 'success');
+        
+        // Update UI to show there are uncommitted changes
+        updateCommitButtonState();
         
     } catch (error) {
         console.error('Error saving artwork changes:', error);
@@ -2030,11 +2030,11 @@ async function deleteArtworkById(artworkId) {
         // Remove from artworkList
         artworkList = artworkList.filter(a => a.id !== artworkId);
         
-        // Save to file locally
-        await saveArtworkDataLocally();
-        
         displayArtworkList(artworkList);
-        showStatus('Artwork deleted successfully! Please save the downloaded file.', 'success');
+        showStatus('Artwork deleted successfully! Changes stored in memory. Use "Commit to GitHub" to save.', 'success');
+        
+        // Update UI to show there are uncommitted changes
+        updateCommitButtonState();
         
     } catch (error) {
         console.error('Error deleting artwork:', error);
@@ -2115,52 +2115,16 @@ export const artCategories = [
 }
 
 /**
- * Save artwork data locally only (no GitHub commit)
- * This creates a downloadable file for the user to manually save
+ * Update the commit button to show if there are uncommitted changes
  */
-async function saveArtworkDataLocally() {
-    try {
-        console.log('Saving artwork data locally...', artworkList.length, 'artworks');
-        
-        const artworkDataContent = `// Art portfolio data
-// This file is automatically updated by the admin panel
-
-export const artworks = ${JSON.stringify(artworkList, null, 2)};
-
-// Also make data available globally for backward compatibility
-window.artData = artworks;
-
-// You can add more art-related data exports here
-export const artCategories = [
-    "Digital Art",
-    "Painting",
-    "Drawing",
-];`;
-
-        // Create a blob and download link for the user to save manually
-        const blob = new Blob([artworkDataContent], { type: 'text/javascript' });
-        const url = URL.createObjectURL(blob);
-        
-        // Create a temporary download link
-        const downloadLink = document.createElement('a');
-        downloadLink.href = url;
-        downloadLink.download = 'art-data.js';
-        downloadLink.style.display = 'none';
-        
-        // Add to DOM, click, then remove
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        
-        // Clean up the URL object
-        URL.revokeObjectURL(url);
-        
-        console.log('Artwork data file created for download');
-        showStatus('Art data file downloaded! Please replace the file in user-data/art-data.js', 'info');
-        
-    } catch (error) {
-        console.error('Error saving artwork data locally:', error);
-        throw error;
+function updateCommitButtonState() {
+    const commitButton = document.getElementById('commit-btn');
+    if (commitButton) {
+        // Enable the button and update text to indicate there are changes
+        commitButton.disabled = false;
+        commitButton.textContent = 'Commit Changes to GitHub';
+        commitButton.style.backgroundColor = '#28a745';
+        commitButton.style.borderColor = '#28a745';
     }
 }
 
@@ -2212,6 +2176,18 @@ async function initializeAll() {
     await initializeProjectSearch();
     initializeFormHandler();
     initializeArtworkManagement();
+    initializeCommitButton();
+}
+
+// Initialize commit button to default state
+function initializeCommitButton() {
+    const commitButton = document.getElementById('commit-btn');
+    if (commitButton) {
+        commitButton.textContent = 'No Changes to Commit';
+        commitButton.disabled = true;
+        commitButton.style.backgroundColor = '#6c757d';
+        commitButton.style.borderColor = '#6c757d';
+    }
 }
 
 // Call initializeAll when document is ready
@@ -2281,6 +2257,15 @@ async function commitToGitHub() {
         await saveArtworkData();
         
         showStatus('Successfully committed artwork data to GitHub! 🎉', 'success');
+        
+        // Reset commit button state
+        const commitButton = document.getElementById('commit-btn');
+        if (commitButton) {
+            commitButton.textContent = 'No Changes to Commit';
+            commitButton.disabled = true;
+            commitButton.style.backgroundColor = '#6c757d';
+            commitButton.style.borderColor = '#6c757d';
+        }
         
     } catch (error) {
         console.error('Error committing to GitHub:', error);
