@@ -6,7 +6,7 @@ export const artworks = [
     "id": 1751322066427,
     "title": "Unnamed Protagonist",
     "description": "Art piece for a protagonist for a game I may one day make.",
-    "category": "digital",
+    "category": "Digital Art",
     "date": "2025-06",
     "datePrecision": "month",
     "formattedDate": "June 2025",
@@ -25,7 +25,8 @@ export const artworks = [
     "image": "IMAGES/art/digital-UNNAMEDPROTAG-2025-06-30T22-21-06-427Z.png",
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-UNNAMEDPROTAG-2025-06-30T22-21-06-427Z.png",
     "uploadDate": "2025-06-30T22:21:08.066Z",
-    "featured": false
+    "featured": false,
+    "year": "2025"
   },
   {
     "id": 1751322214165,
@@ -311,6 +312,87 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01cf4afb5689050681205953f0fcbfaabfabe5cc19-2025-07-01T07-50-13-361Z.jpg",
     "imagePath": "IMAGES/art/digital-01cf4afb5689050681205953f0fcbfaabfabe5cc19-2025-07-01T07-50-13-361Z.jpg",
     "uploadDate": "2025-07-01T07:50:14.698Z"
+  },
+  {
+    "id": 1751381471837,
+    "title": "MCC Rising Team - Rainbow Racoons",
+    "description": "",
+    "category": "Digital Art",
+    "date": "September 2021",
+    "tags": [
+      "Minecraft",
+      "SourSticks"
+    ],
+    "dateCreated": "2025-07-01",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751381470898-010e727e7cd9ce3e1003d88fceb551c359c667cd03.jpg",
+    "imagePath": "IMAGES/art/1751381470898-010e727e7cd9ce3e1003d88fceb551c359c667cd03.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\OneDrive\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751381470898-010e727e7cd9ce3e1003d88fceb551c359c667cd03.jpg",
+    "uploadDate": "2025-07-01T14:51:10.900Z"
+  },
+  {
+    "id": 1751385909533,
+    "title": "I'm Not a Good Soul --- 2025 Redraw",
+    "description": "Second redraw!",
+    "category": "Digital Art",
+    "date": "1 July 2025",
+    "tags": [
+      "Undertale",
+      "Fan art"
+    ],
+    "linkedProject": {
+      "title": "Undertale",
+      "type": "custom",
+      "url": null,
+      "language": null,
+      "description": "Custom project"
+    },
+    "dateCreated": "2025-07-01",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751385908904-014a7d9992ac3eff19069b8ffe66206d9eec6b2199.jpg",
+    "imagePath": "IMAGES/art/1751385908904-014a7d9992ac3eff19069b8ffe66206d9eec6b2199.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\OneDrive\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751385908904-014a7d9992ac3eff19069b8ffe66206d9eec6b2199.jpg",
+    "uploadDate": "2025-07-01T16:05:08.906Z"
+  },
+  {
+    "id": 1751386316041,
+    "title": "Snowdin Tubbo",
+    "description": "",
+    "category": "Digital Art",
+    "date": "1 August 2025",
+    "tags": [
+      "DreamSMP",
+      "Fan art",
+      "Tubbo"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null,
+      "description": "Fan art collection"
+    },
+    "dateCreated": "2025-07-01",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751386315591-01232f7491a553e71cfe8a2ebdc3fb2eacd132c6d5.jpg",
+    "imagePath": "IMAGES/art/1751386315591-01232f7491a553e71cfe8a2ebdc3fb2eacd132c6d5.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\OneDrive\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751386315591-01232f7491a553e71cfe8a2ebdc3fb2eacd132c6d5.jpg",
+    "uploadDate": "2025-07-01T16:11:55.592Z"
+  },
+  {
+    "id": 1751386381016,
+    "title": "Cecilia Character Sheet",
+    "description": "Minecraft OC",
+    "category": "Digital Art",
+    "date": "7 June 2025",
+    "tags": [
+      "Minecraft",
+      "OC",
+      "Concept Art"
+    ],
+    "linkedProject": null,
+    "dateCreated": "2025-07-01",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751386380103-01775fb3118723385b27345f521ebf3399ee796775.jpg",
+    "imagePath": "IMAGES/art/1751386380103-01775fb3118723385b27345f521ebf3399ee796775.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\OneDrive\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751386380103-01775fb3118723385b27345f521ebf3399ee796775.jpg",
+    "uploadDate": "2025-07-01T16:13:00.107Z"
   }
 ];
 
@@ -320,6 +402,8 @@ window.artData = artworks;
 // You can add more art-related data exports here
 export const artCategories = [
     "Digital Art",
-    "Painting",
+    "Painting", 
     "Drawing",
+    "Photography",
+    "Mixed Media"
 ];
