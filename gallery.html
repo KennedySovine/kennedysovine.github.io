@@ -14,7 +14,7 @@
             <div class="header-content">
                 <button class="back-btn" onclick="window.location.href='index.html'">← Back to Portfolio</button>
                 <h1>Art Portfolio</h1>
-                <a href="admin/index.html" class="admin-link">Admin Panel</a>
+                <a href="admin/index.html" class="admin-link" id="admin-panel-link">Admin Panel</a>
             </div>
         </header>
 
@@ -88,7 +88,7 @@
                 <div class="empty-state" id="empty-state" style="display: none;">
                     <div class="empty-icon">🎨</div>
                     <h3>No artwork found</h3>
-                    <p>Try adjusting your search or filters, or <a href="admin/index.html">upload some artwork</a>!</p>
+                    <p>Try adjusting your search or filters<span id="admin-upload-link-wrapper">, or <a href="admin/index.html" id="admin-upload-link">upload some artwork</a></span>!</p>
                 </div>
             </main>
         </div>
