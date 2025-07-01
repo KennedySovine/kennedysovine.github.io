@@ -10,8 +10,7 @@
 // - Flexible date input (month/year or full date)
 // ================================================================
 
-// Import project management functions
-import { adminProjects, addTemporaryProject, makeProjectPermanent } from './admin-projects.js';
+// Note: admin-projects.js will be loaded separately as a regular script
 
 // ==============================================
 // GLOBAL STATE VARIABLES
@@ -109,6 +108,9 @@ async function authenticate() {
         document.getElementById('admin-password').value = '';
     }
 }
+
+// Make authenticate function globally available immediately
+window.authenticate = authenticate;
 
 // ==============================================
 // UI INITIALIZATION FUNCTIONS
@@ -459,6 +461,9 @@ async function generatePasswordHash(password) {
     return hash;
 }
 
+// Make generatePasswordHash function globally available immediately
+window.generatePasswordHash = generatePasswordHash;
+
 /**
  * Load configuration from config.js
  * This file contains sensitive data and is excluded from git
@@ -526,7 +531,7 @@ async function loadGitHubRepositories() {
         const repos = await response.json();
         
         // Transform repository data for our project system
-        githubRepos = repos.map(repo => ({
+        githubRepositories = repos.map(repo => ({
             title: repo.name,
             description: repo.description || '',
             url: repo.html_url,
@@ -538,15 +543,15 @@ async function loadGitHubRepositories() {
         }));
         
         // Sort by most recently updated
-        githubRepos.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+        githubRepositories.sort((a, b) => new Date(b.updated) - new Date(a.updated));
         
-        console.log(`Loaded ${githubRepos.length} GitHub repositories`);
-        showStatus(`Loaded ${githubRepos.length} GitHub repositories`, 'success');
+        console.log(`Loaded ${githubRepositories.length} GitHub repositories`);
+        showStatus(`Loaded ${githubRepositories.length} GitHub repositories`, 'success');
         
     } catch (error) {
         console.error('Error loading GitHub repositories:', error);
         showStatus('Could not load GitHub repositories. Project linking will still work with manual entries.', 'warning');
-        githubRepos = []; // Ensure it's an empty array on failure
+        githubRepositories = []; // Ensure it's an empty array on failure
     }
 }
 
@@ -701,59 +706,6 @@ async function initializeProjectSearch() {
 /**
  * Load existing projects from your main portfolio
  * These are the projects already featured on your website
- */
-function loadExistingProjects() {
-    existingProjects = [
-        { title: "Final Project - Balancing in MMOs Demo", type: "project" },
-        { title: "Crossing Roads - Integrated Group Project", type: "project" },
-        { title: "Web Dev Suika Game", type: "project" },
-        { title: "Project: New World", type: "project" }
-    ];
-}
-
-/**
- * Load GitHub repositories via GitHub API
- * Fetches your repositories and caches them for project linking
- */
-async function loadGitHubRepositories() {
-    // Skip if GitHub token is not configured
-    if (!GITHUB_TOKEN) {
-        showStatus('GitHub token not configured. Project linking will work with manual entries only.', 'warning');
-        return;
-    }
-    
-    try {
-        showStatus('Loading GitHub repositories...', 'info');
-        
-        // Fetch repositories from GitHub API
-        const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        if (response.ok) {
-            const repos = await response.json();
-            githubRepositories = repos.map(repo => ({
-                title: repo.name,
-                description: repo.description || 'No description',
-                url: repo.html_url,
-                language: repo.language,
-                stars: repo.stargazers_count,
-                type: 'repository'
-            }));
-            showStatus('GitHub repositories loaded successfully', 'success');
-        } else {
-            console.warn('Could not load GitHub repositories:', response.status);
-            showStatus('Could not load GitHub repositories. Manual project entry still available.', 'warning');
-        }
-    } catch (error) {
-        console.error('Error loading GitHub repositories:', error);
-        showStatus('Error loading GitHub repositories. Manual project entry still available.', 'warning');
-    }
-}
-
 /**
  * Show project dropdown with filtered results
  */
@@ -855,6 +807,9 @@ function clearProject() {
     selectedProject = null;
     document.getElementById('selected-project').style.display = 'none';
 }
+
+// Make clearProject function globally available immediately
+window.clearProject = clearProject;
 
 // Initialize form handler
 /**
@@ -1084,6 +1039,9 @@ function logout() {
     
     showStatus('Logged out successfully.', 'info');
 }
+
+// Make logout function globally available immediately
+window.logout = logout;
 
 // Add keyboard support for login
 document.addEventListener('DOMContentLoaded', function() {
@@ -1696,3 +1654,6 @@ function clearForm() {
 // 1. Secure token management
 // 2. Real GitHub repository fetching
 // 3. Enhanced project search and linking
+
+// Note: Functions are made globally available immediately after their definitions
+// to ensure they're accessible to HTML onclick handlers

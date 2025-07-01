@@ -436,7 +436,8 @@ function createArtworkCard(artwork) {
     card.addEventListener('click', () => openModal(artwork));
     
     // Format date for display
-    const displayDate = formatDate(artwork.dateCreated || artwork.year);
+    console.log(artwork.dateCreated, artwork.year); // Debug log
+    const displayDate = artwork.formattedDate || 'Unknown Date';
     
     // Truncate description
     const description = artwork.description || '';
@@ -455,11 +456,11 @@ function createArtworkCard(artwork) {
                 <span class="artwork-date">${displayDate}</span>
             </div>
             <div class="artwork-tags">
-                ${(artwork.tags || []).slice(0, 3).map(tag => 
+                ${(artwork.tags || []).slice(0, 5).map(tag => 
                     `<span class="artwork-tag">${tag}</span>`
                 ).join('')}
-                ${artwork.tags && artwork.tags.length > 3 ? 
-                    `<span class="artwork-tag">+${artwork.tags.length - 3}</span>` : ''
+                ${artwork.tags && artwork.tags.length > 5 ? 
+                    `<span class="artwork-tag">+${artwork.tags.length - 5}</span>` : ''
                 }
             </div>
         </div>
@@ -542,7 +543,7 @@ function openModal(artwork) {
     modalTitle.textContent = artwork.title;
     modalDescription.textContent = artwork.description || 'No description available.';
     modalCategory.textContent = formatCategory(artwork.category);
-    modalDate.textContent = formatDate(artwork.dateCreated || artwork.year);
+    modalDate.textContent = artwork.formattedDate || 'Unknown Date';
     
     // Populate tags
     modalTags.innerHTML = '';

@@ -82,8 +82,8 @@
     
     /* Layout */
     --max-width: 1400px;
-    --sidebar-width: 240px;
-    --sidebar-width-sm: 220px;
+    --sidebar-width: 320px;
+    --sidebar-width-sm: 280px;
     --grid-gap: var(--space-6);
 }
 

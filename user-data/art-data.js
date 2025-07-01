@@ -11,7 +11,6 @@ export const artworks = [
     "datePrecision": "month",
     "formattedDate": "June 2025",
     "tags": [
-      "ConceptArt",
       "Concept Art",
       "Greyscale",
       "Procreate",
@@ -42,7 +41,12 @@ export const artworks = [
       "protag",
       "procreate"
     ],
-    "linkedProject": null,
+    "linkedProject": {
+      "title": "Prism of Light",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
     "image": "IMAGES/art/digital-01d5f0952238d0ed8bd0176c08b8024583f8b3f476-2025-06-30T22-23-34-165Z.jpg",
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01d5f0952238d0ed8bd0176c08b8024583f8b3f476-2025-06-30T22-23-34-165Z.jpg",
     "uploadDate": "2025-06-30T22:23:35.306Z",
