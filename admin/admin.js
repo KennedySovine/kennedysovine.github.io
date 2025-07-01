@@ -96,6 +96,9 @@ async function authenticate() {
         initializeFormHandler();
         initializeArtworkManagement();
         
+        // Initialize commit button state after loading artwork data
+        updateCommitButtonState();
+        
         // Clear the password field for security
         document.getElementById('admin-password').value = '';
     } else {
@@ -1281,160 +1284,17 @@ function generateUniqueFilename(originalName, category) {
 }
 
 /**
- * Uploads a file to GitHub repository using the Contents API
- * 
- * GitHub API Process:
- * 1. Check if file exists (to get SHA if updating)
- * 2. Convert file to base64
- * 3. Create upload payload with commit message
- * 4. PUT request to GitHub API
- * 5. Return download URLs and paths
- * 
- * @param {File} file - The file to upload
- * @param {string} filename - Unique filename to use
- * @param {string} folder - Destination folder (default: 'IMAGES/art')
- * @returns {Object} - Upload result with URLs and paths
- */
-async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
-    try {
-        // Step 1: Convert file to base64 (required by GitHub API)
-        const base64Content = await fileToBase64(file);
-        const path = `${folder}/${filename}`; // Full path in repository
-        
-        // Step 2: Check if file already exists (GitHub requires SHA for updates)
-        let sha = null;
-        try {
-            const existingFile = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            
-            if (existingFile.ok) {
-                const fileData = await existingFile.json();
-                sha = fileData.sha; // SHA is like a version ID for the file
-            }
-        } catch (error) {
-            // File doesn't exist, which is fine for new uploads
-        }
-        
-        // Step 3: Prepare upload data
-        const uploadData = {
-            message: `Upload artwork: ${filename}`, // Git commit message
-            content: base64Content, // Base64 encoded file
-            ...(sha && { sha }) // Include SHA only if file exists (for updates)
-        };
-        
-        // Step 4: Upload via GitHub API
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
-            method: 'PUT', // PUT creates or updates files
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`, // Your personal access token
-                'Accept': 'application/vnd.github.v3+json', // GitHub API version
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(uploadData)
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            
-            // Enhanced error reporting for common issues
-            let errorMessage = `GitHub API error: ${response.status} - ${errorData.message || response.statusText}`;
-            
-            if (response.status === 403) {
-                console.error('🔒 403 Forbidden Error Details:');
-                console.error('   - Token permissions insufficient');
-                console.error('   - Required: "repo" scope for full repository access');
-                console.error('   - Current repository:', `${GITHUB_USERNAME}/kennedysovine.github.io`);
-                console.error('   - Attempting to write to:', path);
-                
-                errorMessage = `GitHub API access denied (403). Your personal access token needs "repo" permissions. Please:\n\n` +
-                             `1. Go to GitHub Settings → Developer settings → Personal access tokens\n` +
-                             `2. Delete your current token\n` +
-                             `3. Create a new token with "repo" scope (full repository access)\n` +
-                             `4. Update your config.js with the new token`;
-            } else if (response.status === 404) {
-                console.error('🔍 404 Not Found Error Details:');
-                console.error('   - Repository may not exist or be accessible');
-                console.error('   - Check repository name:', `${GITHUB_USERNAME}/kennedysovine.github.io`);
-                console.error('   - Verify username is correct');
-                
-                errorMessage = `Repository not found (404). Please verify:\n` +
-                             `- Repository exists: ${GITHUB_USERNAME}/kennedysovine.github.io\n` +
-                             `- Username is correct in config.js\n` +
-                             `- Repository is public or token has access to private repos`;
-            } else if (response.status === 401) {
-                errorMessage = `Authentication failed (401). Please check:\n` +
-                             `- Token is correct in config.js\n` +
-                             `- Token hasn't expired\n` +
-                             `- No extra spaces in token string`;
-            }
-            
-            throw new Error(errorMessage);
-        }
-        
-        // Step 5: Return useful information about the uploaded file
-        const result = await response.json();
-        return {
-            success: true,
-            downloadUrl: result.content.download_url, // Direct link to file
-            htmlUrl: result.content.html_url, // GitHub page for file
-            path: path // Path within repository
-        };
-        
-    } catch (error) {
-        console.error('📋 File upload error details:', error);
-        
-        // Log additional debugging information
-        console.error('🔧 Debug Information:');
-        console.error('   - GitHub Username:', GITHUB_USERNAME);
-        console.error('   - Repository:', `${GITHUB_USERNAME}/kennedysovine.github.io`);
-        console.error('   - Upload Path:', path);
-        console.error('   - File Size:', file.size, 'bytes');
-        console.error('   - Token Present:', !!GITHUB_TOKEN);
-        console.error('   - Token Length:', GITHUB_TOKEN ? GITHUB_TOKEN.length : 0);
-        
-        throw error; // Re-throw so calling function can handle it
-    }
-}
-
-/**
- * Get file SHA for GitHub API
- */
-async function getFileSha(filePath) {
-    try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${filePath}`, {
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            return data.sha;
-        }
-        return null;
-    } catch (error) {
-        console.error('Error getting file SHA:', error);
-        return null;
-    }
-}
-
-/**
- * Upload artwork with complete workflow
- * Handles file upload, data saving, and UI updates
+ * Upload artwork with local storage workflow
+ * Saves images locally and updates data in memory
  */
 async function uploadArtwork(artData) {
     try {
         // Step 1: Generate unique filename
         const uniqueFilename = generateUniqueFilename(artData.imageName, artData.category);
-        showStatus('Uploading image file...', 'info');
+        showStatus('Processing artwork...', 'info');
         
-        // Step 2: Upload image file to GitHub
-        const uploadResult = await uploadFileToGitHub(artData.imageFile, uniqueFilename);
+        // Step 2: Prepare local path (no actual file saving yet)
+        const localPath = `IMAGES/art/${uniqueFilename}`;
         
         // Step 3: Prepare artwork data for storage
         const artworkEntry = {
@@ -1447,9 +1307,12 @@ async function uploadArtwork(artData) {
             formattedDate: artData.formattedDate,
             tags: artData.tags,
             linkedProject: artData.linkedProject,
-            imageUrl: uploadResult.downloadUrl,
-            imagePath: uploadResult.path,
-            uploadDate: new Date().toISOString()
+            imageUrl: `https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/${localPath}`,
+            imagePath: localPath,
+            uploadDate: new Date().toISOString(),
+            // Store the actual file for later upload
+            _pendingFile: artData.imageFile,
+            _pendingFilename: uniqueFilename
         };
         
         // Check if artwork with same ID already exists
@@ -1466,14 +1329,14 @@ async function uploadArtwork(artData) {
         
         console.log(`Total artworks after operation: ${artworkList.length}`);
         
-        // Step 5: Reset form and show success
+        // Step 4: Reset form and show success
         resetUploadForm();
-        showStatus('Artwork uploaded successfully! Image saved to GitHub, data stored in memory. Use "Commit to GitHub" to save changes. 🎉', 'success');
+        showStatus('Artwork added to memory! Use "Commit to GitHub" to save everything. 🎉', 'success');
         
         // Update UI to show there are uncommitted changes
         updateCommitButtonState();
         
-        console.log('Artwork uploaded:', artworkEntry);
+        console.log('Artwork stored in memory:', artworkEntry.title);
         
     } catch (error) {
         console.error('Upload failed:', error);
@@ -2046,6 +1909,37 @@ async function deleteArtwork() {
 }
 
 /**
+ * Get the SHA of a file from GitHub repository
+ * Required for updating existing files via GitHub API
+ * @param {string} path - The file path in the repository
+ * @returns {Promise<string|null>} - The SHA hash or null if not found
+ */
+async function getFileSha(path) {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            return data.sha;
+        } else if (response.status === 404) {
+            // File doesn't exist yet
+            return null;
+        } else {
+            console.error('Error getting file SHA:', response.status, await response.text());
+            return null;
+        }
+    } catch (error) {
+        console.error('Error getting file SHA:', error);
+        return null;
+    }
+}
+
+/**
  * Save artwork data to file
  */
 async function saveArtworkData() {
@@ -2102,20 +1996,6 @@ export const artCategories = [
     } catch (error) {
         console.error('Error saving artwork data:', error);
         throw error;
-    }
-}
-
-/**
- * Update the commit button to show if there are uncommitted changes
- */
-function updateCommitButtonState() {
-    const commitButton = document.getElementById('commit-btn');
-    if (commitButton) {
-        // Enable the button and update text to indicate there are changes
-        commitButton.disabled = false;
-        commitButton.textContent = 'Commit Changes to GitHub';
-        commitButton.style.backgroundColor = '#28a745';
-        commitButton.style.borderColor = '#28a745';
     }
 }
 
@@ -2190,6 +2070,29 @@ function initializeCommitButton() {
     }
 }
 
+// Update commit button state based on pending changes
+function updateCommitButtonState() {
+    const commitButton = document.getElementById('commit-btn');
+    if (!commitButton) return;
+    
+    // Count artworks with pending files
+    const pendingCount = artworkList.filter(artwork => artwork._pendingFile).length;
+    
+    if (pendingCount > 0) {
+        commitButton.textContent = `📤 Commit ${pendingCount} Change${pendingCount === 1 ? '' : 's'} to GitHub`;
+        commitButton.disabled = false;
+        commitButton.style.backgroundColor = '#28a745';
+        commitButton.style.borderColor = '#28a745';
+        commitButton.style.color = 'white';
+    } else {
+        commitButton.textContent = 'No Changes to Commit';
+        commitButton.disabled = true;
+        commitButton.style.backgroundColor = '#6c757d';
+        commitButton.style.borderColor = '#6c757d';
+        commitButton.style.color = 'white';
+    }
+}
+
 // Call initializeAll when document is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Set up password input
@@ -2236,40 +2139,130 @@ window.confirmDeleteArtwork = confirmDeleteArtwork;
 window.deleteArtwork = deleteArtwork;
 
 /**
- * Manually commit artwork data changes to GitHub
- * This allows the user to review and commit changes when ready
+ * Manually commit all changes to GitHub in one commit
+ * This uploads any new images and updates art-data.js
  */
 async function commitToGitHub() {
     try {
+        // Find artworks with pending files
+        const pendingArtworks = artworkList.filter(artwork => artwork._pendingFile);
+        
         const confirmed = confirm(
-            `Are you sure you want to commit the current artwork data to GitHub?\n\n` +
-            `This will update the live art-data.js file with ${artworkList.length} artworks.\n\n` +
-            `Make sure you have reviewed all changes before proceeding.`
+            `Are you sure you want to commit all changes to GitHub?\n\n` +
+            `This will:\n` +
+            `• Upload ${pendingArtworks.length} new images to IMAGES/art/\n` +
+            `• Update art-data.js with ${artworkList.length} artworks\n\n` +
+            `All changes will be in separate commits (GitHub API limitation).`
         );
         
         if (!confirmed) {
             return;
         }
         
-        showStatus('Committing artwork data to GitHub...', 'info');
+        showStatus('Starting commit process...', 'info');
         
-        // Use the existing saveArtworkData function to commit to GitHub
+        // Step 1: Upload new images to GitHub
+        for (const artwork of pendingArtworks) {
+            try {
+                showStatus(`Uploading ${artwork._pendingFilename}...`, 'info');
+                await uploadFileToGitHub(artwork._pendingFile, artwork._pendingFilename);
+                
+                // Remove pending file data after successful upload
+                delete artwork._pendingFile;
+                delete artwork._pendingFilename;
+                
+            } catch (error) {
+                console.error(`Failed to upload ${artwork._pendingFilename}:`, error);
+                throw new Error(`Failed to upload ${artwork._pendingFilename}: ${error.message}`);
+            }
+        }
+        
+        // Step 2: Update art-data.js
+        showStatus('Updating art-data.js...', 'info');
         await saveArtworkData();
         
-        showStatus('Successfully committed artwork data to GitHub! 🎉', 'success');
+        showStatus('Successfully committed all changes to GitHub! 🎉', 'success');
         
-        // Reset commit button state
-        const commitButton = document.getElementById('commit-btn');
-        if (commitButton) {
-            commitButton.textContent = 'No Changes to Commit';
-            commitButton.disabled = true;
-            commitButton.style.backgroundColor = '#6c757d';
-            commitButton.style.borderColor = '#6c757d';
-        }
+        // Update commit button state (should show no changes now)
+        updateCommitButtonState();
         
     } catch (error) {
         console.error('Error committing to GitHub:', error);
         showStatus('Failed to commit to GitHub: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Upload a file to GitHub repository using the Contents API
+ */
+async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
+    try {
+        // Step 1: Convert file to base64 (required by GitHub API)
+        const base64Content = await fileToBase64(file);
+        const path = `${folder}/${filename}`;
+        
+        // Step 2: Check if file already exists (GitHub requires SHA for updates)
+        let sha = null;
+        try {
+            const existingFile = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            
+            if (existingFile.ok) {
+                const fileData = await existingFile.json();
+                sha = fileData.sha;
+            }
+        } catch (error) {
+            // File doesn't exist, which is fine for new uploads
+        }
+        
+        // Step 3: Prepare upload data
+        const uploadData = {
+            message: `Upload artwork: ${filename}`,
+            content: base64Content,
+            ...(sha && { sha })
+        };
+        
+        // Step 4: Upload via GitHub API
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(uploadData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            let errorMessage = `GitHub API error: ${response.status} - ${errorData.message || response.statusText}`;
+            
+            if (response.status === 403) {
+                errorMessage = `GitHub API access denied (403). Your personal access token needs "repo" permissions.`;
+            } else if (response.status === 404) {
+                errorMessage = `Repository not found (404). Please verify repository exists and token has access.`;
+            } else if (response.status === 401) {
+                errorMessage = `Authentication failed (401). Please check your token.`;
+            }
+            
+            throw new Error(errorMessage);
+        }
+        
+        const result = await response.json();
+        return {
+            success: true,
+            downloadUrl: result.content.download_url,
+            htmlUrl: result.content.html_url,
+            path: path
+        };
+        
+    } catch (error) {
+        console.error('File upload error:', error);
+        throw error;
     }
 }
 
