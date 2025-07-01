@@ -1051,9 +1051,6 @@ function initializeFormHandler() {
         // PREPARE ARTWORK DATA OBJECT
         // ==============================================
         
-        // First load existing artwork data to ensure unique ID generation
-        await loadArtworkData();
-        
         const artData = {
             id: generateUniqueArtworkId(), // Generate truly unique ID
             title: title || 'Untitled',
@@ -1952,9 +1949,6 @@ async function saveArtworkChanges() {
     if (!currentEditingArtwork) return;
     
     try {
-        // Load latest artwork data to prevent overwriting other changes
-        await loadArtworkData();
-        
         const artworkId = parseInt(document.getElementById('edit-artwork-id').value);
         const title = document.getElementById('edit-title').value.trim();
         const description = document.getElementById('edit-description').value.trim();
@@ -2024,9 +2018,6 @@ function confirmDeleteArtwork(artworkId) {
  */
 async function deleteArtworkById(artworkId) {
     try {
-        // Load latest artwork data to prevent overwriting other changes
-        await loadArtworkData();
-        
         // Remove from artworkList
         artworkList = artworkList.filter(a => a.id !== artworkId);
         
@@ -2177,6 +2168,15 @@ async function initializeAll() {
     initializeFormHandler();
     initializeArtworkManagement();
     initializeCommitButton();
+    
+    // Load initial artwork data once
+    try {
+        await loadArtworkData();
+        console.log(`Loaded ${artworkList.length} initial artworks`);
+    } catch (error) {
+        console.error('Failed to load initial artwork data:', error);
+        showStatus('Warning: Failed to load existing artwork data', 'warning');
+    }
 }
 
 // Initialize commit button to default state
