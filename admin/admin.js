@@ -1624,7 +1624,7 @@ function clearForm() {
 // ==============================================
 // DRAG & DROP SYSTEM COMPLETE!
 // ==============================================
-// 
+//
 // Features implemented:
 // 1. Visual drag & drop interface with animations
 // 2. File validation (type, size, format)
