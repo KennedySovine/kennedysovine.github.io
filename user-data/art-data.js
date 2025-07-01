@@ -182,15 +182,16 @@ export const artworks = [
     "uploadDate": "2025-07-01T02:16:34.947Z"
   },
   {
-    "id": 1751353619720,
-    "title": "Drowning Under the Water",
-    "description": "",
+    "id": 1751353734092,
+    "title": "TommyInnit - The Fallen Angel",
+    "description": "Drew over the Fallen Angel drawing",
     "category": "digital",
-    "date": "2022-03-10",
+    "date": "2022-01-17",
     "datePrecision": "full",
-    "formattedDate": "10 March 2022",
+    "formattedDate": "17 January 2022",
     "tags": [
       "DreamSMP",
+      "Fan art",
       "TommyInnit"
     ],
     "linkedProject": {
@@ -199,9 +200,9 @@ export const artworks = [
       "url": null,
       "language": null
     },
-    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0120073264dba4a24a0aa0b332c2f8f5cd4b3b7217-2025-07-01T07-06-58-166Z.jpg",
-    "imagePath": "IMAGES/art/digital-0120073264dba4a24a0aa0b332c2f8f5cd4b3b7217-2025-07-01T07-06-58-166Z.jpg",
-    "uploadDate": "2025-07-01T07:06:59.386Z"
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01ba8c5e6be8ac882c1e62263603718cad77d7d4b8-2025-07-01T07-08-49-873Z.jpg",
+    "imagePath": "IMAGES/art/digital-01ba8c5e6be8ac882c1e62263603718cad77d7d4b8-2025-07-01T07-08-49-873Z.jpg",
+    "uploadDate": "2025-07-01T07:08:50.960Z"
   }
 ];
 
