@@ -26,9 +26,46 @@ const sortTypeMapping = {
     'reverse-alphabetical': 'alphabetical'
 };
 
+/**
+ * Check if the site is running on GitHub Pages
+ * @returns {boolean} True if running on GitHub Pages
+ */
+function isRunningOnGitHubPages() {
+    const hostname = window.location.hostname;
+    
+    // Check for GitHub Pages domains
+    return hostname.includes('github.io') || 
+           hostname.includes('githubusercontent.com') ||
+           (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.includes('local'));
+}
+
+/**
+ * Hide admin panel if running on GitHub Pages
+ */
+function hideAdminPanelIfOnPages() {
+    if (isRunningOnGitHubPages()) {
+        // Hide main admin panel link
+        const adminLink = document.getElementById('admin-panel-link');
+        if (adminLink) {
+            adminLink.style.display = 'none';
+        }
+        
+        // Hide upload link in empty state message
+        const adminUploadWrapper = document.getElementById('admin-upload-link-wrapper');
+        if (adminUploadWrapper) {
+            adminUploadWrapper.style.display = 'none';
+        }
+        
+        console.log('Admin panel hidden - running on GitHub Pages');
+    }
+}
+
 // Initialize gallery when page loads
 document.addEventListener('DOMContentLoaded', async function() {
     try {
+        // Hide admin panel if on GitHub Pages
+        hideAdminPanelIfOnPages();
+        
         await initializeGallery();
     } catch (error) {
         console.error('Failed to initialize gallery:', error);
