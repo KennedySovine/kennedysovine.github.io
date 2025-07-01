@@ -1,134 +1,53 @@
-# Local Image Upload System
+# Image Upload System & Anti-Overwrite Guide
 
 ## Overview
 
-The admin panel has been completely refactored to work locally without any GitHub API commits. All artwork uploads and data management happen locally, and you handle git commits manually at your discretion.
+The admin portal uses a sophisticated **memory-first, batch-commit** system to safely upload images to GitHub servers while preventing any data loss or overwriting of existing entries. This guide explains the complete workflow from image selection to final GitHub storage.
 
-## How It Works
+---
 
-### 1. Image Upload Process
+## 🔄 Upload Workflow: Step by Step
 
-When you upload artwork through the admin panel:
+### Phase 1: Memory Storage (Immediate)
+When you upload an artwork through the admin panel:
 
-1. **Image Processing**: The selected image is processed and given a unique filename
-2. **Local Save Prompt**: Browser prompts you to download/save the image file
-3. **Save Location**: You must save the image to `IMAGES/art/` folder in your project
-4. **Data Update**: The artwork data is added to the `artworkList` array using `.push()`
-5. **File Download**: Browser prompts you to download the updated `art-data.js` file
-6. **Replace File**: You must save the new `art-data.js` to your `user-data/` folder
+1. **Image Selection**
+   ```javascript
+   // User selects image via drag-drop or file picker
+   const imageFile = document.getElementById('art-image').files[0];
+   ```
 
-### 2. Anti-Overwrite Protection
+2. **Unique Filename Generation**
+   ```javascript
+   function generateUniqueFilename(originalName, category) {
+       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+       const extension = originalName.split('.').pop();
+       const baseName = originalName.split('.').slice(0, -1).join('.');
+       const safeName = baseName.replace(/[^a-zA-Z0-9-_]/g, '-');
+       return `${category}-${safeName}-${timestamp}.${extension}`;
+   }
+   
+   // Example output: "digital-my-artwork-2025-07-01T14-30-45-123Z.jpg"
+   ```
 
-The system uses **`.push()`** to add new artworks to the existing array, which means:
-- ✅ New artworks are **added** to the existing collection
-- ✅ Existing artworks are **never overwritten**
-- ✅ Each artwork gets a unique timestamp-based ID
-- ✅ The array grows incrementally with each upload
+3. **Memory Storage with Pending Flags**
+   ```javascript
+   const artworkEntry = {
+       id: generateUniqueArtworkId(),
+       title: "My Artwork",
+       description: "Description here...",
+       category: "digital",
+       // ... other metadata
+       imageUrl: `https://raw.githubusercontent.com/USER/REPO/main/IMAGES/art/${uniqueFilename}`,
+       imagePath: `IMAGES/art/${uniqueFilename}`,
+       
+       // 🔑 KEY: Pending file data stored in memory
+       _pendingFile: imageFile,           // Actual File object
+       _pendingFilename: uniqueFilename   // Generated filename
+   };
+   ```
 
-### 3. Edit and Delete Operations
-
-When you edit or delete artwork:
-- Changes are made to the `artworkList` array in memory
-- Browser prompts you to download the updated `art-data.js` file
-- You save the file to `user-data/` folder to make changes persistent
-
-## Workflow Steps
-
-### For New Artwork:
-
-1. Fill out the upload form in the admin panel
-2. Click "Upload Artwork"
-3. **Save the image**: When prompted, save to `IMAGES/art/`
-4. **Save the data**: When prompted, save `art-data.js` to `user-data/`
-5. **Git commit**: When ready, commit both files manually
-
-### For Editing Artwork:
-
-1. Use the "Manage Existing" view
-2. Click "Edit" on any artwork
-3. Make your changes and save
-4. **Save the data**: When prompted, save `art-data.js` to `user-data/`
-5. **Git commit**: When ready, commit the changes manually
-
-### For Deleting Artwork:
-
-1. Use the "Manage Existing" view  
-2. Click "Delete" on any artwork
-3. Confirm the deletion
-4. **Save the data**: When prompted, save `art-data.js` to `user-data/`
-5. **Optional**: Manually delete the image file from `IMAGES/art/`
-6. **Git commit**: When ready, commit the changes manually
-
-## Technical Details
-
-### File Naming Convention
-
-Images are saved with this pattern:
-```
-{category}-{original-name}-{timestamp}.{extension}
-```
-
-Example: `digital-character-sketch-2025-07-01T14-30-45-123Z.jpg`
-
-### Data Structure
-
-Each artwork entry contains:
-```javascript
-{
-  id: 1751322066427,           // Unique timestamp-based ID
-  title: "Artwork Title",
-  description: "Description",
-  category: "digital",
-  date: "2025-06",
-  datePrecision: "month",
-  formattedDate: "June 2025",
-  tags: ["tag1", "tag2"],
-  linkedProject: {...},
-  imageUrl: "https://raw.githubusercontent.com/.../image.jpg",
-  imagePath: "IMAGES/art/image.jpg",
-  uploadDate: "2025-07-01T14:30:45.123Z"
-}
-```
-
-### Array Management
-
-The system maintains artwork integrity by:
-- Loading existing artworks from `art-data.js` on startup
-- Using `artworkList.push(newArtwork)` for additions
-- Using `artworkList[index] = updatedArtwork` for edits
-- Using `artworkList.filter()` for deletions
-- Never replacing the entire array
-
-## Benefits
-
-1. **No Multiple Commits**: Only you decide when to commit
-2. **Local Control**: All changes happen locally first
-3. **Data Safety**: Existing artworks cannot be accidentally overwritten
-4. **Flexibility**: You can batch multiple uploads before committing
-5. **Offline Capable**: Works entirely without internet connection
-
-## Migration Notes
-
-- All GitHub API commit functions have been removed
-- The "Commit to GitHub" button has been removed from the UI
-- Image uploads prompt for local file saving
-- Data changes prompt for local file replacement
-- Manual git workflow gives you full control
-
-## Troubleshooting
-
-**Q: The download prompts don't appear**
-- Check if your browser is blocking downloads
-- Ensure popup blockers are disabled for localhost
-
-**Q: Changes don't persist after page reload**
-- Make sure you saved the new `art-data.js` file to `user-data/`
-- Check the file was saved with the correct name and location
-
-**Q: Images don't show in the gallery**
-- Ensure images were saved to `IMAGES/art/` folder
-- Check that the filename matches what's in the data
-- Verify the file path is correct in `art-data.js`
+4. **Anti-Overwrite Protection**
    ```javascript
    // Always load latest art-data.js before modifying
    await loadArtworkData();

@@ -96,6 +96,9 @@ async function authenticate() {
         initializeFormHandler();
         initializeArtworkManagement();
         
+        // Initialize commit button state after loading artwork data
+        updateCommitButtonState();
+        
         // Clear the password field for security
         document.getElementById('admin-password').value = '';
     } else {
@@ -1281,8 +1284,8 @@ function generateUniqueFilename(originalName, category) {
 }
 
 /**
- * Upload artwork with local file system workflow
- * Saves images locally and updates art-data.js directly
+ * Upload artwork with local storage workflow
+ * Saves images locally and updates data in memory
  */
 async function uploadArtwork(artData) {
     try {
@@ -1290,9 +1293,8 @@ async function uploadArtwork(artData) {
         const uniqueFilename = generateUniqueFilename(artData.imageName, artData.category);
         showStatus('Processing artwork...', 'info');
         
-        // Step 2: Save image locally to IMAGES/art/ directory
+        // Step 2: Prepare local path (no actual file saving yet)
         const localPath = `IMAGES/art/${uniqueFilename}`;
-        await saveImageToLocalDirectory(artData.imageFile, uniqueFilename);
         
         // Step 3: Prepare artwork data for storage
         const artworkEntry = {
@@ -1307,22 +1309,34 @@ async function uploadArtwork(artData) {
             linkedProject: artData.linkedProject,
             imageUrl: `https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/${localPath}`,
             imagePath: localPath,
-            uploadDate: new Date().toISOString()
+            uploadDate: new Date().toISOString(),
+            // Store the actual file for later upload
+            _pendingFile: artData.imageFile,
+            _pendingFilename: uniqueFilename
         };
         
-        // Step 4: Add to artworkList using push (no overwriting)
-        artworkList.push(artworkEntry);
-        console.log(`Added new artwork with ID: ${artworkEntry.id}`);
+        // Check if artwork with same ID already exists
+        const existingIndex = artworkList.findIndex(item => item.id === artworkEntry.id);
+        if (existingIndex !== -1) {
+            // Update existing artwork
+            artworkList[existingIndex] = artworkEntry;
+            console.log(`Updated existing artwork with ID: ${artworkEntry.id}`);
+        } else {
+            // Add new artwork to the list
+            artworkList.push(artworkEntry);
+            console.log(`Added new artwork with ID: ${artworkEntry.id}`);
+        }
+        
         console.log(`Total artworks after operation: ${artworkList.length}`);
         
-        // Step 5: Update local art-data.js file directly
-        await updateLocalArtDataFile();
-        
-        // Step 6: Reset form and show success
+        // Step 4: Reset form and show success
         resetUploadForm();
-        showStatus('Artwork saved locally! Image and data file updated. 🎉', 'success');
+        showStatus('Artwork added to memory! Use "Commit to GitHub" to save everything. 🎉', 'success');
         
-        console.log('Artwork saved locally:', artworkEntry.title);
+        // Update UI to show there are uncommitted changes
+        updateCommitButtonState();
+        
+        console.log('Artwork stored in memory:', artworkEntry.title);
         
     } catch (error) {
         console.error('Upload failed:', error);
@@ -1837,12 +1851,12 @@ async function saveArtworkChanges() {
             artworkList[index] = updatedArtwork;
         }
         
-        // Update local art-data.js file
-        await updateLocalArtDataFile();
-        
         closeEditModal();
         displayArtworkList(artworkList);
-        showStatus('Artwork updated successfully! Files updated locally.', 'success');
+        showStatus('Artwork updated successfully! Changes stored in memory. Use "Commit to GitHub" to save.', 'success');
+        
+        // Update UI to show there are uncommitted changes
+        updateCommitButtonState();
         
     } catch (error) {
         console.error('Error saving artwork changes:', error);
@@ -1870,11 +1884,11 @@ async function deleteArtworkById(artworkId) {
         // Remove from artworkList
         artworkList = artworkList.filter(a => a.id !== artworkId);
         
-        // Update local art-data.js file
-        await updateLocalArtDataFile();
-        
         displayArtworkList(artworkList);
-        showStatus('Artwork deleted successfully! Files updated locally.', 'success');
+        showStatus('Artwork deleted successfully! Changes stored in memory. Use "Commit to GitHub" to save.', 'success');
+        
+        // Update UI to show there are uncommitted changes
+        updateCommitButtonState();
         
     } catch (error) {
         console.error('Error deleting artwork:', error);
@@ -1894,50 +1908,44 @@ async function deleteArtwork() {
     }
 }
 
-// ===========================
-// ID GENERATION UTILITIES
-// ===========================
-
 /**
- * Save an image file to the local IMAGES/art directory
- * @param {File} file - The image file to save
- * @param {string} filename - The filename to use
+ * Get the SHA of a file from GitHub repository
+ * Required for updating existing files via GitHub API
+ * @param {string} path - The file path in the repository
+ * @returns {Promise<string|null>} - The SHA hash or null if not found
  */
-async function saveImageToLocalDirectory(file, filename) {
+async function getFileSha(path) {
     try {
-        // Create a download link to save the file locally
-        const arrayBuffer = await file.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        const blob = new Blob([uint8Array], { type: file.type });
-        const url = URL.createObjectURL(blob);
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
         
-        const downloadLink = document.createElement('a');
-        downloadLink.href = url;
-        downloadLink.download = filename;
-        downloadLink.style.display = 'none';
-        
-        // Add instructions for the user
-        showStatus(`Please save ${filename} to your IMAGES/art/ folder when prompted`, 'info');
-        
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        
-        URL.revokeObjectURL(url);
-        
-        console.log(`Image download initiated: ${filename}`);
-        
+        if (response.ok) {
+            const data = await response.json();
+            return data.sha;
+        } else if (response.status === 404) {
+            // File doesn't exist yet
+            return null;
+        } else {
+            console.error('Error getting file SHA:', response.status, await response.text());
+            return null;
+        }
     } catch (error) {
-        console.error('Error saving image locally:', error);
-        throw new Error(`Failed to save image locally: ${error.message}`);
+        console.error('Error getting file SHA:', error);
+        return null;
     }
 }
 
 /**
- * Update the local art-data.js file with current artwork data
+ * Save artwork data to file
  */
-async function updateLocalArtDataFile() {
+async function saveArtworkData() {
     try {
+        console.log('Saving artwork data...', artworkList.length, 'artworks');
+        
         const artworkDataContent = `// Art portfolio data
 // This file is automatically updated by the admin panel
 
@@ -1949,33 +1957,45 @@ window.artData = artworks;
 // You can add more art-related data exports here
 export const artCategories = [
     "Digital Art",
-    "Painting", 
+    "Painting",
     "Drawing",
 ];`;
 
-        // Create a download for the updated art-data.js file
-        const blob = new Blob([artworkDataContent], { type: 'text/javascript' });
-        const url = URL.createObjectURL(blob);
+        // Get current file SHA
+        console.log('Getting file SHA for art-data.js...');
+        const sha = await getFileSha('user-data/art-data.js');
+        console.log('File SHA:', sha);
         
-        const downloadLink = document.createElement('a');
-        downloadLink.href = url;
-        downloadLink.download = 'art-data.js';
-        downloadLink.style.display = 'none';
+        if (!sha) {
+            throw new Error('Could not get file SHA - check authentication and file existence');
+        }
+
+        console.log('Updating art-data.js via GitHub API...');
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/user-data/art-data.js`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: 'Update artwork data via admin panel',
+                content: btoa(artworkDataContent),
+                sha: sha
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('GitHub API Error:', response.status, errorData);
+            throw new Error(`Failed to save artwork data: ${response.status} - ${errorData}`);
+        }
         
-        // Add instructions for the user
-        showStatus('Please save art-data.js to your user-data/ folder when prompted', 'info');
-        
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        
-        URL.revokeObjectURL(url);
-        
-        console.log('Art data file download initiated');
+        const responseData = await response.json();
+        console.log('Successfully saved artwork data:', responseData);
         
     } catch (error) {
-        console.error('Error updating local art data file:', error);
-        throw new Error(`Failed to update art data file: ${error.message}`);
+        console.error('Error saving artwork data:', error);
+        throw error;
     }
 }
 
@@ -2027,6 +2047,7 @@ async function initializeAll() {
     await initializeProjectSearch();
     initializeFormHandler();
     initializeArtworkManagement();
+    initializeCommitButton();
     
     // Load initial artwork data once
     try {
@@ -2035,6 +2056,40 @@ async function initializeAll() {
     } catch (error) {
         console.error('Failed to load initial artwork data:', error);
         showStatus('Warning: Failed to load existing artwork data', 'warning');
+    }
+}
+
+// Initialize commit button to default state
+function initializeCommitButton() {
+    const commitButton = document.getElementById('commit-btn');
+    if (commitButton) {
+        commitButton.textContent = 'No Changes to Commit';
+        commitButton.disabled = true;
+        commitButton.style.backgroundColor = '#6c757d';
+        commitButton.style.borderColor = '#6c757d';
+    }
+}
+
+// Update commit button state based on pending changes
+function updateCommitButtonState() {
+    const commitButton = document.getElementById('commit-btn');
+    if (!commitButton) return;
+    
+    // Count artworks with pending files
+    const pendingCount = artworkList.filter(artwork => artwork._pendingFile).length;
+    
+    if (pendingCount > 0) {
+        commitButton.textContent = `📤 Commit ${pendingCount} Change${pendingCount === 1 ? '' : 's'} to GitHub`;
+        commitButton.disabled = false;
+        commitButton.style.backgroundColor = '#28a745';
+        commitButton.style.borderColor = '#28a745';
+        commitButton.style.color = 'white';
+    } else {
+        commitButton.textContent = 'No Changes to Commit';
+        commitButton.disabled = true;
+        commitButton.style.backgroundColor = '#6c757d';
+        commitButton.style.borderColor = '#6c757d';
+        commitButton.style.color = 'white';
     }
 }
 
@@ -2082,3 +2137,134 @@ window.closeEditModal = closeEditModal;
 window.clearEditProject = clearEditProject;
 window.confirmDeleteArtwork = confirmDeleteArtwork;
 window.deleteArtwork = deleteArtwork;
+
+/**
+ * Manually commit all changes to GitHub in one commit
+ * This uploads any new images and updates art-data.js
+ */
+async function commitToGitHub() {
+    try {
+        // Find artworks with pending files
+        const pendingArtworks = artworkList.filter(artwork => artwork._pendingFile);
+        
+        const confirmed = confirm(
+            `Are you sure you want to commit all changes to GitHub?\n\n` +
+            `This will:\n` +
+            `• Upload ${pendingArtworks.length} new images to IMAGES/art/\n` +
+            `• Update art-data.js with ${artworkList.length} artworks\n\n` +
+            `All changes will be in separate commits (GitHub API limitation).`
+        );
+        
+        if (!confirmed) {
+            return;
+        }
+        
+        showStatus('Starting commit process...', 'info');
+        
+        // Step 1: Upload new images to GitHub
+        for (const artwork of pendingArtworks) {
+            try {
+                showStatus(`Uploading ${artwork._pendingFilename}...`, 'info');
+                await uploadFileToGitHub(artwork._pendingFile, artwork._pendingFilename);
+                
+                // Remove pending file data after successful upload
+                delete artwork._pendingFile;
+                delete artwork._pendingFilename;
+                
+            } catch (error) {
+                console.error(`Failed to upload ${artwork._pendingFilename}:`, error);
+                throw new Error(`Failed to upload ${artwork._pendingFilename}: ${error.message}`);
+            }
+        }
+        
+        // Step 2: Update art-data.js
+        showStatus('Updating art-data.js...', 'info');
+        await saveArtworkData();
+        
+        showStatus('Successfully committed all changes to GitHub! 🎉', 'success');
+        
+        // Update commit button state (should show no changes now)
+        updateCommitButtonState();
+        
+    } catch (error) {
+        console.error('Error committing to GitHub:', error);
+        showStatus('Failed to commit to GitHub: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Upload a file to GitHub repository using the Contents API
+ */
+async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
+    try {
+        // Step 1: Convert file to base64 (required by GitHub API)
+        const base64Content = await fileToBase64(file);
+        const path = `${folder}/${filename}`;
+        
+        // Step 2: Check if file already exists (GitHub requires SHA for updates)
+        let sha = null;
+        try {
+            const existingFile = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            
+            if (existingFile.ok) {
+                const fileData = await existingFile.json();
+                sha = fileData.sha;
+            }
+        } catch (error) {
+            // File doesn't exist, which is fine for new uploads
+        }
+        
+        // Step 3: Prepare upload data
+        const uploadData = {
+            message: `Upload artwork: ${filename}`,
+            content: base64Content,
+            ...(sha && { sha })
+        };
+        
+        // Step 4: Upload via GitHub API
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(uploadData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            let errorMessage = `GitHub API error: ${response.status} - ${errorData.message || response.statusText}`;
+            
+            if (response.status === 403) {
+                errorMessage = `GitHub API access denied (403). Your personal access token needs "repo" permissions.`;
+            } else if (response.status === 404) {
+                errorMessage = `Repository not found (404). Please verify repository exists and token has access.`;
+            } else if (response.status === 401) {
+                errorMessage = `Authentication failed (401). Please check your token.`;
+            }
+            
+            throw new Error(errorMessage);
+        }
+        
+        const result = await response.json();
+        return {
+            success: true,
+            downloadUrl: result.content.download_url,
+            htmlUrl: result.content.html_url,
+            path: path
+        };
+        
+    } catch (error) {
+        console.error('File upload error:', error);
+        throw error;
+    }
+}
+
+// Make commitToGitHub function globally available
+window.commitToGitHub = commitToGitHub;
