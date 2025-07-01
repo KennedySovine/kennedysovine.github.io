@@ -180,6 +180,29 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
     "imagePath": "IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
     "uploadDate": "2025-07-01T02:16:34.947Z"
+  },
+  {
+    "id": 1751353540220,
+    "title": "Apple",
+    "description": "",
+    "category": "digital",
+    "date": "2022-05-01",
+    "datePrecision": "full",
+    "formattedDate": "1 May 2022",
+    "tags": [
+      "DreamSMP",
+      "procreate",
+      "Jschlatt"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-013ace323dcd8d03a0a3a9248847da90f8743dc83d-2025-07-01T07-05-33-500Z.jpg",
+    "imagePath": "IMAGES/art/digital-013ace323dcd8d03a0a3a9248847da90f8743dc83d-2025-07-01T07-05-33-500Z.jpg",
+    "uploadDate": "2025-07-01T07:05:34.709Z"
   }
 ];
 
