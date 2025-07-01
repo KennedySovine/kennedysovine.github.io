@@ -273,7 +273,7 @@ export const artworks = [
     "uploadDate": "2025-07-01T07:20:35.699Z"
   },
   {
-    "id": 1751355092843,
+    "id": 1751355980347,
     "title": "Falling Through L'Manberg",
     "description": "",
     "category": "digital",
@@ -291,9 +291,9 @@ export const artworks = [
       "url": null,
       "language": null
     },
-    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-31-30-538Z.jpg",
-    "imagePath": "IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-31-30-538Z.jpg",
-    "uploadDate": "2025-07-01T07:31:31.941Z"
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-46-17-960Z.jpg",
+    "imagePath": "IMAGES/art/digital-0170b1b5c784e1a08eeab0fcbe5dedcb8e8e8677fa-2025-07-01T07-46-17-960Z.jpg",
+    "uploadDate": "2025-07-01T07:46:18.990Z"
   }
 ];
 
