@@ -98,16 +98,16 @@ export const artworks = [
     "uploadDate": "2025-07-01T02:03:16.366Z"
   },
   {
-    "id": 1751336155196,
-    "title": "Gas Station in Utah",
+    "id": 1751336193899,
+    "title": "Ghostbur with Friend",
     "description": "",
     "category": "digital",
-    "date": "2022-09-04",
+    "date": "2022-09-03",
     "datePrecision": "full",
-    "formattedDate": "4 September 2022",
+    "formattedDate": "3 September 2022",
     "tags": [
-      "DreamSMP",
-      "Fan Art"
+      "Fan art",
+      "DreamSMP"
     ],
     "linkedProject": {
       "title": "Dream SMP",
@@ -115,9 +115,9 @@ export const artworks = [
       "url": null,
       "language": null
     },
-    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-010afab06699ca171c1ea39d9e1424a0b501dfb767-2025-07-01T02-15-55-196Z.jpg",
-    "imagePath": "IMAGES/art/digital-010afab06699ca171c1ea39d9e1424a0b501dfb767-2025-07-01T02-15-55-196Z.jpg",
-    "uploadDate": "2025-07-01T02:15:56.681Z"
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
+    "imagePath": "IMAGES/art/digital-012d2d00d5bc61e6d20637eb583f49219145e29e5a-2025-07-01T02-16-33-899Z.jpg",
+    "uploadDate": "2025-07-01T02:16:34.947Z"
   }
 ];
 
