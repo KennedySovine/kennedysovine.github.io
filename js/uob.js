@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         year2: document.getElementById('year2-btn'),
         year3: document.getElementById('year3-btn')
     };
-      moduleContainers = {
+    moduleContainers = {
         semester1: document.getElementById('semester1-modules'),
         semester2: document.getElementById('semester2-modules'),
         semester3: document.getElementById('semester3-modules')
@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // selectFirstModule(); // Will be called at the end of loadModulesForYear
 });
 
-function setupYearButtons() {    yearButtons.year1.addEventListener('click', () => {
+function setupYearButtons() {
+    yearButtons.year1.addEventListener('click', () => {
         setActiveYear('year1', "2022 - 2023");
         loadModulesForYear("2022 - 2023");
     });
@@ -244,15 +245,6 @@ function updateModuleInfo(module) {
         repoBtn.style.display = 'none'; // Hide button if no URL
     }
 }
-
-/* REMOVE THIS FUNCTION
-function generateReadmeContent(module) {
-    // Generate a realistic README-style content based on the module
-    const readmeText = `# ${module.title}\\n\\nThis repository contains coursework and projects for ${module.title} at the University of Brighton.\\n\\n## Overview\\nThis module covers fundamental concepts and practical applications in the field. Students will develop hands-on experience through various assignments and projects.\\n\\n## Learning Objectives\\n- Understand core principles and methodologies\\n- Apply theoretical knowledge to practical scenarios\\n- Develop technical skills relevant to the subject area\\n- Complete assessments demonstrating competency\\n\\n## Repository Structure\\n- \\\\\`/assignments\\\\\` - Weekly assignments and homework\\n- \\\\\`/projects\\\\\` - Major projects and coursework\\n- \\\\\`/resources\\\\\` - Additional learning materials\\n- \\\\\`/documentation\\\\\` - Project documentation and reports\\n\\n## Technologies Used\\n- Programming languages and tools relevant to the module\\n- Development environments and frameworks\\n- Testing and deployment tools\\n\\n## Assessment\\nThis module includes various forms of assessment including practical work, written assignments, and project deliverables.\\n\\nFor more information about this module, please refer to the official University of Brighton course documentation.`;
-
-    return readmeText;
-}
-*/
 
 function renderMarkdown(text, owner, repo, branch) {
     let html = text;    // Phase 1: Resolve URLs and convert Markdown images and links

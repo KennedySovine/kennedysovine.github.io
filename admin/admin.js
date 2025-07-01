@@ -88,7 +88,6 @@ async function authenticate() {
         initializeDateInput();
         await initializeProjectSearch();
         initializeFormHandler();
-        initializeDateInput();
         
         // Clear the password field for security
         document.getElementById('admin-password').value = '';
@@ -1347,21 +1346,8 @@ window.artData = artworks;
 // You can add more art-related data exports here
 export const artCategories = [
     "Digital Art",
-    "Traditional Art", 
-    "Sketches",
-    "Paintings",
-    "Character Design",
-    "Concept Art"
-];
-
-export const artMediums = [
-    "Digital",
-    "Pencil",
-    "Ink",
-    "Watercolor",
-    "Oil Paint",
-    "Acrylic",
-    "Mixed Media"
+    "Painting",
+    "Drawing",
 ];
 `;
         
