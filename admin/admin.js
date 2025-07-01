@@ -1542,11 +1542,25 @@ function clearEditProject() {
  * Add tag to edit form
  */
 function addEditTag(tagText) {
+    const trimmedTag = tagText.trim();
+    if (!trimmedTag) return;
+    
     const container = document.getElementById('edit-tags-container');
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    tag.innerHTML = `${tagText} <button type="button" onclick="this.parentElement.remove()">&times;</button>`;
-    container.appendChild(tag);
+    
+    // Check for duplicates
+    const existingTags = Array.from(container.querySelectorAll('.tag-bubble .tag-text')).map(el => el.textContent.trim());
+    if (existingTags.includes(trimmedTag)) {
+        showStatus('Tag already exists', 'warning');
+        return;
+    }
+    
+    const tagBubble = document.createElement('div');
+    tagBubble.className = 'tag-bubble';
+    tagBubble.innerHTML = `
+        <span class="tag-text">${trimmedTag}</span>
+        <button type="button" class="tag-remove" onclick="this.parentElement.remove()">&times;</button>
+    `;
+    container.appendChild(tagBubble);
 }
 
 /**
@@ -1583,6 +1597,15 @@ function setupEditForm() {
                 }
             }
         });
+        
+        // Also handle input on blur (when user clicks away)
+        editTagInput.addEventListener('blur', function() {
+            const tagText = this.value.trim();
+            if (tagText) {
+                addEditTag(tagText);
+                this.value = '';
+            }
+        });
     }
     
     // Edit form submission
@@ -1612,8 +1635,8 @@ async function saveArtworkChanges() {
             document.getElementById('edit-date-full').value;
         
         // Get tags
-        const tagElements = document.querySelectorAll('#edit-tags-container .tag');
-        const tags = Array.from(tagElements).map(tag => tag.textContent.replace('×', '').trim());
+        const tagElements = document.querySelectorAll('#edit-tags-container .tag-bubble .tag-text');
+        const tags = Array.from(tagElements).map(tag => tag.textContent.trim());
         
         // Get project
         const projectElement = document.getElementById('edit-selected-project');
