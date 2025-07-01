@@ -421,13 +421,13 @@ function applySorting() {
             filteredArtworks.sort((a, b) => new Date(b.uploadDate || b.dateAdded) - new Date(a.uploadDate || a.dateAdded));
             break;
         case 'newest-created':
-            filteredArtworks.sort((a, b) => new Date(b.dateCreated || b.year) - new Date(a.dateCreated || a.year));
+            filteredArtworks.sort((a, b) => new Date(b.date || b.dateCreated || b.year) - new Date(a.date || a.dateCreated || a.year));
             break;
         case 'oldest-upload':
             filteredArtworks.sort((a, b) => new Date(a.uploadDate || a.dateAdded) - new Date(b.uploadDate || b.dateAdded));
             break;
         case 'oldest-created':
-            filteredArtworks.sort((a, b) => new Date(a.dateCreated || a.year) - new Date(b.dateCreated || b.year));
+            filteredArtworks.sort((a, b) => new Date(a.date || a.dateCreated || a.year) - new Date(b.date || b.dateCreated || b.year));
             break;
         case 'alphabetical':
             filteredArtworks.sort((a, b) => a.title.localeCompare(b.title));

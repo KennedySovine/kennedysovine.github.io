@@ -203,6 +203,51 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01ba8c5e6be8ac882c1e62263603718cad77d7d4b8-2025-07-01T07-08-49-873Z.jpg",
     "imagePath": "IMAGES/art/digital-01ba8c5e6be8ac882c1e62263603718cad77d7d4b8-2025-07-01T07-08-49-873Z.jpg",
     "uploadDate": "2025-07-01T07:08:50.960Z"
+  },
+  {
+    "id": 1751353540220,
+    "title": "Apple",
+    "description": "",
+    "category": "digital",
+    "date": "2022-05-01",
+    "datePrecision": "full",
+    "formattedDate": "1 May 2022",
+    "tags": [
+      "DreamSMP",
+      "procreate",
+      "Jschlatt"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-013ace323dcd8d03a0a3a9248847da90f8743dc83d-2025-07-01T07-05-33-500Z.jpg",
+    "imagePath": "IMAGES/art/digital-013ace323dcd8d03a0a3a9248847da90f8743dc83d-2025-07-01T07-05-33-500Z.jpg",
+    "uploadDate": "2025-07-01T07:05:34.709Z"
+  },
+  {
+    "id": 1751353619720,
+    "title": "Drowning Under the Water",
+    "description": "",
+    "category": "digital",
+    "date": "2022-03-10",
+    "datePrecision": "full",
+    "formattedDate": "10 March 2022",
+    "tags": [
+      "DreamSMP",
+      "TommyInnit"
+    ],
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-0120073264dba4a24a0aa0b332c2f8f5cd4b3b7217-2025-07-01T07-06-58-166Z.jpg",
+    "imagePath": "IMAGES/art/digital-0120073264dba4a24a0aa0b332c2f8f5cd4b3b7217-2025-07-01T07-06-58-166Z.jpg",
+    "uploadDate": "2025-07-01T07:06:59.386Z"
   }
 ];
 
