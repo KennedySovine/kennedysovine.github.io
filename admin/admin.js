@@ -24,6 +24,7 @@ let tags = [];
 let selectedProject = null;     // Currently selected project for linking
 let existingProjects = [];      // Predefined projects from portfolio
 let githubRepositories = [];    // Repositories fetched from GitHub API
+// Note: adminProjects is declared in admin-projects.js
 
 // Artwork management variables
 let artworkList = [];          // List of all artworks
@@ -93,7 +94,6 @@ async function authenticate() {
         initializeDateInput();
         await initializeProjectSearch();
         initializeFormHandler();
-        initializeDateInput();
         initializeArtworkManagement();
         
         // Clear the password field for security
@@ -522,8 +522,8 @@ async function loadGitHubRepositories() {
     try {
         showStatus('Loading GitHub repositories...', 'info');
         
-        // Fetch repositories from GitHub API
-        const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
+        // Fetch only owned repositories (not starred or collaborated)
+        const response = await fetch(`https://api.github.com/user/repos?type=owner&sort=updated&per_page=100`, {
             headers: {
                 'Authorization': `token ${GITHUB_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json'
@@ -536,8 +536,14 @@ async function loadGitHubRepositories() {
         
         const repos = await response.json();
         
+        // Filter out forked repositories unless they have commits from the owner
+        const ownedRepos = repos.filter(repo => {
+            // Include if it's not a fork, or if it's a fork but has been updated recently
+            return !repo.fork || repo.pushed_at !== repo.created_at;
+        });
+        
         // Transform repository data for our project system
-        githubRepositories = repos.map(repo => ({
+        githubRepositories = ownedRepos.map(repo => ({
             title: repo.name,
             description: repo.description || '',
             url: repo.html_url,
@@ -545,19 +551,75 @@ async function loadGitHubRepositories() {
             updated: repo.updated_at,
             language: repo.language,
             stars: repo.stargazers_count,
-            private: repo.private
+            private: repo.private,
+            isOwned: true
         }));
         
         // Sort by most recently updated
         githubRepositories.sort((a, b) => new Date(b.updated) - new Date(a.updated));
         
-        console.log(`Loaded ${githubRepositories.length} GitHub repositories`);
-        showStatus(`Loaded ${githubRepositories.length} GitHub repositories`, 'success');
+        console.log(`Loaded ${githubRepositories.length} owned GitHub repositories`);
+        showStatus(`Loaded ${githubRepositories.length} owned GitHub repositories`, 'success');
         
     } catch (error) {
         console.error('Error loading GitHub repositories:', error);
         showStatus('Could not load GitHub repositories. Project linking will still work with manual entries.', 'warning');
         githubRepositories = []; // Ensure it's an empty array on failure
+    }
+}
+
+/**
+ * Load projects from existing artwork data
+ * Extracts unique project names from artworks that have linkedProject data
+ */
+async function loadProjectsFromArtwork() {
+    try {
+        // Fetch artwork data from art-data.js to extract linked projects
+        const response = await fetch('../user-data/art-data.js');
+        const text = await response.text();
+        
+        // Extract artworks array from the module
+        const artworksMatch = text.match(/export const artworks = (\[[\s\S]*?\]);/);
+        let artworks = [];
+        if (artworksMatch) {
+            artworks = JSON.parse(artworksMatch[1]);
+        }
+        
+        // Extract unique projects from artwork data
+        const projectsFromArtwork = [];
+        const seenProjects = new Set();
+        
+        artworks.forEach(artwork => {
+            if (artwork.linkedProject && artwork.linkedProject.title) {
+                const projectTitle = artwork.linkedProject.title;
+                if (!seenProjects.has(projectTitle.toLowerCase())) {
+                    seenProjects.add(projectTitle.toLowerCase());
+                    projectsFromArtwork.push({
+                        title: artwork.linkedProject.title,
+                        type: artwork.linkedProject.type || 'project',
+                        url: artwork.linkedProject.url || null,
+                        language: artwork.linkedProject.language || null,
+                        source: 'artwork-data'
+                    });
+                }
+            }
+        });
+        
+        // Add these projects to existingProjects if they're not already there
+        projectsFromArtwork.forEach(project => {
+            const exists = existingProjects.find(p => 
+                p.title.toLowerCase() === project.title.toLowerCase()
+            );
+            if (!exists) {
+                existingProjects.push(project);
+            }
+        });
+        
+        console.log(`Loaded ${projectsFromArtwork.length} projects from artwork data`);
+        
+    } catch (error) {
+        console.error('Error loading projects from artwork data:', error);
+        // Don't throw error - this is not critical functionality
     }
 }
 
@@ -685,6 +747,7 @@ async function initializeProjectSearch() {
     // Load existing projects and GitHub repositories
     loadExistingProjects();
     await loadGitHubRepositories();
+    await loadProjectsFromArtwork();
     
     const searchInput = document.getElementById('project-search');
     const dropdown = document.getElementById('project-dropdown');
@@ -709,9 +772,6 @@ async function initializeProjectSearch() {
     });
 }
 
-/**
- * Load existing projects from your main portfolio
- * These are the projects already featured on your website
 /**
  * Show project dropdown with filtered results
  */
@@ -761,6 +821,54 @@ function showProjectDropdown(query, queryLower) {
 }
 
 /**
+ * Show project dropdown with filtered results for edit form
+ */
+function showEditProjectDropdown(query, queryLower) {
+    const dropdown = document.getElementById('edit-project-dropdown');
+    
+    if (!query) {
+        dropdown.style.display = 'none';
+        return;
+    }
+    
+    // Combine all project sources: existing, GitHub repos, and admin projects
+    const allProjects = [...existingProjects, ...githubRepositories, ...adminProjects];
+    
+    // Filter projects based on query (case-insensitive search)
+    const filtered = allProjects.filter(project => 
+        project.title.toLowerCase().includes(queryLower)
+    );
+    
+    // Clear and populate dropdown
+    dropdown.innerHTML = '';
+    
+    if (filtered.length > 0) {
+        filtered.forEach(project => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.innerHTML = `
+                <div class="project-title">${project.title}</div>
+                <div class="project-type">${project.type}${project.isTemporary ? ' (temporary)' : ''}</div>
+                ${project.description ? `<div class="project-description">${project.description}</div>` : ''}
+            `;
+            item.addEventListener('click', () => selectEditProject(project));
+            dropdown.appendChild(item);
+        });
+        dropdown.style.display = 'block';
+    } else if (query) {
+        // Show option to create new project (using original case)
+        const item = document.createElement('div');
+        item.className = 'dropdown-item create-new';
+        item.innerHTML = `<div class="project-title">Create "${query}" as new project</div>`;
+        item.addEventListener('click', () => createNewEditProject(query));
+        dropdown.appendChild(item);
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+/**
  * Select a project for linking
  */
 function selectProject(project) {
@@ -768,6 +876,28 @@ function selectProject(project) {
     document.getElementById('project-search').value = '';
     document.getElementById('project-dropdown').style.display = 'none';
     updateSelectedProject();
+}
+
+/**
+ * Select a project for linking in edit form
+ */
+function selectEditProject(project) {
+    // Store the selected project data for the edit form
+    if (currentEditingArtwork) {
+        currentEditingArtwork.linkedProject = {
+            title: project.title,
+            type: project.type,
+            url: project.url || null,
+            language: project.language || null
+        };
+    }
+    
+    // Clear search input and hide dropdown
+    document.getElementById('edit-project-search').value = '';
+    document.getElementById('edit-project-dropdown').style.display = 'none';
+    
+    // Update the selected project display
+    updateEditSelectedProject(project);
 }
 
 /**
@@ -787,6 +917,22 @@ function createNewProject(title) {
 }
 
 /**
+ * Create a new project entry for edit form
+ */
+function createNewEditProject(title) {
+    const newProject = {
+        title: title, // Preserve original capitalization
+        type: 'custom',
+        isTemporary: true
+    };
+    
+    // Add to persistent storage and get the project with ID
+    const persistedProject = addTemporaryProject(newProject);
+    
+    selectEditProject(persistedProject);
+}
+
+/**
  * Update the selected project display
  */
 function updateSelectedProject() {
@@ -799,6 +945,26 @@ function updateSelectedProject() {
             displayText += ' (temporary)';
         } else {
             displayText += ` (${selectedProject.type})`;
+        }
+        
+        nameSpan.textContent = displayText;
+        container.style.display = 'flex';
+    }
+}
+
+/**
+ * Update the selected project display in edit form
+ */
+function updateEditSelectedProject(project) {
+    const container = document.getElementById('edit-selected-project');
+    const nameSpan = document.getElementById('edit-project-name');
+    
+    if (project) {
+        let displayText = project.title;
+        if (project.isTemporary) {
+            displayText += ' (temporary)';
+        } else {
+            displayText += ` (${project.type})`;
         }
         
         nameSpan.textContent = displayText;
@@ -1050,21 +1216,6 @@ function logout() {
 // Make logout function globally available immediately
 window.logout = logout;
 
-// Add keyboard support for login
-document.addEventListener('DOMContentLoaded', function() {
-    const passwordInput = document.getElementById('admin-password');
-    if (passwordInput) {
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                authenticate();
-            }
-        });
-    }
-    
-    // Make generatePasswordHash available globally for console use
-    window.generatePasswordHash = generatePasswordHash;
-});
-
 // Activity tracking for session timeout
 let lastActivity = Date.now();
 
@@ -1254,7 +1405,7 @@ async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
  */
 async function getFileSha(filePath) {
     try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${filePath}`, {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/${filePath}`, {
             headers: {
                 'Authorization': `token ${GITHUB_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json'
@@ -1269,6 +1420,87 @@ async function getFileSha(filePath) {
     } catch (error) {
         console.error('Error getting file SHA:', error);
         return null;
+    }
+}
+
+/**
+ * Upload artwork with complete workflow
+ * Handles file upload, data saving, and UI updates
+ */
+async function uploadArtwork(artData) {
+    try {
+        // Step 1: Generate unique filename
+        const uniqueFilename = generateUniqueFilename(artData.imageName, artData.category);
+        showStatus('Uploading image file...', 'info');
+        
+        // Step 2: Upload image file to GitHub
+        const uploadResult = await uploadFileToGitHub(artData.imageFile, uniqueFilename);
+        
+        // Step 3: Prepare artwork data for storage
+        const artworkEntry = {
+            id: artData.id,
+            title: artData.title,
+            description: artData.description,
+            category: artData.category,
+            date: artData.date,
+            datePrecision: artData.datePrecision,
+            formattedDate: artData.formattedDate,
+            tags: artData.tags,
+            linkedProject: artData.linkedProject,
+            imageUrl: uploadResult.downloadUrl,
+            imagePath: uploadResult.path,
+            uploadDate: new Date().toISOString()
+        };
+        
+        // Step 4: Update artwork list and save
+        artworkList.push(artworkEntry);
+        showStatus('Saving artwork data...', 'info');
+        await saveArtworkData();
+        
+        // Step 5: Reset form and show success
+        resetUploadForm();
+        showStatus('Artwork uploaded successfully! 🎉', 'success');
+        
+        console.log('Artwork uploaded:', artworkEntry);
+        
+    } catch (error) {
+        console.error('Upload failed:', error);
+        showStatus('Upload failed: ' + error.message, 'error');
+        throw error;
+    }
+}
+
+/**
+ * Reset the upload form after successful submission
+ */
+function resetUploadForm() {
+    // Reset form fields
+    document.getElementById('upload-form').reset();
+    
+    // Clear tags
+    tags = [];
+    renderTags();
+    
+    // Clear selected project
+    selectedProject = null;
+    document.getElementById('selected-project').style.display = 'none';
+    
+    // Reset image preview
+    const dropZone = document.getElementById('drop-zone');
+    const preview = document.getElementById('image-preview');
+    if (dropZone && preview) {
+        dropZone.style.display = 'flex';
+        preview.style.display = 'none';
+        dropZone.classList.remove('drag-over', 'error');
+    }
+    
+    // Reset date inputs to default
+    const monthInput = document.getElementById('art-date-month');
+    const fullInput = document.getElementById('art-date-full');
+    if (monthInput && fullInput) {
+        monthInput.style.display = 'block';
+        fullInput.style.display = 'none';
+        document.querySelector('input[name="date-precision"][value="month"]').checked = true;
     }
 }
 
@@ -1503,11 +1735,14 @@ function editArtwork(artworkId) {
     
     // Set project
     if (artwork.linkedProject && artwork.linkedProject.title) {
-        document.getElementById('edit-selected-project').style.display = 'block';
-        document.getElementById('edit-project-name').textContent = artwork.linkedProject.title;
+        updateEditSelectedProject(artwork.linkedProject);
     } else {
         document.getElementById('edit-selected-project').style.display = 'none';
     }
+    
+    // Clear project search input
+    document.getElementById('edit-project-search').value = '';
+    document.getElementById('edit-project-dropdown').style.display = 'none';
     
     // Set tags
     const tagsContainer = document.getElementById('edit-tags-container');
@@ -1534,8 +1769,15 @@ function closeEditModal() {
  * Clear edit project
  */
 function clearEditProject() {
+    // Clear the project from the current editing artwork
+    if (currentEditingArtwork) {
+        currentEditingArtwork.linkedProject = null;
+    }
+    
+    // Hide the selected project display and clear search input
     document.getElementById('edit-selected-project').style.display = 'none';
     document.getElementById('edit-project-search').value = '';
+    document.getElementById('edit-project-dropdown').style.display = 'none';
 }
 
 /**
@@ -1584,6 +1826,25 @@ function setupEditForm() {
         });
     });
     
+    // Project search for edit form
+    const editProjectSearch = document.getElementById('edit-project-search');
+    const editProjectDropdown = document.getElementById('edit-project-dropdown');
+    
+    if (editProjectSearch && editProjectDropdown) {
+        editProjectSearch.addEventListener('input', function() {
+            const query = this.value.trim();
+            const queryLower = query.toLowerCase();
+            showEditProjectDropdown(query, queryLower);
+        });
+        
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#edit-project-search') && !e.target.closest('#edit-project-dropdown')) {
+                editProjectDropdown.style.display = 'none';
+            }
+        });
+    }
+    
     // Tag input for edit form
     const editTagInput = document.getElementById('edit-tag-input');
     if (editTagInput) {
@@ -1630,7 +1891,7 @@ async function saveArtworkChanges() {
         const description = document.getElementById('edit-description').value.trim();
         const category = document.querySelector('input[name="edit-category"]:checked').value;
         const datePrecision = document.querySelector('input[name="edit-date-precision"]:checked').value;
-        const date = datePrecision === 'month' ? 
+        const date = datePrecision === 'month' ?
             document.getElementById('edit-date-month').value : 
             document.getElementById('edit-date-full').value;
         
@@ -1740,7 +2001,7 @@ export const artCategories = [
     "Drawing",
 ];`;
 
-    const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/user-data/art-data.js`, {
+    const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/user-data/art-data.js`, {
         method: 'PUT',
         headers: {
             'Authorization': `token ${GITHUB_TOKEN}`,
@@ -1769,22 +2030,45 @@ function initializeArtworkManagement() {
 }
 
 // Initialize all components
-function initializeAll() {
+async function initializeAll() {
     initializeTagInput();
     initializeImagePreview();
     initializeDateInput();
-    initializeProjectSearch();
+    await initializeProjectSearch();
     initializeFormHandler();
     initializeArtworkManagement();
 }
 
 // Call initializeAll when document is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Set up password input
+    const passwordInput = document.getElementById('admin-password');
+    if (passwordInput) {
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                authenticate();
+            }
+        });
+    }
+    
+    // Set up login button
+    const loginButton = document.getElementById('login-button');
+    if (loginButton) {
+        loginButton.addEventListener('click', function() {
+            authenticate();
+        });
+    }
+    
+    // Make generatePasswordHash available globally for console use
+    window.generatePasswordHash = generatePasswordHash;
+    
     // Ensure all scripts are loaded before initialization
-    const checkReady = setInterval(() => {
-        if (window.CONFIG && window.GITHUB_TOKEN) {
+    const checkReady = setInterval(async () => {
+        // Check if configuration is available
+        const configLoaded = loadConfig();
+        if (configLoaded) {
             clearInterval(checkReady);
-            initializeAll();
+            await initializeAll();
             showStatus('Admin panel ready', 'success');
         }
     }, 100);
