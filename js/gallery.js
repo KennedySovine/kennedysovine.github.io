@@ -468,6 +468,9 @@ function updateGalleryDisplay() {
  * Create an artwork card element
  */
 function createArtworkCard(artwork) {
+    // Debug image loading
+    debugImageLoading(artwork);
+    
     const card = document.createElement('div');
     card.className = 'artwork-card';
     card.addEventListener('click', () => openModal(artwork));
@@ -483,7 +486,8 @@ function createArtworkCard(artwork) {
     
     card.innerHTML = `
         <div class="artwork-image">
-            <img src="${artwork.imageUrl}" alt="${artwork.title}" loading="lazy">
+            <img src="${artwork.imageUrl || artwork.image}" alt="${artwork.title}" loading="lazy" 
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDI1MCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjRjhGOUZBIi8+CjxwYXRoIGQ9Ik0xMjUgMTAwQzEzOC44MDcgMTAwIDE1MCA4OC44MDcxIDE1MCA3NUMxNTAgNjEuMTkyOSAxMzguODA3IDUwIDEyNSA1MEMxMTEuMTkzIDUwIDEwMCA2MS4xOTI5IDEwMCA3NUMxMDAgODguODA3MSAxMTEuMTkzIDEwMCAxMjUgMTAwWiIgZmlsbD0iIzZDNzU3RCIvPgo8cGF0aCBkPSJNMjAwIDIwMEg1MFYxNzVMMTAwIDEyNUwxMjUgMTUwTDE3NSAxMDBMMjAwIDE3NVYyMDBaIiBmaWxsPSIjNkM3NTdEIi8+Cjx0ZXh0IHg9IjEyNSIgeT0iMjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkM3NTdEIiBmb250LXNpemU9IjE0cHgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiI+Tm8gSW1hZ2UgQXZhaWxhYmxlPC90ZXh0Pgo8L3N2Zz4='; this.style.objectFit='contain';">
         </div>
         <div class="artwork-info">
             <h3 class="artwork-title">${artwork.title}</h3>
@@ -504,6 +508,43 @@ function createArtworkCard(artwork) {
     `;
     
     return card;
+}
+
+/**
+ * Debug image loading issues
+ */
+function debugImageLoading(artwork) {
+    console.log('Artwork object:', artwork);
+    console.log('Image URL:', artwork.imageUrl);
+    console.log('Image path:', artwork.image);
+    
+    // Test if the image URL is accessible
+    if (artwork.imageUrl) {
+        const testImg = new Image();
+        testImg.onload = function() {
+            console.log('✓ Image loaded successfully:', artwork.imageUrl);
+        };
+        testImg.onerror = function() {
+            console.log('✗ Image failed to load:', artwork.imageUrl);
+            console.log('Trying alternative path...');
+            
+            // Try with current domain
+            const currentDomain = window.location.origin;
+            const imagePath = artwork.image;
+            const alternativeUrl = `${currentDomain}/${imagePath}`;
+            console.log('Alternative URL:', alternativeUrl);
+            
+            const testImg2 = new Image();
+            testImg2.onload = function() {
+                console.log('✓ Alternative image loaded successfully:', alternativeUrl);
+            };
+            testImg2.onerror = function() {
+                console.log('✗ Alternative image also failed:', alternativeUrl);
+            };
+            testImg2.src = alternativeUrl;
+        };
+        testImg.src = artwork.imageUrl;
+    }
 }
 
 /**
@@ -575,8 +616,13 @@ function openModal(artwork) {
     const modalProject = document.getElementById('modal-project');
     
     // Populate modal content
-    modalImg.src = artwork.imageUrl;
+    modalImg.src = artwork.imageUrl || artwork.image;
     modalImg.alt = artwork.title;
+    modalImg.onerror = function() {
+        this.onerror = null;
+        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDUwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiBmaWxsPSIjRjhGOUZBIi8+CjxwYXRoIGQ9Ik0yNTAgMjAwQzI3Ny42MTQgMjAwIDMwMCAxNzcuNjE0IDMwMCAxNTBDMzAwIDEyMi4zODYgMjc3LjYxNCAxMDAgMjUwIDEwMEMyMjIuMzg2IDEwMCAyMDAgMTIyLjM4NiAyMDAgMTUwQzIwMCAxNzcuNjE0IDIyMi4zODYgMjAwIDI1MCAyMDBaIiBmaWxsPSIjNkM3NTdEIi8+CjxwYXRoIGQ9Ik00MDAgNDAwSDEwMFYzNTBMMjAwIDI1MEwyNTAgMzAwTDM1MCAyMDBMNDAwIDM1MFY0MDBaIiBmaWxsPSIjNkM3NTdEIi8+Cjx0ZXh0IHg9IjI1MCIgeT0iNDUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkM3NTdEIiBmb250LXNpemU9IjI0cHgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiI+SW1hZ2UgTm90IEF2YWlsYWJsZTwvdGV4dD4KPC9zdmc+';
+        this.style.objectFit = 'contain';
+    };
     modalTitle.textContent = artwork.title;
     modalDescription.textContent = artwork.description || 'No description available.';
     modalCategory.textContent = formatCategory(artwork.category);

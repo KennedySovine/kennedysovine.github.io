@@ -1364,10 +1364,22 @@ function displayArtworkList(artworks) {
         return;
     }
     
-    tableBody.innerHTML = filteredArtworks.map(artwork => `
-        <tr>
+    // Clear existing content
+    tableBody.innerHTML = '';
+    
+    // Create rows with proper event handling
+    filteredArtworks.forEach(artwork => {
+        const row = document.createElement('tr');
+        
+        // Get image URL with fallback options
+        const imageUrl = artwork.imageUrl || artwork.image || artwork.downloadUrl;
+        
+        row.innerHTML = `
             <td>
-                <img src="${artwork.imageUrl || artwork.image}" alt="${artwork.title}" class="artwork-preview" onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"60\" viewBox=\"0 0 60 60\"><rect width=\"60\" height=\"60\" fill=\"%23f8f9fa\"/><text x=\"30\" y=\"35\" text-anchor=\"middle\" fill=\"%236c757d\" font-size=\"12\">No Image</text></svg>'">
+                <div class="image-container">
+                    <img alt="${artwork.title}" class="artwork-preview" style="display: none;">
+                    <div class="image-placeholder">Loading...</div>
+                </div>
             </td>
             <td>
                 <div style="font-weight: 500;">${artwork.title}</div>
@@ -1384,8 +1396,34 @@ function displayArtworkList(artworks) {
                     <button type="button" class="delete-btn" onclick="confirmDeleteArtwork(${artwork.id})">Delete</button>
                 </div>
             </td>
-        </tr>
-    `).join('');
+        `;
+        
+        // Set up image loading with proper event handlers
+        const img = row.querySelector('.artwork-preview');
+        const placeholder = row.querySelector('.image-placeholder');
+        const container = row.querySelector('.image-container');
+        
+        if (imageUrl) {
+            img.onload = function() {
+                console.log('Image loaded successfully:', imageUrl);
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            
+            img.onerror = function() {
+                console.error('Failed to load image:', imageUrl);
+                placeholder.innerHTML = 'No Image';
+                placeholder.style.color = '#6c757d';
+            };
+            
+            img.src = imageUrl;
+        } else {
+            placeholder.innerHTML = 'No Image URL';
+            placeholder.style.color = '#6c757d';
+        }
+        
+        tableBody.appendChild(row);
+    });
 }
 
 /**
