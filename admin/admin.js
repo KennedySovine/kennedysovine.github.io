@@ -1051,8 +1051,11 @@ function initializeFormHandler() {
         // PREPARE ARTWORK DATA OBJECT
         // ==============================================
         
+        // First load existing artwork data to ensure unique ID generation
+        await loadArtworkData();
+        
         const artData = {
-            id: Date.now() + Math.floor(Math.random() * 1000), // More unique ID generation
+            id: generateUniqueArtworkId(), // Generate truly unique ID
             title: title || 'Untitled',
             description: description || '',
             category: category,
@@ -1451,10 +1454,6 @@ async function uploadArtwork(artData) {
             imagePath: uploadResult.path,
             uploadDate: new Date().toISOString()
         };
-        
-        // Step 4: Load existing artwork data first to prevent overwriting
-        console.log('Loading existing artwork data...');
-        await loadArtworkData();
         
         // Check if artwork with same ID already exists
         const existingIndex = artworkList.findIndex(item => item.id === artworkEntry.id);
@@ -1953,6 +1952,9 @@ async function saveArtworkChanges() {
     if (!currentEditingArtwork) return;
     
     try {
+        // Load latest artwork data to prevent overwriting other changes
+        await loadArtworkData();
+        
         const artworkId = parseInt(document.getElementById('edit-artwork-id').value);
         const title = document.getElementById('edit-title').value.trim();
         const description = document.getElementById('edit-description').value.trim();
@@ -2022,6 +2024,9 @@ function confirmDeleteArtwork(artworkId) {
  */
 async function deleteArtworkById(artworkId) {
     try {
+        // Load latest artwork data to prevent overwriting other changes
+        await loadArtworkData();
+        
         // Remove from artworkList
         artworkList = artworkList.filter(a => a.id !== artworkId);
         
@@ -2107,6 +2112,36 @@ export const artCategories = [
         console.error('Error saving artwork data:', error);
         throw error;
     }
+}
+
+// ===========================
+// ID GENERATION UTILITIES
+// ===========================
+
+/**
+ * Generate a unique ID for artwork that doesn't conflict with existing IDs
+ * @returns {number} - Unique ID for the artwork
+ */
+function generateUniqueArtworkId() {
+    let newId;
+    let attempts = 0;
+    const maxAttempts = 100;
+    
+    do {
+        // Generate ID: timestamp + random number + attempt counter for extra uniqueness
+        newId = Date.now() + Math.floor(Math.random() * 10000) + attempts;
+        attempts++;
+        
+        // Safety check to prevent infinite loop
+        if (attempts > maxAttempts) {
+            console.warn('Max attempts reached for ID generation, using fallback');
+            newId = Date.now() + Math.floor(Math.random() * 100000);
+            break;
+        }
+    } while (artworkList.some(artwork => artwork.id === newId));
+    
+    console.log(`Generated unique ID: ${newId} (attempts: ${attempts})`);
+    return newId;
 }
 
 // ===========================
