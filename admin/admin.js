@@ -25,6 +25,10 @@ let selectedProject = null;     // Currently selected project for linking
 let existingProjects = [];      // Predefined projects from portfolio
 let githubRepositories = [];    // Repositories fetched from GitHub API
 
+// Artwork management variables
+let artworkList = [];          // List of all artworks
+let currentEditingArtwork = null; // Currently edited artwork
+
 // ==============================================
 // SECURITY CONFIGURATION
 // ==============================================
@@ -78,6 +82,7 @@ async function authenticate() {
         
         document.getElementById('auth-section').style.display = 'none';
         document.getElementById('upload-form').style.display = 'block';
+        document.getElementById('artwork-management').style.display = 'block';
         showStatus('Authenticated successfully!', 'success');
         
         // Start session timeout
@@ -89,6 +94,7 @@ async function authenticate() {
         await initializeProjectSearch();
         initializeFormHandler();
         initializeDateInput();
+        initializeArtworkManagement();
         
         // Clear the password field for security
         document.getElementById('admin-password').value = '';
@@ -1025,6 +1031,7 @@ function startSessionTimeout() {
 function logout() {
     document.getElementById('auth-section').style.display = 'block';
     document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('artwork-management').style.display = 'none';
     document.getElementById('admin-password').value = '';
     
     if (sessionTimeout) {
@@ -1242,104 +1249,425 @@ async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
     }
 }
 
-// ==============================================
-// ART DATA MANAGEMENT SYSTEM
-// ==============================================
-
 /**
- * Fetch current art data from GitHub repository
- * 
- * How it works:
- * 1. Makes API call to get user-data/art-data.js file
- * 2. Decodes the base64 content to readable JavaScript
- * 3. Extracts the artData array using regex pattern matching
- * 4. Returns both the data and SHA (needed for updates)
- * 
- * Error handling:
- * - If file doesn't exist (404), returns empty array
- * - If file exists but has no data, returns empty array
- * - Returns SHA for version control (GitHub requirement)
- * 
- * @returns {Object} - { artData: Array, sha: string|null }
+ * Get file SHA for GitHub API
  */
-async function getCurrentArtData() {
+async function getFileSha(filePath) {
     try {
-        // Fetch the art data file from GitHub
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/user-data/art-data.js`, {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${filePath}`, {
             headers: {
                 'Authorization': `token ${GITHUB_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
         
-        if (!response.ok) {
-            if (response.status === 404) {
-                // File doesn't exist yet - this is normal for first upload
-                console.log('Art data file does not exist yet, will create new one');
-                return { artData: [], sha: null };
-            }
-            throw new Error(`Failed to fetch art data: ${response.status}`);
+        if (response.ok) {
+            const data = await response.json();
+            return data.sha;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error getting file SHA:', error);
+        return null;
+    }
+}
+
+// ===========================
+// ARTWORK MANAGEMENT FUNCTIONS
+// ===========================
+
+/**
+ * Show the upload view and hide management view
+ */
+function showUploadView() {
+    document.getElementById('upload-form').style.display = 'block';
+    document.getElementById('artwork-management').style.display = 'none';
+    document.getElementById('upload-view-btn').classList.add('active');
+    document.getElementById('manage-view-btn').classList.remove('active');
+}
+
+/**
+ * Show the management view and hide upload view
+ */
+function showManageView() {
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('artwork-management').style.display = 'block';
+    document.getElementById('upload-view-btn').classList.remove('active');
+    document.getElementById('manage-view-btn').classList.add('active');
+    
+    // Load artwork list when showing management view
+    loadArtworkList();
+}
+
+/**
+ * Load and display the artwork list
+ */
+async function loadArtworkList() {
+    const loadingEl = document.getElementById('artwork-loading');
+    const emptyEl = document.getElementById('artwork-empty');
+    const tableBody = document.getElementById('artwork-table-body');
+    
+    loadingEl.style.display = 'block';
+    emptyEl.style.display = 'none';
+    tableBody.innerHTML = '';
+    
+    try {
+        // Fetch artwork data from art-data.js
+        const response = await fetch('../user-data/art-data.js');
+        const text = await response.text();
+        
+        // Extract artworks array from the module
+        const artworksMatch = text.match(/export const artworks = (\[[\s\S]*?\]);/);
+        if (artworksMatch) {
+            artworkList = JSON.parse(artworksMatch[1]);
+        } else {
+            artworkList = [];
         }
         
-        const fileData = await response.json();
+        loadingEl.style.display = 'none';
         
-        // Decode base64 content to readable JavaScript code
-        const content = atob(fileData.content);
-        
-        // Extract the artData array from the JavaScript file using regex
-        // This looks for: const artData = [...]
-        const match = content.match(/const\s+artData\s*=\s*(\[[\s\S]*?\]);/);
-        
-        if (match) {
-            // Parse the JSON array from the JavaScript code
-            const artData = JSON.parse(match[1]);
-            console.log(`Loaded ${artData.length} existing artworks from database`);
-            return { artData, sha: fileData.sha };
+        if (artworkList.length === 0) {
+            emptyEl.style.display = 'block';
         } else {
-            // File exists but no artData found - use empty array
-            console.log('Art data file exists but contains no artwork data');
-            return { artData: [], sha: fileData.sha };
+            displayArtworkList(artworkList);
         }
         
     } catch (error) {
-        console.error('Error fetching art data:', error);
-        return { artData: [], sha: null }; // Fallback to empty data
+        console.error('Error loading artwork list:', error);
+        loadingEl.style.display = 'none';
+        showStatus('Error loading artwork list: ' + error.message, 'error');
     }
 }
 
 /**
- * Update art data file on GitHub with new artwork
- * 
- * Process:
- * 1. Creates properly formatted JavaScript file content
- * 2. Encodes content as base64 (GitHub API requirement)
- * 3. Includes SHA for version control (prevents conflicts)
- * 4. Creates descriptive commit message
- * 5. Uploads via GitHub Contents API
- * 
- * File structure created:
- * ```javascript
- * // Art portfolio data
- * // This file is automatically updated by the admin panel
- * const artData = [
- *   { id: 1, title: "Artwork 1", ... },
- *   { id: 2, title: "Artwork 2", ... }
- * ];
- * window.artData = artData;
- * ```
- * 
- * @param {Array} newArtData - Complete array of art objects
- * @param {string|null} sha - Version SHA from GitHub (for updates)
- * @returns {Object} - GitHub API response
+ * Display the artwork list in the table
  */
-async function updateArtDataFile(newArtData, sha) {
+function displayArtworkList(artworks) {
+    const tableBody = document.getElementById('artwork-table-body');
+    const searchTerm = document.getElementById('artwork-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value;
+    
+    // Filter artworks based on search and category
+    const filteredArtworks = artworks.filter(artwork => {
+        const matchesSearch = !searchTerm || 
+            artwork.title.toLowerCase().includes(searchTerm) ||
+            artwork.description.toLowerCase().includes(searchTerm) ||
+            (artwork.tags && artwork.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
+        
+        const matchesCategory = !categoryFilter || artwork.category === categoryFilter;
+        
+        return matchesSearch && matchesCategory;
+    });
+    
+    if (filteredArtworks.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6c757d; padding: 2rem;">No artwork found matching your criteria.</td></tr>';
+        return;
+    }
+    
+    tableBody.innerHTML = filteredArtworks.map(artwork => `
+        <tr>
+            <td>
+                <img src="${artwork.imageUrl || artwork.image}" alt="${artwork.title}" class="artwork-preview" onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"60\" viewBox=\"0 0 60 60\"><rect width=\"60\" height=\"60\" fill=\"%23f8f9fa\"/><text x=\"30\" y=\"35\" text-anchor=\"middle\" fill=\"%236c757d\" font-size=\"12\">No Image</text></svg>'">
+            </td>
+            <td>
+                <div style="font-weight: 500;">${artwork.title}</div>
+                <div style="font-size: 0.75rem; color: #6c757d; margin-top: 0.25rem;">${artwork.description ? artwork.description.substring(0, 50) + (artwork.description.length > 50 ? '...' : '') : 'No description'}</div>
+            </td>
+            <td>
+                <span class="category-badge ${artwork.category}">${artwork.category}</span>
+            </td>
+            <td>${artwork.formattedDate || artwork.date || 'Unknown'}</td>
+            <td>${formatUploadDate(artwork.uploadDate)}</td>
+            <td>
+                <div class="action-buttons">
+                    <button type="button" class="edit-btn" onclick="editArtwork(${artwork.id})">Edit</button>
+                    <button type="button" class="delete-btn" onclick="confirmDeleteArtwork(${artwork.id})">Delete</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+/**
+ * Format upload date for display
+ */
+function formatUploadDate(dateString) {
+    if (!dateString) return 'Unknown';
+    
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+/**
+ * Refresh the artwork list
+ */
+function refreshArtworkList() {
+    loadArtworkList();
+}
+
+/**
+ * Search and filter artwork
+ */
+function setupArtworkFilters() {
+    const searchInput = document.getElementById('artwork-search');
+    const categoryFilter = document.getElementById('category-filter');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            displayArtworkList(artworkList);
+        });
+    }
+    
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', () => {
+            displayArtworkList(artworkList);
+        });
+    }
+}
+
+/**
+ * Edit artwork
+ */
+function editArtwork(artworkId) {
+    const artwork = artworkList.find(a => a.id === artworkId);
+    if (!artwork) {
+        showStatus('Artwork not found', 'error');
+        return;
+    }
+    
+    currentEditingArtwork = artwork;
+    
+    // Populate edit form
+    document.getElementById('edit-artwork-id').value = artwork.id;
+    document.getElementById('edit-title').value = artwork.title;
+    document.getElementById('edit-description').value = artwork.description || '';
+    
+    // Set category
+    const categoryRadio = document.querySelector(`input[name="edit-category"][value="${artwork.category}"]`);
+    if (categoryRadio) categoryRadio.checked = true;
+    
+    // Set date
+    if (artwork.datePrecision === 'full' && artwork.date.length === 10) {
+        document.getElementById('edit-date-full').value = artwork.date;
+        document.getElementById('edit-date-full').style.display = 'block';
+        document.getElementById('edit-date-month').style.display = 'none';
+        document.querySelector('input[name="edit-date-precision"][value="full"]').checked = true;
+    } else {
+        document.getElementById('edit-date-month').value = artwork.date.substring(0, 7);
+        document.getElementById('edit-date-month').style.display = 'block';
+        document.getElementById('edit-date-full').style.display = 'none';
+        document.querySelector('input[name="edit-date-precision"][value="month"]').checked = true;
+    }
+    
+    // Set project
+    if (artwork.linkedProject && artwork.linkedProject.title) {
+        document.getElementById('edit-selected-project').style.display = 'block';
+        document.getElementById('edit-project-name').textContent = artwork.linkedProject.title;
+    } else {
+        document.getElementById('edit-selected-project').style.display = 'none';
+    }
+    
+    // Set tags
+    const tagsContainer = document.getElementById('edit-tags-container');
+    tagsContainer.innerHTML = '';
+    if (artwork.tags) {
+        artwork.tags.forEach(tag => {
+            addEditTag(tag);
+        });
+    }
+    
+    // Show modal
+    document.getElementById('edit-modal').style.display = 'flex';
+}
+
+/**
+ * Close edit modal
+ */
+function closeEditModal() {
+    document.getElementById('edit-modal').style.display = 'none';
+    currentEditingArtwork = null;
+}
+
+/**
+ * Clear edit project
+ */
+function clearEditProject() {
+    document.getElementById('edit-selected-project').style.display = 'none';
+    document.getElementById('edit-project-search').value = '';
+}
+
+/**
+ * Add tag to edit form
+ */
+function addEditTag(tagText) {
+    const container = document.getElementById('edit-tags-container');
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.innerHTML = `${tagText} <button type="button" onclick="this.parentElement.remove()">&times;</button>`;
+    container.appendChild(tag);
+}
+
+/**
+ * Setup edit form event listeners
+ */
+function setupEditForm() {
+    // Date precision toggle for edit form
+    const editDatePrecisionInputs = document.querySelectorAll('input[name="edit-date-precision"]');
+    editDatePrecisionInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const monthInput = document.getElementById('edit-date-month');
+            const fullInput = document.getElementById('edit-date-full');
+            
+            if (this.value === 'month') {
+                monthInput.style.display = 'block';
+                fullInput.style.display = 'none';
+            } else {
+                monthInput.style.display = 'none';
+                fullInput.style.display = 'block';
+            }
+        });
+    });
+    
+    // Tag input for edit form
+    const editTagInput = document.getElementById('edit-tag-input');
+    if (editTagInput) {
+        editTagInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const tagText = this.value.trim();
+                if (tagText) {
+                    addEditTag(tagText);
+                    this.value = '';
+                }
+            }
+        });
+    }
+    
+    // Edit form submission
+    const editForm = document.getElementById('edit-form');
+    if (editForm) {
+        editForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await saveArtworkChanges();
+        });
+    }
+}
+
+/**
+ * Save artwork changes
+ */
+async function saveArtworkChanges() {
+    if (!currentEditingArtwork) return;
+    
     try {
-        // Create formatted JavaScript file content
-        // This creates a proper .js file that can be imported by your portfolio
-        const fileContent = `// Art portfolio data
+        const artworkId = parseInt(document.getElementById('edit-artwork-id').value);
+        const title = document.getElementById('edit-title').value.trim();
+        const description = document.getElementById('edit-description').value.trim();
+        const category = document.querySelector('input[name="edit-category"]:checked').value;
+        const datePrecision = document.querySelector('input[name="edit-date-precision"]:checked').value;
+        const date = datePrecision === 'month' ? 
+            document.getElementById('edit-date-month').value : 
+            document.getElementById('edit-date-full').value;
+        
+        // Get tags
+        const tagElements = document.querySelectorAll('#edit-tags-container .tag');
+        const tags = Array.from(tagElements).map(tag => tag.textContent.replace('×', '').trim());
+        
+        // Get project
+        const projectElement = document.getElementById('edit-selected-project');
+        let linkedProject = null;
+        if (projectElement.style.display !== 'none') {
+            linkedProject = currentEditingArtwork.linkedProject; // Keep existing project data
+        }
+        
+        // Update artwork object
+        const updatedArtwork = {
+            ...currentEditingArtwork,
+            title,
+            description,
+            category,
+            date,
+            datePrecision,
+            formattedDate: formatDateForDisplay(date, datePrecision),
+            tags,
+            linkedProject
+        };
+        
+        // Update in artworkList
+        const index = artworkList.findIndex(a => a.id === artworkId);
+        if (index !== -1) {
+            artworkList[index] = updatedArtwork;
+        }
+        
+        // Save to file
+        await saveArtworkData();
+        
+        closeEditModal();
+        displayArtworkList(artworkList);
+        showStatus('Artwork updated successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Error saving artwork changes:', error);
+        showStatus('Error saving changes: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Confirm delete artwork
+ */
+function confirmDeleteArtwork(artworkId) {
+    const artwork = artworkList.find(a => a.id === artworkId);
+    if (!artwork) return;
+    
+    if (confirm(`Are you sure you want to delete "${artwork.title}"? This action cannot be undone.`)) {
+        deleteArtworkById(artworkId);
+    }
+}
+
+/**
+ * Delete artwork by ID
+ */
+async function deleteArtworkById(artworkId) {
+    try {
+        // Remove from artworkList
+        artworkList = artworkList.filter(a => a.id !== artworkId);
+        
+        // Save to file
+        await saveArtworkData();
+        
+        displayArtworkList(artworkList);
+        showStatus('Artwork deleted successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Error deleting artwork:', error);
+        showStatus('Error deleting artwork: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Delete artwork (called from modal)
+ */
+async function deleteArtwork() {
+    if (!currentEditingArtwork) return;
+    
+    if (confirm(`Are you sure you want to delete "${currentEditingArtwork.title}"? This action cannot be undone.`)) {
+        await deleteArtworkById(currentEditingArtwork.id);
+        closeEditModal();
+    }
+}
+
+/**
+ * Save artwork data to file
+ */
+async function saveArtworkData() {
+    const artworkDataContent = `// Art portfolio data
 // This file is automatically updated by the admin panel
 
-export const artworks = ${JSON.stringify(newArtData, null, 2)};
+export const artworks = ${JSON.stringify(artworkList, null, 2)};
 
 // Also make data available globally for backward compatibility
 window.artData = artworks;
@@ -1347,313 +1675,66 @@ window.artData = artworks;
 // You can add more art-related data exports here
 export const artCategories = [
     "Digital Art",
-    "Traditional Art", 
-    "Sketches",
-    "Paintings",
-    "Character Design",
-    "Concept Art"
-];
+    "Painting",
+    "Drawing",
+];`;
 
-export const artMediums = [
-    "Digital",
-    "Pencil",
-    "Ink",
-    "Watercolor",
-    "Oil Paint",
-    "Acrylic",
-    "Mixed Media"
-];
-`;
-        
-        // Encode content as base64 (GitHub API requirement)
-        const base64Content = btoa(fileContent);
-        
-        // Prepare upload payload
-        const uploadData = {
-            message: `Add new artwork: ${newArtData[newArtData.length - 1].title}`, // Git commit message
-            content: base64Content, // Base64 encoded file content
-            ...(sha && { sha }) // Include SHA only if updating existing file
-        };
-        
-        // Upload to GitHub via Contents API
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/kennedysovine.github.io/contents/user-data/art-data.js`, {
-            method: 'PUT', // PUT creates or updates files
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(uploadData)
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Failed to update art data: ${response.status} - ${errorData.message}`);
-        }
-        
-        console.log(`Successfully updated art database with ${newArtData.length} artworks`);
-        return await response.json();
-        
-    } catch (error) {
-        console.error('Error updating art data:', error);
-        throw error; // Re-throw so upload function can handle it
-    }
-}
-
-// ==============================================
-// MAIN UPLOAD FUNCTION
-// ==============================================
-
-// ==============================================
-// MAIN UPLOAD WORKFLOW
-// ==============================================
-
-/**
- * Show or hide the upload progress indicator
- * Provides visual feedback during the upload process
- * @param {boolean} show - Whether to show or hide the progress bar
- */
-function showUploadProgress(show = true) {
-    const progressDiv = document.getElementById('upload-progress');
-    const uploadBtn = document.getElementById('upload-btn');
-    
-    if (show) {
-        progressDiv.style.display = 'block';
-        uploadBtn.disabled = true;
-        uploadBtn.textContent = 'Uploading...';
-    } else {
-        progressDiv.style.display = 'none';
-        uploadBtn.disabled = false;
-        uploadBtn.textContent = 'Upload Artwork';
-    }
-}
-
-/**
- * Update the progress bar and status text
- * Shows users what stage of the upload process is happening
- * @param {number} percentage - Progress percentage (0-100)
- * @param {string} text - Status message to display
- */
-function updateProgress(percentage, text) {
-    const progressFill = document.getElementById('progress-fill');
-    const progressText = document.getElementById('progress-text');
-    
-    progressFill.style.width = `${percentage}%`;
-    progressText.textContent = text;
-}
-
-/**
- * MAIN UPLOAD FUNCTION - This is where everything comes together!
- * 
- * Upload Process Overview:
- * 1. Generate unique filename to prevent conflicts
- * 2. Upload image file to GitHub repository
- * 3. Fetch current art database from GitHub
- * 4. Add new artwork entry to database
- * 5. Update art database file on GitHub
- * 6. Show success message and clear form
- * 
- * Error Handling:
- * - Network failures are caught and reported
- * - GitHub API errors are parsed and displayed
- * - Progress bar is hidden on errors
- * - Form remains intact so user can retry
- * 
- * @param {Object} artData - Complete artwork data from form
- * @returns {Object} - The created art entry
- */
-async function uploadArtwork(artData) {
-    try {
-        // Initialize progress tracking
-        showUploadProgress(true);
-        updateProgress(10, 'Preparing files...');
-        
-        // STEP 1: Generate unique filename
-        // This prevents conflicts and organizes files by category
-        const filename = generateUniqueFilename(artData.imageName, artData.category);
-        updateProgress(20, 'Uploading image to GitHub...');
-        
-        // STEP 2: Upload the actual image file
-        // This is the most time-consuming part of the process
-        const uploadResult = await uploadFileToGitHub(artData.imageFile, filename);
-        updateProgress(60, 'Image uploaded! Updating art database...');
-        
-        // STEP 3: Get current art database
-        // We need the existing data and SHA for updating the file
-        const { artData: currentArtData, sha } = await getCurrentArtData();
-        updateProgress(80, 'Adding artwork to database...');
-        
-        // STEP 4: Create the new art entry
-        // This structures all the metadata for the artwork
-        const newArtEntry = {
-            id: artData.id,                           // Unique timestamp ID
-            title: artData.title,                     // User-entered title
-            description: artData.description,         // User description
-            category: artData.category,               // painting/drawing/digital
-            date: artData.date,                       // Date created (user input)
-            datePrecision: artData.datePrecision,     // 'month' or 'full'
-            formattedDate: artData.formattedDate,     // Human-readable date
-            tags: artData.tags,                       // Array of tag strings
-            linkedProject: artData.linkedProject,    // Connected project info
-            image: uploadResult.path,                 // Path within repository
-            imageUrl: uploadResult.downloadUrl,      // Direct download URL
-            uploadDate: new Date().toISOString(),     // When uploaded to admin
-            featured: false                          // Can be set to true later
-        };
-        
-        // STEP 5: Update the art database
-        // Add new entry and push changes to GitHub
-        const updatedArtData = [...currentArtData, newArtEntry];
-        await updateArtDataFile(updatedArtData, sha);
-        updateProgress(100, 'Upload complete!');
-        
-        // SUCCESS! Show completion and clean up
-        setTimeout(() => {
-            showUploadProgress(false);
-            showStatus('Artwork uploaded successfully! 🎨', 'success');
-            clearForm(); // Reset form for next upload
-        }, 1000);
-        
-        return newArtEntry;
-        
-    } catch (error) {
-        // ERROR HANDLING: Log details and show user-friendly message
-        console.error('Upload failed:', error);
-        showUploadProgress(false);
-        showStatus(`Upload failed: ${error.message}`, 'error');
-        throw error; // Re-throw for any additional error handling
-    }
-}
-
-/**
- * Clear the form after successful upload
- * Resets all inputs to their default state, ready for the next artwork
- * This includes clearing preview images, tags, projects, and all form fields
- */
-/**
- * Clear the form after successful upload
- * Resets all inputs to their default state, ready for the next artwork
- * Updated to work with drag & drop interface
- */
-function clearForm() {
-    // ==============================================
-    // CLEAR FILE INPUT AND RESET DRAG & DROP ZONE
-    // ==============================================
-    
-    // Clear the hidden file input
-    document.getElementById('art-image').value = '';
-    
-    // Reset drag & drop interface - show drop zone, hide preview
-    const dropZone = document.getElementById('drop-zone');
-    const preview = document.getElementById('image-preview');
-    
-    if (dropZone) {
-        dropZone.style.display = 'flex';
-        dropZone.classList.remove('drag-over', 'error');
-    }
-    
-    if (preview) {
-        preview.style.display = 'none';
-        preview.style.border = ''; // Clear any error borders
-    }
-    
-    // ==============================================
-    // CLEAR TEXT INPUTS
-    // ==============================================
-    
-    document.getElementById('art-title').value = '';
-    document.getElementById('art-description').value = '';
-    document.getElementById('tag-input').value = '';
-    
-    // ==============================================
-    // RESET RADIO BUTTONS AND SELECTIONS
-    // ==============================================
-    
-    // Clear category selection
-    const selectedCategory = document.querySelector('input[name="art-category"]:checked');
-    if (selectedCategory) {
-        selectedCategory.checked = false;
-    }
-    
-    // ==============================================
-    // RESET DATE INPUTS
-    // ==============================================
-    
-    // Clear date inputs and reset to month precision
-    document.getElementById('art-date-month').value = '';
-    document.getElementById('art-date-full').value = '';
-    
-    // Reset to month precision (default)
-    const monthPrecision = document.querySelector('input[name="date-precision"][value="month"]');
-    if (monthPrecision) {
-        monthPrecision.checked = true;
-    }
-    
-    // Show month input, hide full date input
-    const monthInput = document.getElementById('art-date-month');
-    const fullInput = document.getElementById('art-date-full');
-    if (monthInput && fullInput) {
-        monthInput.style.display = 'block';
-        fullInput.style.display = 'none';
-    }
-    
-    // ==============================================
-    // CLEAR PROJECT AND TAG SELECTIONS
-    // ==============================================
-    
-    // Clear selected project
-    clearProject();
-    
-    // Clear tags array and update UI
-    tags = [];
-    renderTags();
-    
-    // ==============================================
-    // RESET FORM STATE AND PROVIDE FEEDBACK
-    // ==============================================
-    
-    // Reset any form validation states
-    const form = document.getElementById('upload-form');
-    if (form) {
-        form.classList.remove('was-validated');
-    }
-    
-    // Scroll back to top of form for next upload
-    document.getElementById('drop-zone').scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+    const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/user-data/art-data.js`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            message: 'Update artwork data via admin panel',
+            content: btoa(artworkDataContent),
+            sha: await getFileSha('user-data/art-data.js')
+        })
     });
-    
-    // Confirm form is ready for next upload
-    showStatus('Form cleared. Ready for next upload! 🎨', 'info');
-    
-    // Focus on the drop zone for immediate interaction
-    setTimeout(() => {
-        if (dropZone) {
-            dropZone.focus();
-        }
-    }, 500);
+
+    if (!response.ok) {
+        throw new Error('Failed to save artwork data');
+    }
 }
 
-// ==============================================
-// DRAG & DROP SYSTEM COMPLETE!
-// ==============================================
-// 
-// Features implemented:
-// 1. Visual drag & drop interface with animations
-// 2. File validation (type, size, format)
-// 3. Enhanced preview with metadata
-// 4. Smooth transitions between states
-// 5. Accessibility support (keyboard navigation)
-// 6. Error handling with visual feedback
-// 7. Integration with existing upload system
-//
-// GitHub API integration complete!
-// Configuration is now loaded from config.js for security
-// Core features implemented:
-// 1. Secure token management
-// 2. Real GitHub repository fetching
-// 3. Enhanced project search and linking
+// ===========================
+// INITIALIZATION
+// ===========================
 
-// Note: Functions are made globally available immediately after their definitions
-// to ensure they're accessible to HTML onclick handlers
+// Initialize artwork management when authenticated
+function initializeArtworkManagement() {
+    setupArtworkFilters();
+    setupEditForm();
+}
+
+// Initialize all components
+function initializeAll() {
+    initializeTagInput();
+    initializeImagePreview();
+    initializeDateInput();
+    initializeProjectSearch();
+    initializeFormHandler();
+    initializeArtworkManagement();
+}
+
+// Call initializeAll when document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure all scripts are loaded before initialization
+    const checkReady = setInterval(() => {
+        if (window.CONFIG && window.GITHUB_TOKEN) {
+            clearInterval(checkReady);
+            initializeAll();
+            showStatus('Admin panel ready', 'success');
+        }
+    }, 100);
+});
+
+// Make artwork management functions globally available
+window.showUploadView = showUploadView;
+window.showManageView = showManageView;
+window.refreshArtworkList = refreshArtworkList;
+window.editArtwork = editArtwork;
+window.closeEditModal = closeEditModal;
+window.clearEditProject = clearEditProject;
+window.confirmDeleteArtwork = confirmDeleteArtwork;
+window.deleteArtwork = deleteArtwork;
