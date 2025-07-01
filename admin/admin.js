@@ -29,6 +29,7 @@ let githubRepositories = [];    // Repositories fetched from GitHub API
 // Artwork management variables
 let artworkList = [];          // List of all artworks
 let currentEditingArtwork = null; // Currently edited artwork
+let hasDataChanges = false;    // Flag to track if data changes need committing
 
 // ==============================================
 // SECURITY CONFIGURATION
@@ -1832,7 +1833,7 @@ async function saveArtworkChanges() {
             linkedProject = currentEditingArtwork.linkedProject; // Keep existing project data
         }
         
-        // Update artwork object
+        // Update artwork object (preserve any pending file data)
         const updatedArtwork = {
             ...currentEditingArtwork,
             title,
@@ -1850,6 +1851,9 @@ async function saveArtworkChanges() {
         if (index !== -1) {
             artworkList[index] = updatedArtwork;
         }
+        
+        // Mark that we have data changes that need committing
+        hasDataChanges = true;
         
         closeEditModal();
         displayArtworkList(artworkList);
@@ -1883,6 +1887,9 @@ async function deleteArtworkById(artworkId) {
     try {
         // Remove from artworkList
         artworkList = artworkList.filter(a => a.id !== artworkId);
+        
+        // Mark that we have data changes that need committing
+        hasDataChanges = true;
         
         displayArtworkList(artworkList);
         showStatus('Artwork deleted successfully! Changes stored in memory. Use "Commit to GitHub" to save.', 'success');
@@ -1978,7 +1985,7 @@ export const artCategories = [
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                message: 'Update artwork data via admin panel',
+                message: `Update artwork data - batch commit completed`,
                 content: btoa(artworkDataContent),
                 sha: sha
             })
@@ -2076,10 +2083,22 @@ function updateCommitButtonState() {
     if (!commitButton) return;
     
     // Count artworks with pending files
-    const pendingCount = artworkList.filter(artwork => artwork._pendingFile).length;
+    const pendingFileCount = artworkList.filter(artwork => artwork._pendingFile).length;
     
-    if (pendingCount > 0) {
-        commitButton.textContent = `📤 Commit ${pendingCount} Change${pendingCount === 1 ? '' : 's'} to GitHub`;
+    // Check if there are any pending changes (files or data changes)
+    const hasPendingChanges = pendingFileCount > 0 || hasDataChanges;
+    
+    if (hasPendingChanges) {
+        let changeText = [];
+        if (pendingFileCount > 0) {
+            changeText.push(`${pendingFileCount} image${pendingFileCount === 1 ? '' : 's'}`);
+        }
+        if (hasDataChanges) {
+            changeText.push('data');
+        }
+        
+        const buttonText = `📤 Commit ${changeText.join(' + ')} to GitHub`;
+        commitButton.textContent = buttonText;
         commitButton.disabled = false;
         commitButton.style.backgroundColor = '#28a745';
         commitButton.style.borderColor = '#28a745';
@@ -2147,12 +2166,25 @@ async function commitToGitHub() {
         // Find artworks with pending files
         const pendingArtworks = artworkList.filter(artwork => artwork._pendingFile);
         
+        // Check if there are any changes to commit
+        if (pendingArtworks.length === 0 && !hasDataChanges) {
+            showStatus('No changes to commit', 'info');
+            return;
+        }
+        
+        let commitMessage = [];
+        if (pendingArtworks.length > 0) {
+            commitMessage.push(`Upload ${pendingArtworks.length} new image${pendingArtworks.length === 1 ? '' : 's'}`);
+        }
+        if (hasDataChanges) {
+            commitMessage.push('Update artwork data');
+        }
+        
         const confirmed = confirm(
             `Are you sure you want to commit all changes to GitHub?\n\n` +
             `This will:\n` +
-            `• Upload ${pendingArtworks.length} new images to IMAGES/art/\n` +
-            `• Update art-data.js with ${artworkList.length} artworks\n\n` +
-            `All changes will be in separate commits (GitHub API limitation).`
+            `• ${commitMessage.join('\n• ')}\n\n` +
+            `All changes will be committed in a batch process.`
         );
         
         if (!confirmed) {
@@ -2177,9 +2209,14 @@ async function commitToGitHub() {
             }
         }
         
-        // Step 2: Update art-data.js
-        showStatus('Updating art-data.js...', 'info');
-        await saveArtworkData();
+        // Step 2: Update art-data.js if there are any changes
+        if (hasDataChanges || pendingArtworks.length > 0) {
+            showStatus('Updating art-data.js...', 'info');
+            await saveArtworkData();
+            
+            // Clear data change flag
+            hasDataChanges = false;
+        }
         
         showStatus('Successfully committed all changes to GitHub! 🎉', 'success');
         
@@ -2219,9 +2256,10 @@ async function uploadFileToGitHub(file, filename, folder = 'IMAGES/art') {
             // File doesn't exist, which is fine for new uploads
         }
         
-        // Step 3: Prepare upload data
+        // Step 3: Prepare upload data with batch identifier
+        const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
         const uploadData = {
-            message: `Upload artwork: ${filename}`,
+            message: `Add artwork batch ${timestamp} - ${filename}`,
             content: base64Content,
             ...(sha && { sha })
         };
