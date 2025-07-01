@@ -98,21 +98,27 @@ export const artworks = [
     "uploadDate": "2025-07-01T02:03:16.366Z"
   },
   {
-    "id": 1751336238849,
-    "title": "Pantalone: Number 9 of the Fatui Harbingers",
+    "id": 1751336278971,
+    "title": "Technoblade Never Dies",
     "description": "",
     "category": "digital",
-    "date": "2022-07-28",
+    "date": "2022-07-05",
     "datePrecision": "full",
-    "formattedDate": "28 July 2022",
+    "formattedDate": "5 July 2022",
     "tags": [
+      "DreamSMP",
       "Fan art",
-      "Genshin Impact"
+      "Technoblade"
     ],
-    "linkedProject": null,
-    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01af29f7243995c9284064c1462334b1ac7f3552ce-2025-07-01T02-17-18-849Z.jpg",
-    "imagePath": "IMAGES/art/digital-01af29f7243995c9284064c1462334b1ac7f3552ce-2025-07-01T02-17-18-849Z.jpg",
-    "uploadDate": "2025-07-01T02:17:20.222Z"
+    "linkedProject": {
+      "title": "Dream SMP",
+      "type": "custom",
+      "url": null,
+      "language": null
+    },
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/digital-01567b8f3973ba1a36055212b3c3aa50d0483b246c-2025-07-01T02-17-58-971Z.jpg",
+    "imagePath": "IMAGES/art/digital-01567b8f3973ba1a36055212b3c3aa50d0483b246c-2025-07-01T02-17-58-971Z.jpg",
+    "uploadDate": "2025-07-01T02:18:00.262Z"
   }
 ];
 
