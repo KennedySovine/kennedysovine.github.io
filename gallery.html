@@ -13,8 +13,16 @@
         <header class="gallery-header">
             <div class="header-content">
                 <button class="back-btn" onclick="window.location.href='index.html'">← Back to Portfolio</button>
-                <h1>Art Portfolio</h1>
+                <h1 class="gallery-title">Art Portfolio</h1>
                 <a href="admin/index.html" class="admin-link" id="admin-panel-link">Admin Panel</a>
+            </div>
+            
+            <!-- Mobile Filter Toggle -->
+            <div class="mobile-filter-toggle" id="mobile-filter-toggle">
+                <button class="filter-toggle-btn" onclick="toggleMobileFilter()">
+                    <span>🔍 Filters</span>
+                    <span class="toggle-icon" id="mobile-toggle-icon">▼</span>
+                </button>
             </div>
         </header>
 
@@ -35,16 +43,20 @@
                         </div>
                     </div>
 
-                    <div class="filter-group">
-                        <h3>Tags</h3>
-                        <div class="tags-filter" id="tags-filter">
+                    <div class="filter-group collapsible">
+                        <h3 class="filter-header" onclick="toggleFilterSection('tags')">
+                            Tags <span class="collapse-icon" id="tags-icon">▼</span>
+                        </h3>
+                        <div class="tags-filter filter-content" id="tags-filter">
                             <!-- Dynamic tags will be populated here -->
                         </div>
                     </div>
 
-                    <div class="filter-group">
-                        <h3>Projects</h3>
-                        <div class="projects-filter" id="projects-filter">
+                    <div class="filter-group collapsible">
+                        <h3 class="filter-header" onclick="toggleFilterSection('projects')">
+                            Projects <span class="collapse-icon" id="projects-icon">▼</span>
+                        </h3>
+                        <div class="projects-filter filter-content" id="projects-filter">
                             <!-- Dynamic projects will be populated here -->
                         </div>
                     </div>
