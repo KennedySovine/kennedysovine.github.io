@@ -127,10 +127,20 @@ async function tryFetchFromGitHub() {
  * Extract unique tags and projects from artwork data
  */
 function extractMetadata() {
+    // Map to store normalized tags to preserve original casing of first occurrence
+    const tagMap = new Map();
+    
     artworks.forEach(artwork => {
-        // Collect tags
+        // Collect tags with case normalization
         if (artwork.tags && Array.isArray(artwork.tags)) {
-            artwork.tags.forEach(tag => allTags.add(tag));
+            artwork.tags.forEach(tag => {
+                const normalizedTag = tag.toLowerCase().trim();
+                // Only add if we haven't seen this normalized tag before
+                if (!tagMap.has(normalizedTag)) {
+                    tagMap.set(normalizedTag, tag);
+                    allTags.add(tag);
+                }
+            });
         }
         
         // Collect projects
@@ -177,7 +187,8 @@ function initializeFilters() {
     const tagsFilter = document.getElementById('tags-filter');
     tagsFilter.innerHTML = '';
     
-    Array.from(allTags).sort().forEach(tag => {
+    // Sort tags case-insensitively
+    Array.from(allTags).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach(tag => {
         const tagElement = document.createElement('div');
         tagElement.className = 'filter-tag';
         tagElement.textContent = tag;
@@ -387,11 +398,13 @@ function applyFiltersAndSort() {
         console.log(`Type filter: ${beforeFilter} -> ${filteredArtworks.length} artworks`); // Debug log
     }
     
-    // Apply tag filter
+    // Apply tag filter (case-insensitive)
     if (currentFilters.tags.length > 0) {
         filteredArtworks = filteredArtworks.filter(artwork => {
-            return currentFilters.tags.some(tag => 
-                artwork.tags && artwork.tags.includes(tag)
+            return currentFilters.tags.some(filterTag => 
+                artwork.tags && artwork.tags.some(artworkTag => 
+                    artworkTag.toLowerCase().trim() === filterTag.toLowerCase().trim()
+                )
             );
         });
     }
@@ -617,6 +630,38 @@ function closeModal() {
 }
 
 /**
+ * Toggle mobile filter visibility
+ */
+function toggleMobileFilter() {
+    const sidebar = document.querySelector('.gallery-sidebar');
+    const icon = document.getElementById('mobile-toggle-icon');
+    
+    if (sidebar.classList.contains('mobile-visible')) {
+        sidebar.classList.remove('mobile-visible');
+        icon.textContent = '▼';
+    } else {
+        sidebar.classList.add('mobile-visible');
+        icon.textContent = '▲';
+    }
+}
+
+/**
+ * Toggle filter section visibility (collapse/expand)
+ */
+function toggleFilterSection(sectionName) {
+    const filterContent = document.getElementById(`${sectionName}-filter`);
+    const icon = document.getElementById(`${sectionName}-icon`);
+    
+    if (filterContent.style.display === 'none') {
+        filterContent.style.display = 'flex';
+        icon.textContent = '▼';
+    } else {
+        filterContent.style.display = 'none';
+        icon.textContent = '▶';
+    }
+}
+
+/**
  * Clear all filters
  */
 function clearAllFilters() {
@@ -665,3 +710,5 @@ function showEmptyState() {
 // Export functions for global access
 window.closeModal = closeModal;
 window.clearAllFilters = clearAllFilters;
+window.toggleFilterSection = toggleFilterSection;
+window.toggleMobileFilter = toggleMobileFilter;
