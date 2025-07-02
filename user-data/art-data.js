@@ -386,9 +386,9 @@ export const artworks = [
     "title": "Snowdin Tubbo",
     "description": "",
     "category": "Digital Art",
-    "date": "2025-08-01",
+    "date": "2021-08-01",
     "datePrecision": "full",
-    "formattedDate": "1 August 2025",
+    "formattedDate": "1 August 2021",
     "tags": [
       "DreamSMP",
       "Fan art",
@@ -404,7 +404,7 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751386315591-01232f7491a553e71cfe8a2ebdc3fb2eacd132c6d5.jpg",
     "uploadDate": "2025-07-01T16:11:55.592Z",
     "featured": false,
-    "year": "2025"
+    "year": "2021"
   },
   {
     "id": 1751386381016,
