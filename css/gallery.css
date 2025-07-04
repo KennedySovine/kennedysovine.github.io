@@ -383,7 +383,7 @@ body {
     justify-content: space-between;
 }
 
-.back-btn, .admin-link {
+.back-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -401,7 +401,7 @@ body {
     color: var(--gray-600);
 }
 
-.back-btn:hover, .admin-link:hover {
+.back-btn:hover {
     background: var(--gray-200);
     transform: translateY(-1px);
 }
