@@ -5,8 +5,9 @@ import {
   experience,
   footer,
   certifications,
-  projects,
 } from "./user-data/data.js";
+
+import { projects } from "./user-data/projects.js";
 
 import { URLs } from "./user-data/urls.js";
 import { config } from "./user-data/config-loader.js";
