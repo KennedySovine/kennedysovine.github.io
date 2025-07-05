@@ -5,9 +5,8 @@ import {
   experience,
   footer,
   certifications,
+  projects,
 } from "./user-data/data.js";
-
-import { projects } from "./user-data/projects.js";
 
 import { URLs } from "./user-data/urls.js";
 import { config } from "./user-data/config-loader.js";
@@ -1056,7 +1055,7 @@ function createProjectCard(project, index) {
     }
   });
   
- 
+  // Show overlay on hover
   const overlay = card.querySelector('.project-overlay');
   card.addEventListener('mouseenter', () => {
     overlay.style.opacity = '1';
@@ -1390,55 +1389,6 @@ function initializeProjects() {
   updateProjectsDisplay();
   
   console.log('🎉 Projects initialization complete!');
-}
-
-/**
- * Fetch GitHub language stats for featured projects and add as tags
- */
-async function addLanguageTagsToProjects() {
-  const githubApiBase = 'https://api.github.com/repos/';
-  const fetches = projects.map(async (project) => {
-    if (
-      project.sourceCodeUrl &&
-      project.sourceCodeUrl.includes('github.com')
-    ) {
-      // Extract owner/repo from URL
-      const match = project.sourceCodeUrl.match(/github.com\/(.+?)\/(.+?)(?:[\/#]|$)/);
-      if (match) {
-        const owner = match[1];
-        const repo = match[2];
-        try {
-          const res = await fetch(`${githubApiBase}${owner}/${repo}/languages`);
-          if (res.ok) {
-            const langData = await res.json();
-            const total = Object.values(langData).reduce((a, b) => a + b, 0);
-            // Get top 2 languages by percentage
-            const sorted = Object.entries(langData)
-              .map(([lang, bytes]) => ({ lang, percent: (bytes / total) * 100 }))
-              .sort((a, b) => b.percent - a.percent)
-              .slice(0, 2);
-            // Add language tags if not already present
-            if (!project.tags) project.tags = [];
-            sorted.forEach(({ lang }) => {
-              if (!project.tags.includes(lang)) {
-                project.tags.push(lang);
-              }
-            });
-          }
-        } catch (e) {
-          // Ignore errors
-        }
-      }
-    }
-  });
-  await Promise.all(fetches);
-}
-
-// Patch initializeProjects to add language tags before rendering
-const _originalInitializeProjects = initializeProjects;
-initializeProjects = async function() {
-  await addLanguageTagsToProjects();
-  _originalInitializeProjects();
 }
 
 // =======================================================
