@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 
   <script src="js/modernizr-2.6.2.min.js"></script>
+  <script src="user-data/projects.js"></script>
   <script type="module" src="index.js"></script>
   <script src="js/profile-card.js"></script>
 </head>
@@ -40,8 +41,7 @@
               <li>
                 <a href="#" data-nav-section="repos">Top Repositories</a>
               </li>
-              <li><a href="#" data-nav-section="projects">Projects</a></li>
-              <li><a href="gallery.html" class="external">Art Portfolio</a></li>
+              <li><a href="#" data-nav-section="explore-more">Art and Projects</a></li>
               <li><a href="#" data-nav-section="education">Education</a></li>
               <li>
                 <a href="#" data-nav-section="experience">Work Experience</a>
@@ -126,19 +126,22 @@
           <div class="colorlib-narrow-content">
             <div class="row row-bottom-padded-sm animate-box" data-animate-effect="fadeInLeft">
               <div class="about-desc">
-                <h1>Featured <span style="color: #6a5acd">Projects</span></h1>
+                <h1>Explore <span style="color: #6a5acd">More</span></h1>
               </div>
             </div>
-            <div class="project-carousel-container">
-              <button class="project-nav-btn project-prev" id="project-prev-btn">
-                <i class="fa fa-chevron-left"></i>
-              </button>
-              <div id="projects">
-                <!-- Project cards will be dynamically generated here -->
+            <div class="explore-sections-row">
+              <div class="explore-card art-portfolio">
+                <i class="fas fa-palette explore-icon accent"></i>
+                <h2 class="explore-title primary">Art Portfolio</h2>
+                <p class="explore-desc">See digital art, illustrations, and creative projects in the dedicated art portfolio section.</p>
+                <a href="gallery.html" class="explore-btn accent">View Art Portfolio</a>
               </div>
-              <button class="project-nav-btn project-next" id="project-next-btn">
-                <i class="fa fa-chevron-right"></i>
-              </button>
+              <div class="explore-card projects-portfolio">
+                <i class="fas fa-laptop-code explore-icon primary"></i>
+                <h2 class="explore-title primary">Projects Portfolio</h2>
+                <p class="explore-desc">Browse programming, game development, and technical projects with detailed write-ups and demos.</p>
+                <a href="projects.html" class="explore-btn primary">View Projects</a>
+              </div>
             </div>
           </div>
         </section>
