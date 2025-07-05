@@ -12,6 +12,15 @@
     --accent-blue: var(--blue-500);
     --accent-purple: var(--secondary-color);
     
+    /* Glass effect backgrounds for white background */
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    
+    /* Map gallery transitions to master design transitions */
+    --transition-fast: var(--transition-fast);
+    --transition-normal: var(--transition);
+    --transition-slow: var(--transition-slow);
+    
     /* Gallery-specific spacing (supplements master design spacing) */
     --space-1: 0.25rem;
     --space-3: 0.75rem;
@@ -49,7 +58,7 @@
 
 body {
     font-family: var(--font-primary);
-    background: var(--primary-gradient);
+    background: var(--white);
     min-height: 100vh;
     color: var(--gray-700);
     line-height: 1.6;
