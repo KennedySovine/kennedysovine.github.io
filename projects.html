@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link rel="stylesheet" href="css/projects.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <!-- Load project data as a global variable BEFORE the main JS -->
+    <script src="user-data/projects.js"></script>
+    <script src="js/projects.js" defer></script>
+</head>
+<body>
+  <div class="projects-page-container">
+    <!-- Sidebar -->
+    <aside class="projects-sidebar">
+      <div class="sidebar-header">
+        <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</button>
+      </div>
+      <div class="search-section">
+        <div class="search-box">
+          <input type="text" id="projectSearch" placeholder="Search..." autocomplete="off" />
+          <span class="search-icon"><i class="fas fa-search"></i></span>
+        </div>
+      </div>
+      <div class="filter-group collapsible">
+        <div class="filter-header" id="tagsCollapseHeader">
+          Tags
+          <span class="collapse-icon" id="tagsCollapseIcon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="filter-content" id="tagsFilterContent">
+          <!-- Tag bubbles will be injected here -->
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="projects-main">
+      <div class="projects-header">
+        <h1>Projects</h1>
+        <a href="https://github.com/kennedysovine" target="_blank" class="github-btn">
+          <span>Go to GitHub</span> <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Project cards will be injected here -->
+      </div>
+    </main>
+  </div>
+</body>
+</html>
