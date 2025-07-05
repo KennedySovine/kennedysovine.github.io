@@ -1477,3 +1477,67 @@ body.offcanvas .colorlib-nav-toggle {
     padding: var(--spacing-sm);
   }
 }
+
+/* =======================================================
+ * EXPLORE MORE SECTION
+ * ======================================================= */
+
+.explore-sections-row {
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.explore-card {
+  flex: 1 1 320px;
+  min-width: 260px;
+  max-width: 400px;
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+  padding: 2em 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.2em;
+}
+
+.explore-card i {
+  font-size: 2.5em;
+  color: var(--accent-color);
+}
+
+.explore-card.projects-icon i {
+  color: var(--primary-color);
+}
+
+.explore-card h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.explore-card p {
+  color: var(--gray-700);
+  font-size: var(--font-size-base);
+}
+
+.explore-btn {
+  display: inline-block;
+  padding: 0.9em 2em;
+  font-size: 1.1em;
+  font-weight: bold;
+  background: var(--accent-color);
+  color: #fff;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.explore-btn.projects {
+  background: var(--primary-color);
+}

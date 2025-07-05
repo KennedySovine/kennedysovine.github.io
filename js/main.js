@@ -149,3 +149,52 @@ Accordion.prototype.dropdown = function (e) {
 };
 
 var accordion = new Accordion($("#accordion"), false);
+
+// Add this after DOMContentLoaded or in your main.js
+function renderFeaturedProjects() {
+  // Use the global window.projects if available
+  const projects = window.projects || [];
+  const container = document.getElementById('featured-projects');
+  if (!container || !projects.length) return;
+  // Show 1 or 2 projects from the top
+  const count = Math.min(2, projects.length);
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const p = projects[i];
+    const card = document.createElement('div');
+    card.className = 'featured-project-card';
+    card.style = 'background: var(--white); border-radius: var(--border-radius-lg); box-shadow: var(--shadow); padding: 1.2em; margin-bottom: 1em; min-width: 220px; max-width: 340px; flex: 1 1 0; display: flex; flex-direction: column; gap: 0.7em;';
+    card.innerHTML = `
+      <div style="font-size: var(--font-size-lg); font-weight: var(--font-bold); color: var(--primary-color); margin-bottom: 0.3em;">${p.title}</div>
+      <div style="font-size: var(--font-size-base); color: var(--gray-700); margin-bottom: 0.5em;">${p.description}</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.3em; margin-bottom: 0.5em;">
+        ${(p.tags || []).slice(0, 3).map(tag => `<span style='background: var(--blue-50); color: var(--primary-color); border-radius: 999px; font-size: var(--font-size-xs); padding: 0.2em 0.7em; font-weight: var(--font-medium); border: 1px solid var(--primary-color);'>${tag}</span>`).join('')}
+      </div>
+      <div style="display: flex; gap: 0.5em;">
+        ${p.sourceCodeUrl ? `<a href="${p.sourceCodeUrl}" target="_blank" style="background: var(--primary-color); color: #fff; border-radius: var(--border-radius-sm); padding: 0.4em 1em; font-size: var(--font-size-sm); font-weight: var(--font-semibold); text-decoration: none;">Source</a>` : ''}
+        ${p.playableURL ? `<a href="${p.playableURL}" target="_blank" style="background: var(--accent-color); color: #fff; border-radius: var(--border-radius-sm); padding: 0.4em 1em; font-size: var(--font-size-sm); font-weight: var(--font-semibold); text-decoration: none;">Play</a>` : ''}
+        ${p.youtubeUrl ? `<a href="${p.youtubeUrl}" target="_blank" style="background: var(--color-3); color: #fff; border-radius: var(--border-radius-sm); padding: 0.4em 1em; font-size: var(--font-size-sm); font-weight: var(--font-semibold); text-decoration: none;">YouTube</a>` : ''}
+      </div>
+    `;
+    container.appendChild(card);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.getElementById('featured-projects')) {
+    // If projects are loaded async, you may want to wait or re-call this
+    renderFeaturedProjects();
+  }
+});
+
+// Smooth scroll for 'Art and Projects' nav link to Explore More section
+const artProjectsNav = document.querySelector('a[data-nav-section="explore-more"]');
+if (artProjectsNav) {
+    artProjectsNav.addEventListener('click', function(e) {
+        e.preventDefault();
+        const exploreSection = document.querySelector('.colorlib-projects[data-section="projects"]');
+        if (exploreSection) {
+            exploreSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+}
