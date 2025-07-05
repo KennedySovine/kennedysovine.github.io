@@ -18,7 +18,7 @@
 
 .projects-sidebar {
   width: 320px;
-  background: var(--background-secondary, var(--white));
+  background: var(--gradient-primary);
   border-right: 1px solid var(--gray-100);
   padding: var(--spacing-lg) var(--spacing-md);
   display: flex;
@@ -39,7 +39,7 @@
 .projects-sidebar .back-btn {
   background: none;
   border: none;
-  color: var(--primary-color);
+  color: var(--white);
   font-size: var(--font-size-lg);
   cursor: pointer;
   display: flex;
@@ -48,7 +48,7 @@
   transition: color var(--transition);
 }
 .projects-sidebar .back-btn:hover {
-  color: var(--accent-color);
+  color: var(--gray-200);
 }
 
 .projects-sidebar .search-section {
@@ -70,9 +70,10 @@
   font-size: var(--font-size-base);
   flex: 1;
   color: var(--text-color);
+  placeholder-color: var(--gray-400);
 }
 .projects-sidebar .search-box .search-icon {
-  color: var(--gray-500);
+  color: var(--gray-400);
   font-size: 1.2em;
   margin-left: 0.5em;
 }
@@ -88,9 +89,9 @@
   cursor: pointer;
   font-weight: var(--font-semibold);
   font-size: var(--font-size-base);
-  color: var(--primary-color);
+  color: var(--white);
   padding: 0.5em 0;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 .projects-sidebar .collapse-icon {
   font-size: 1.1em;
@@ -113,21 +114,21 @@
 
 .tag-bubble {
   display: inline-block;
-  background: var(--primary-light, var(--blue-50));
-  color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
   border-radius: 999px;
   padding: 0.3em 1em;
   font-size: var(--font-size-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  border: 1px solid var(--primary-color);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   margin: 0.1em 0.2em 0.1em 0;
   transition: background var(--transition), color var(--transition), border var(--transition);
 }
 .tag-bubble.active, .tag-bubble:hover {
-  background: var(--primary-color);
-  color: var(--white);
-  border: 1px solid var(--primary-color);
+  background: var(--white);
+  color: var(--secondary-color);
+  border: 1px solid var(--white);
 }
 
 /* ===============================
@@ -153,12 +154,12 @@
 .projects-header h1 {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-bold);
-  color: var(--primary-color);
+  color: var(--secondary-color);
   margin: 0;
   letter-spacing: 0.01em;
 }
 .projects-header .github-btn {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--white);
   border: none;
   border-radius: var(--border-radius);
@@ -208,7 +209,7 @@
   overflow: hidden;
 }
 .project-card:hover {
-  border-color: var(--primary-color);
+  border-color: var(--secondary-color);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .project-card.expanded {
@@ -222,8 +223,8 @@
   gap: 0.5em;
 }
 .project-card .lang-tag {
-  background: var(--primary-light, var(--blue-100));
-  color: var(--primary-color);
+  background: rgba(133, 119, 230, 0.1);
+  color: var(--secondary-color);
   border-radius: 999px;
   font-size: var(--font-size-lg);
   padding: 0.3em 1.1em;
@@ -234,7 +235,7 @@
 .project-card .project-title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-extrabold);
-  color: var(--primary-color);
+  color: var(--secondary-color);
   margin: 0;
   flex: 1;
   letter-spacing: 0.01em;
@@ -289,8 +290,8 @@
   margin-bottom: 0.2em;
 }
 .project-card .project-tag {
-  background: var(--primary-light, var(--blue-50));
-  color: var(--primary-color);
+  background: rgba(133, 119, 230, 0.1);
+  color: var(--secondary-color);
   border-radius: 999px;
   font-size: var(--font-size-xs);
   padding: 0.2em 0.7em;
@@ -298,13 +299,13 @@
   margin-right: 0.2em;
   margin-bottom: 0.2em;
   letter-spacing: 0.01em;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--secondary-color);
   transition: background var(--transition), color var(--transition), border var(--transition);
 }
 .project-card .project-tag:hover {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--white);
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--secondary-color);
 }
 
 .project-card .card-actions {
@@ -313,7 +314,7 @@
   margin-top: 0.5em;
 }
 .project-card .card-btn {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--white);
   border: none;
   border-radius: var(--border-radius-sm);
@@ -333,7 +334,7 @@
   color: var(--white);
 }
 .project-card .card-btn:hover {
-  background: var(--primary-dark, var(--accent-color));
+  background: var(--accent-color);
   color: var(--white);
 }
 
@@ -344,7 +345,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   font-size: 1.3em;
   display: flex;
   align-items: center;
@@ -354,7 +355,7 @@
   border-radius: 50%;
 }
 .project-card .expand-btn:hover {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--white);
 }
 .project-card .expand-btn .arrow {
