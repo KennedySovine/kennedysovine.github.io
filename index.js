@@ -242,7 +242,7 @@ function populateRepo(items, id) {
 
   for (let i = 0; i < count; i++) {
     const item = items[i];
-    if (!item) continue;    const repoCard = document.createElement("div");
+    if (!item) continue; const repoCard = document.createElement("div");
     repoCard.className = "repo-card";
     repoCard.style = `
           flex: 1 0 48%;
@@ -263,11 +263,11 @@ function populateRepo(items, id) {
     repoLink.target = "_blank";
     repoLink.style = "text-decoration: none; color: black; display: block; height: 100%;";
 
-    repoCard.appendChild(repoLink);    const repoName = document.createElement("h4");
+    repoCard.appendChild(repoLink); const repoName = document.createElement("h4");
     repoName.className = "repo-heading";
     repoName.innerHTML = item.name || 'Unknown Repository';
     repoName.style = "margin: 0; font-size: 16px; font-weight: bold;";
-    repoLink.appendChild(repoName);    const repoDescription = document.createElement("p");
+    repoLink.appendChild(repoName); const repoDescription = document.createElement("p");
     repoDescription.className = "repo-description";
     repoDescription.innerHTML = item.description || 'No description available';
     repoDescription.style = "margin-top: 6px; font-size: 11px; color: #555;";
@@ -363,7 +363,7 @@ function populateExp_Edu(items, id) {
 
     let divTimelineIcon = document.createElement("div");
     divTimelineIcon.className = "timeline-icon color-2";
-    
+
     // Check if icon is an image path or FontAwesome class
     if (items[i].icon && (items[i].icon.startsWith('./') || items[i].icon.startsWith('/') || items[i].icon.includes('.'))) {
       // It's an image path
@@ -379,18 +379,18 @@ function populateExp_Edu(items, id) {
       let iFa = document.createElement("i");
       iFa.className = "fa fa-" + items[i].icon;
       divTimelineIcon.append(iFa);
-    }    let divTimelineEntryInner = document.createElement("div");
+    } let divTimelineEntryInner = document.createElement("div");
     divTimelineEntryInner.className = "timeline-entry-inner";
     divTimelineEntryInner.append(divTimelineIcon);
     divTimelineEntryInner.append(divTimelineLabel);
-    
+
     let article = document.createElement("article");
     article.className = "timeline-entry";
     article.append(divTimelineEntryInner);    // Make University of Brighton card clickable to open UOB.html
     if (items[i].title === "University of Brighton") {
       console.log("Setting up click handler for University of Brighton");
       article.style.cursor = "pointer";
-      
+
       // Add visual indicator for clickability
       let clickIndicator = document.createElement("div");
       clickIndicator.className = "click-indicator";
@@ -399,7 +399,7 @@ function populateExp_Edu(items, id) {
         <span>Click to view modules & coursework</span>
       `;
       divTimelineLabel.appendChild(clickIndicator);
-      
+
       // Add styling for the click indicator
       let style = document.createElement("style");
       style.textContent = `
@@ -432,20 +432,20 @@ function populateExp_Edu(items, id) {
         }
       `;
       document.head.appendChild(style);
-      
-      article.addEventListener("click", function(e) {
+
+      article.addEventListener("click", function (e) {
         e.preventDefault();
         console.log("University of Brighton clicked!");
         window.location.href = "UOB.html";
       });
-      
+
       // Add hover effect to indicate it's clickable
-      article.addEventListener("mouseenter", function() {
+      article.addEventListener("mouseenter", function () {
         article.style.transform = "scale(1.02)";
         article.style.transition = "transform 0.2s ease";
       });
-      
-      article.addEventListener("mouseleave", function() {
+
+      article.addEventListener("mouseleave", function () {
         article.style.transform = "scale(1)";
       });
     }
@@ -766,9 +766,9 @@ function displayRepositoryCarousel3Cards(repos) {
       description: 14,
       stats: 12
     };
-    
+
     const isMobile = window.innerWidth <= 768;
-    
+
     if (isMobile) {
       // Mobile single-card layout: larger card for better visibility
       cardWidth = Math.min(320, window.innerWidth * 0.9);
@@ -850,7 +850,7 @@ function displayRepositoryCarousel3Cards(repos) {
           filter: blur(0.5px) brightness(0.95);
         `;
       }
-    }card.innerHTML = `
+    } card.innerHTML = `
       <div style="font-size: ${fontSize.title}px; font-weight: bold; margin-bottom: 8px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
         ${repo.name}
         ${repo.isPinned ? '<span style="background: #4169e1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px;">📌</span>' : ''}
@@ -885,7 +885,7 @@ function displayRepositoryCarousel3Cards(repos) {
 
     // Check if sidebar is collapsed (mobile view)
     const isMobile = window.innerWidth <= 768;
-    
+
     if (isMobile) {
       // Mobile: Show only center card (single card view)
       const centerCard = createRepoCard(repos[centerIndex], "center");
@@ -960,7 +960,7 @@ function displayRepositoryCarousel3Cards(repos) {
     }
   });
   // Window resize listener to update card sizes and layout
-  window.addEventListener("resize", function() {
+  window.addEventListener("resize", function () {
     // Update carousel container height based on screen size
     const carousel = document.getElementById("repo-carousel");
     if (carousel) {
@@ -990,21 +990,21 @@ function getProjectImageUrl(project) {
       return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
     }
   }
-  
+
   // Fallback to the original image
   return project.image || 'https://via.placeholder.com/400x300/8577e6/ffffff?text=No+Image';
 }
 
 function createProjectCard(project, index) {
   console.log(`🔨 Creating project card for: ${project.title}`);
-  
+
   const card = document.createElement('div');
   card.className = 'project-card';
   // Removed animation attributes for immediate display
-  
+
   // Get the appropriate image URL (YouTube thumbnail or original image)
   const imageUrl = getProjectImageUrl(project);
-  
+
   // Professional card styling
   card.style.cssText = `
     background: white;
@@ -1016,18 +1016,18 @@ function createProjectCard(project, index) {
     display: flex;
     flex-direction: column;
   `;
-  
+
   // Add hover effect
   card.addEventListener('mouseenter', () => {
     card.style.transform = 'translateY(-5px)';
     card.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
   });
-  
+
   card.addEventListener('mouseleave', () => {
     card.style.transform = 'translateY(0)';
     card.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)';
   });
-  
+
   card.innerHTML = `
     <div class="project-card-inner" style="height: 100%; display: flex; flex-direction: column;">
       <div class="project-image" style="position: relative !important; height: 200px !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: #f8f8f8 !important; float: none !important; overflow: hidden !important; border-radius: 12px 12px 0 0 !important;">
@@ -1047,24 +1047,24 @@ function createProjectCard(project, index) {
       </div>
     </div>
   `;
-  
+
   // Add click handler for the entire card to expand
   card.addEventListener('click', (e) => {
     if (!e.target.closest('.project-expand-btn')) {
       showProjectModal(index);
     }
   });
-  
+
   // Show overlay on hover
   const overlay = card.querySelector('.project-overlay');
   card.addEventListener('mouseenter', () => {
     overlay.style.opacity = '1';
   });
-  
+
   card.addEventListener('mouseleave', () => {
     overlay.style.opacity = '0';
   });
-  
+
   console.log('✅ Project card created successfully');
   return card;
 }
@@ -1073,7 +1073,7 @@ function createProjectModal(project) {
   const modal = document.createElement('div');
   modal.className = 'project-modal';
   modal.id = 'project-modal';
-  
+
   // Determine whether to show video or image
   let mediaContent;
   if (project.youtubeUrl && project.youtubeUrl.trim() !== '') {
@@ -1107,7 +1107,7 @@ function createProjectModal(project) {
       </div>
     `;
   }
-  
+
   modal.innerHTML = `
     <div class="project-modal-backdrop" id="project-modal-backdrop"></div>
     <div class="project-modal-content">
@@ -1129,44 +1129,44 @@ function createProjectModal(project) {
               <i class="fa fa-external-link"></i>
               Go to source code
             </a>
-            ${project.playableURL && project.playableURL.trim() !== '' ? 
-              `<a href="${project.playableURL}" target="_blank" class="project-play-btn">
+            ${project.playableURL && project.playableURL.trim() !== '' ?
+      `<a href="${project.playableURL}" target="_blank" class="project-play-btn">
                 <i class="fa fa-play"></i>
                 Play Game
               </a>` : ''
-            }
+    }
           </div>
         </div>
       </div>
     </div>
   `;
-  
+
   return modal;
 }
 
 function showProjectModal(projectIndex) {
   const project = projects[projectIndex];
   const existingModal = document.getElementById('project-modal');
-  
+
   if (existingModal) {
     existingModal.remove();
   }
-  
+
   const modal = createProjectModal(project);
   document.body.appendChild(modal);
-  
+
   // Show modal with animation
   setTimeout(() => {
     modal.classList.add('active');
   }, 10);
-  
+
   // Add event listeners
   const closeBtn = modal.querySelector('#project-modal-close');
   const backdrop = modal.querySelector('#project-modal-backdrop');
-  
+
   closeBtn.addEventListener('click', closeProjectModal);
   backdrop.addEventListener('click', closeProjectModal);
-  
+
   // Close on Escape key
   document.addEventListener('keydown', handleModalKeydown);
 }
@@ -1195,27 +1195,27 @@ function updateProjectsDisplay() {
     console.warn('❌ Projects container not found in updateProjectsDisplay');
     return;
   }
-  
+
   console.log('✅ Container found, clearing content...');
-  
+
   // Clear existing content and remove debug styling
   container.innerHTML = '';
   container.style.cssText = '';
-  
+
   // Calculate which projects to show
   const startIndex = currentProjectIndex;
   const endIndex = Math.min(startIndex + projectsPerPage, projects.length);
-  
+
   console.log(`📋 Displaying projects ${startIndex} to ${endIndex - 1} of ${projects.length}`);
   console.log(`📱 Projects per page: ${projectsPerPage}`);
-  
+
   // Create project cards directly in the container
   for (let i = startIndex; i < endIndex; i++) {
     console.log(`🔨 Creating card for project ${i}:`, projects[i].title);
     const card = createProjectCard(projects[i], i);
     container.appendChild(card);
   }
-  
+
   // Add project counter below the grid
   const projectCounter = document.createElement('div');
   projectCounter.style.cssText = `
@@ -1227,9 +1227,9 @@ function updateProjectsDisplay() {
   `;
   projectCounter.innerHTML = `Showing ${startIndex + 1}-${endIndex} of ${projects.length} projects`;
   container.appendChild(projectCounter);
-  
+
   console.log(`✅ Added ${endIndex - startIndex} project cards to container`);
-  
+
   // Add event listeners to expand buttons
   container.querySelectorAll('.project-expand-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -1238,30 +1238,30 @@ function updateProjectsDisplay() {
       showProjectModal(projectIndex);
     });
   });
-  
+
   // Update navigation button states
   updateProjectNavButtons();
-  
+
   console.log('🎉 Projects display update complete!');
 }
 
 function updateProjectNavButtons() {
   const prevBtn = document.getElementById('project-prev-btn');
   const nextBtn = document.getElementById('project-next-btn');
-  
+
   if (prevBtn && nextBtn) {
     const isFirstPage = currentProjectIndex === 0;
     const isLastPage = currentProjectIndex + projectsPerPage >= projects.length;
-    
+
     prevBtn.disabled = isFirstPage;
     nextBtn.disabled = isLastPage;
-    
+
     // Update button opacity and cursor based on state
     prevBtn.style.opacity = isFirstPage ? '0.3' : '1';
     nextBtn.style.opacity = isLastPage ? '0.3' : '1';
     prevBtn.style.cursor = isFirstPage ? 'not-allowed' : 'pointer';
     nextBtn.style.cursor = isLastPage ? 'not-allowed' : 'pointer';
-    
+
     console.log(`🔄 Navigation buttons updated - Prev: ${!isFirstPage}, Next: ${!isLastPage}`);
   } else {
     console.warn('⚠️ Navigation buttons not found in DOM');
@@ -1270,19 +1270,19 @@ function updateProjectNavButtons() {
 
 function navigateProjects(direction) {
   const maxIndex = Math.max(0, projects.length - projectsPerPage);
-  
+
   if (direction === 'next' && currentProjectIndex < maxIndex) {
     currentProjectIndex = Math.min(currentProjectIndex + projectsPerPage, maxIndex);
   } else if (direction === 'prev' && currentProjectIndex > 0) {
     currentProjectIndex = Math.max(currentProjectIndex - projectsPerPage, 0);
   }
-  
+
   updateProjectsDisplay();
 }
 
 function updateProjectsPerPage() {
   const screenWidth = window.innerWidth;
-  
+
   // More responsive breakpoints to match CSS
   // When sidebar collapses (768px), show only 1 project
   if (screenWidth <= 768) {
@@ -1294,7 +1294,7 @@ function updateProjectsPerPage() {
   } else {
     projectsPerPage = 1;
   }
-  
+
   // Update grid columns based on projects per page
   const projectsGrid = document.getElementById('projects');
   if (projectsGrid) {
@@ -1306,7 +1306,7 @@ function updateProjectsPerPage() {
       projectsGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
     }
   }
-  
+
   // Reset to first page and update display
   currentProjectIndex = 0;
   if (typeof updateProjectsDisplay === 'function') {
@@ -1318,7 +1318,7 @@ function initializeProjects() {
   console.log('🎨 Initializing projects...');
   console.log('📊 Projects data:', projects);
   console.log('📊 Projects length:', projects ? projects.length : 'undefined');
-  
+
   // Check if projects data exists
   if (!projects || projects.length === 0) {
     console.error('❌ No projects data found');
@@ -1328,19 +1328,19 @@ function initializeProjects() {
     }
     return;
   }
-  
+
   // Check if container exists
   const container = document.getElementById('projects');
   if (!container) {
     console.error('❌ Projects container element not found');
     return;
   }
-  
+
   console.log('✅ Projects container found');
-  
+
   // Reset variables to initial state
   currentProjectIndex = 0;
-  
+
   // Set initial projects per page based on screen size
   const screenWidth = window.innerWidth;
   if (screenWidth <= 768) {
@@ -1352,25 +1352,25 @@ function initializeProjects() {
   } else {
     projectsPerPage = 1;
   }
-  
+
   console.log(`📱 Set projects per page to: ${projectsPerPage} (screen width: ${screenWidth}px)`);
-  
+
   // Add event listeners to navigation buttons
   const prevBtn = document.getElementById('project-prev-btn');
   const nextBtn = document.getElementById('project-next-btn');
-  
+
   if (prevBtn && nextBtn) {
     console.log('✅ Found navigation buttons, adding event listeners');
-    
+
     // Remove any existing listeners first
     prevBtn.onclick = null;
     nextBtn.onclick = null;
-    
+
     prevBtn.addEventListener('click', () => {
       console.log('⬅️ Previous button clicked');
       navigateProjects('prev');
     });
-    
+
     nextBtn.addEventListener('click', () => {
       console.log('➡️ Next button clicked');
       navigateProjects('next');
@@ -1380,14 +1380,14 @@ function initializeProjects() {
     console.log('prevBtn element:', prevBtn);
     console.log('nextBtn element:', nextBtn);
   }
-  
+
   // Add resize listener to update projects per page
   window.addEventListener('resize', updateProjectsPerPage);
-  
+
   // Initial display
   console.log('🚀 Starting initial projects display...');
   updateProjectsDisplay();
-  
+
   console.log('🎉 Projects initialization complete!');
 }
 
@@ -1401,7 +1401,7 @@ function initializeProjects() {
  */
 function updateProfileWithLinkedInData(linkedInData) {
   console.log('📝 Updating profile with LinkedIn data...');
-  
+
   try {
     // Update bio if LinkedIn data is available
     if (linkedInData.bio && linkedInData.bio.length > 0) {
@@ -1416,7 +1416,7 @@ function updateProfileWithLinkedInData(linkedInData) {
         console.log('✅ Bio updated from LinkedIn');
       }
     }
-    
+
     // Update skills if LinkedIn data is available
     if (linkedInData.skills && linkedInData.skills.length > 0) {
       const skillsElement = document.getElementById('skills');
@@ -1430,21 +1430,21 @@ function updateProfileWithLinkedInData(linkedInData) {
         console.log('✅ Skills updated from LinkedIn');
       }
     }
-    
+
     // Update experience if LinkedIn data is available
     if (linkedInData.experience && linkedInData.experience.length > 0) {
       console.log('✅ Experience data available from LinkedIn');
       // Experience would be updated in the populateExp_Edu function
     }
-    
+
     // Add LinkedIn profile link
     if (linkedInData.profileUrl) {
       addLinkedInProfileLink(linkedInData.profileUrl);
     }
-    
+
     // Show data source indicator
     showDataSourceIndicator(linkedInData.source, linkedInData.lastUpdated);
-    
+
   } catch (error) {
     console.error('❌ Error updating profile with LinkedIn data:', error);
   }
@@ -1465,7 +1465,7 @@ function addLinkedInProfileLink(profileUrl) {
       background: linear-gradient(135deg, #0077b5, #005885);
       border-radius: 8px;
     `;
-    
+
     linkedInLink.innerHTML = `
       <a href="${profileUrl}" target="_blank" style="
         color: white;
@@ -1482,7 +1482,7 @@ function addLinkedInProfileLink(profileUrl) {
         View LinkedIn Profile
       </a>
     `;
-    
+
     footer.prepend(linkedInLink);
   }
 }
@@ -1506,18 +1506,18 @@ function showDataSourceIndicator(source, lastUpdated) {
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   `;
-  
+
   const sourceText = {
     'linkedin_api': '🔗 LinkedIn API',
     'manual_config': '⚙️ Manual Config',
     'cached': '💾 Cached Data'
   };
-  
+
   const updateTime = lastUpdated ? new Date(lastUpdated).toLocaleDateString() : 'Unknown';
   indicator.innerHTML = `${sourceText[source] || '📝 Custom'} • ${updateTime}`;
-  
+
   document.body.appendChild(indicator);
-  
+
   // Auto-hide after 5 seconds
   setTimeout(() => {
     indicator.style.opacity = '0';
@@ -1537,7 +1537,7 @@ function loadGitHubContributions() {
 
   // Use GitHub's contribution graph API through a proxy or direct fetch
   const proxyUrl = `https://github.com/${username}`;
-  
+
   // Alternative approach: Use GitHub's calendar heatmap directly
   container.innerHTML = `
     <div style="
@@ -1576,7 +1576,7 @@ function loadGitHubContributions() {
       // Create a simple activity indicator
       const activityCount = events.length;
       const recentActivity = events.slice(0, 10);
-      
+
       container.innerHTML = `
         <div style="
           background: linear-gradient(135deg, #f8f9fa, #e9ecef);
@@ -1676,7 +1676,7 @@ function loadGitHubContributions() {
 function populateCertifications(items, id) {
   const main = document.getElementById(id);
   if (!main) return;
-  
+
   items.forEach(item => {
     // Create subtitle with issuer
     const spanSub = document.createElement("span");
@@ -1717,7 +1717,7 @@ function populateCertifications(items, id) {
     // Create icon
     const divIcon = document.createElement("div");
     divIcon.className = "timeline-icon color-2";
-    
+
     // Check if icon is an image path or FontAwesome class
     if (item.icon && (item.icon.startsWith('./') || item.icon.startsWith('/') || item.icon.includes('.'))) {
       // It's an image path
