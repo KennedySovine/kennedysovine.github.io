@@ -1,5 +1,5 @@
 // Art portfolio data
-// This file is automatically updated by the admin panel
+// This file is automatically updated by the Website Manager
 
 export const artworks = [
   {
@@ -411,9 +411,9 @@ export const artworks = [
     "title": "Cecilia Character Sheet",
     "description": "Minecraft OC",
     "category": "Digital Art",
-    "date": "2025-06-07",
+    "date": "2022-06-07",
     "datePrecision": "full",
-    "formattedDate": "7 June 2025",
+    "formattedDate": "7 June 2022",
     "tags": [
       "Minecraft",
       "OC",
@@ -424,7 +424,7 @@ export const artworks = [
     "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751386380103-01775fb3118723385b27345f521ebf3399ee796775.jpg",
     "uploadDate": "2025-07-01T16:13:00.107Z",
     "featured": false,
-    "year": "2025"
+    "year": "2022"
   },
   {
     "id": 1751407444680,
