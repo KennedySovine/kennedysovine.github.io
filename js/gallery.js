@@ -2,7 +2,8 @@
 // Handles search, filtering, sorting, and display of artwork
 
 // Import art data
-import { artworks, artCategories } from '../user-data/art-data.js';
+import { artworks } from '../user-data/art-data.js';
+// Use window.artCategories for categories (populated by WebsiteManagerApp)
 
 // State management
 let filteredArtworks = [];
@@ -157,7 +158,7 @@ function initializeFilters() {
     // Populate type filters
     const typeFilterOptions = document.getElementById('type-filter-options');
     typeFilterOptions.innerHTML = '';
-    
+
     // Add "All Types" option first
     const allTypesLabel = document.createElement('label');
     allTypesLabel.className = 'filter-option';
@@ -168,9 +169,16 @@ function initializeFilters() {
     const allTypesCheckbox = allTypesLabel.querySelector('input');
     allTypesCheckbox.addEventListener('change', handleTypeFilter);
     typeFilterOptions.appendChild(allTypesLabel);
-    
-    // Add category filters based on artCategories
-    artCategories.forEach(category => {
+
+    // Use window.artCategories if available, fallback to default
+    const categories = window.artCategories || [
+        "Digital Art",
+        "Painting",
+        "Drawing",
+        "Photography",
+        "Mixed Media"
+    ];
+    categories.forEach(category => {
         const categoryValue = category.toLowerCase().replace(/\s+/g, '');
         const label = document.createElement('label');
         label.className = 'filter-option';
@@ -365,37 +373,17 @@ function applyFiltersAndSort() {
     
     // Apply type filter
     if (!currentFilters.types.includes('all')) {
-        console.log('Applying type filter:', currentFilters.types); // Debug log
-        const beforeFilter = filteredArtworks.length;
-        
         filteredArtworks = filteredArtworks.filter(artwork => {
-            // Map filter values to possible category values
-            const categoryMappings = {
-                'digital': ['Digital Art', 'Digital'],
-                'painting': ['Painting', 'Paintings', 'Oil Paint', 'Acrylic', 'Watercolor'],
-                'drawing': ['Drawing', 'Sketches', 'Pencil', 'Ink'],
-                'traditional': ['Traditional Art', 'Traditional', 'Pencil', 'Ink', 'Watercolor', 'Oil Paint', 'Acrylic'],
-                '3d': ['3D Art', '3D', 'Three Dimensional']
-            };
-            
-            const matches = currentFilters.types.some(type => {
-                const possibleCategories = categoryMappings[type] || [type];
-                return possibleCategories.some(cat => 
-                    artwork.category === cat || 
-                    artwork.category.toLowerCase() === cat.toLowerCase() ||
-                    artwork.medium === cat ||
-                    artwork.medium.toLowerCase() === cat.toLowerCase()
-                );
+            // Normalize artwork category for comparison
+            const artworkCategory = (artwork.category || '').toLowerCase().replace(/\s+/g, '');
+            // Also check artwork.medium if present
+            const artworkMedium = (artwork.medium || '').toLowerCase().replace(/\s+/g, '');
+            // If any selected type matches category or medium, include
+            return currentFilters.types.some(type => {
+                const normalizedType = type.toLowerCase().replace(/\s+/g, '');
+                return artworkCategory === normalizedType || artworkMedium === normalizedType;
             });
-            
-            if (matches) {
-                console.log('Artwork matches filter:', artwork.title, artwork.category, artwork.medium); // Debug log
-            }
-            
-            return matches;
         });
-        
-        console.log(`Type filter: ${beforeFilter} -> ${filteredArtworks.length} artworks`); // Debug log
     }
     
     // Apply tag filter (case-insensitive)
