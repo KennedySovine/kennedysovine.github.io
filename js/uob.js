@@ -1,5 +1,6 @@
 // UOB Modules Page Functionality
-import { modules, moduleGrades } from '../user-data/data.js';
+import { modules } from '../user-data/modules.js';
+import { moduleGrades } from '../user-data/moduleGrades.js';
 
 // State management
 let currentYear = "2022 - 2023";

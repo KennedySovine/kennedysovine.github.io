@@ -355,3 +355,6 @@ export function updateBioManually(aboutText) {
   
   return formattedBio;
 }
+
+// NOTE: The following instructions reference data.js, but user data is now split into multiple files (bio.js, skills.js, experience.js, education.js, etc.)
+// Please update the relevant file instead of data.js.

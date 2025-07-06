@@ -1,0 +1,46 @@
+export const education = [
+  {
+    title: "University of Brighton",
+    duration: "September 2022 - Present",
+    location: "Brighton, England",
+    subtitle: "Bachelor of Science in Computer Science for Games",
+    details: [
+      "Activities and societies: Archery, eSports, GameJams,",
+      "Course Representative 22-23",
+    ],
+    tags: [
+      "Game Development",
+      "Unity",
+      "C#",
+      "C++",
+      "Java",
+      "Object-Oriented Programming",
+      "Software Engineering",
+      "Game Design",
+      "Game Prototyping",
+    ],
+    icon: "graduation-cap",
+  },
+  {
+    title: "Pope John Paul II High School",
+    duration: "August 2018 - May 2022",
+    location: "Hendersonville, TN, USA",
+    subtitle: "High School Diploma",
+    details: [
+      "Grade: 3.98/4 WeightedGrade: 3.98/4 Weighted",
+      "Activities and societies: Math Team, Archery Team, Model UN, Youth in Government",
+      "Honors: National Honor Society,",
+    ],
+    tags: [
+      "AP Computer Science A",
+      "AP Calculus BC",
+      "AP US History",
+      "AP English Language and Composition",
+      "AP Economics",
+      "Model United Nations",
+      "Youth in Government",
+      "Archery Team",
+    ],
+    icon: "book",
+  },
+];

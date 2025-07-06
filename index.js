@@ -1,12 +1,10 @@
-import {
-  bio,
-  skills,
-  education,
-  experience,
-  footer,
-  certifications,
-  projects,
-} from "./user-data/data.js";
+import { bio } from "./user-data/bio.js";
+import { skills } from "./user-data/skills.js";
+import { education } from "./user-data/education.js";
+import { experience } from "./user-data/experience.js";
+import { footer } from "./user-data/footer.js";
+import { certifications } from "./user-data/certifications.js";
+import { projects } from "./user-data/projects-data.js";
 
 import { URLs } from "./user-data/urls.js";
 import { config } from "./user-data/config-loader.js";

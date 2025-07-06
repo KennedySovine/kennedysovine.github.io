@@ -1491,7 +1491,7 @@ body.offcanvas .colorlib-nav-toggle {
 
 .explore-card {
   flex: 1 1 320px;
-  min-width: 260px;
+  min-width: 180px;
   max-width: 400px;
   background: var(--white);
   border-radius: var(--border-radius-lg);

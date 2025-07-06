@@ -669,7 +669,7 @@ body {
     display: flex;
     flex-direction: column;
     height: auto;
-    min-height: 420px;
+    min-width: 200px;
 }
 
 .artwork-card:hover {
