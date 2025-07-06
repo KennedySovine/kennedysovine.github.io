@@ -25,8 +25,7 @@
   flex-direction: column;
   gap: var(--spacing-lg);
   box-shadow: none;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-radius: var(--border-radius-lg);
 }
 
 .projects-sidebar .sidebar-header {
@@ -274,10 +273,10 @@
 }
 .project-card .project-description {
   flex: 0 1 auto;
-  max-height: 4.5em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+  max-height: none;
+  overflow: visible;
+  text-overflow: unset;
+  transition: none;
 }
 .project-card.expanded .project-description {
   max-height: 100vh;
@@ -377,7 +376,8 @@ html, body, .projects-page-container, .projects-sidebar, .projects-main, .projec
     flex-direction: column;
   }
   .projects-sidebar {
-    width: 100%;
+    width: 93%;
+    border-radius: var(--border-radius-lg);
     border-right: none;
     border-bottom: 1px solid var(--gray-200);
     flex-direction: column;
@@ -433,6 +433,8 @@ html, body, .projects-page-container, .projects-sidebar, .projects-main, .projec
   .projects-grid > .project-card {
     max-width: 100%;
     min-width: 0;
+    flex-basis: 100%;
+    width: 100%;
   }
 }
 
@@ -445,9 +447,27 @@ html, body, .projects-page-container, .projects-sidebar, .projects-main, .projec
   }
   .projects-sidebar {
     padding: var(--spacing-md) var(--spacing-xs) 0 var(--spacing-xs);
+    border-radius: var(--border-radius-lg);
+  }
+  .projects-sidebar .search-section {
+    margin-bottom: var(--spacing-xs);
   }
   .projects-sidebar .search-box {
-    padding: 0.4em 0.7em;
+    padding: 0.2em 0.5em;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+  .projects-sidebar .search-box input {
+    font-size: var(--font-size-sm);
+    padding: 0.4em 0.2em;
+  }
+  .projects-sidebar .search-box .search-icon {
+    font-size: 1em;
+    margin-left: 0.3em;
   }
   .projects-sidebar .filter-content {
     gap: 0.3em;

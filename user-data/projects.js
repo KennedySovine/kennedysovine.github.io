@@ -1,6 +1,6 @@
 // This file contains the project data for the portfolio.
 // Make this file a global variable for browser compatibility
-window.projects = [{
+export const projects = [{
   "title": "Final Project - Balancing in MMOs Demo",
   "description": "A demo project for the final year, focusing on balancing mechanics in Massively Multiplayer Online (MMO) games. The project explores various balancing techniques and their impact on gameplay, with research focused on League of Legends.",
   "fullDescription": "\n      <h3>Project Overview</h3>\n      <p>A comprehensive research and development project examining game balance in MMOs, specifically analyzing Riot Games' approach to balancing League of Legends. The project includes both theoretical research and a practical demonstration.</p>\n      \n      <h3>Research Focus</h3>\n      <ul>\n        <li>Analysis of Riot Games' balancing methodology</li>\n        <li>Player behavior and meta evolution</li>\n        <li>Data-driven balance decisions</li>\n      </ul>\n      \n      <h3>Demo Features</h3>\n      <ul>\n        <li>Interactive balance testing environment</li>\n        <li>Real-time parameter adjustment</li>\n        <li>Performance metrics and analytics</li>\n      </ul>\n      \n      <h3>Technical Implementation</h3>\n      <ul>\n        <li>Unity Engine for demo development</li>\n        <li>C# scripting for balance algorithms</li>\n        <li>Statistical analysis integration</li>\n      </ul>\n      \n      <h3>Academic Contribution</h3>\n      <p>This project contributes to the understanding of game balance theory and provides practical tools for game developers to implement and test balance changes.</p>\n    ",
@@ -68,8 +68,8 @@ window.projects = [{
 },
 {
   "title": "Breaking the Ice CI628",
-  "youtube": "https://youtu.be/E_0biT9nlfM",
   "description": "This game was centered around the board game 'Ice Breaker' where players take turns breaking bits of the 'ice'. Whoever drops the penguin first loses. This game was not fully implemented due to issue with network configurations at the time.",
+  "fullDescription": "",
   "tags": [
     "C#",
     "Unity",
@@ -77,13 +77,11 @@ window.projects = [{
     "Prototype",
     "ShaderLab"
   ],
-  "repo": "CI628-Multiplayer-Game-Development",
-  "thumbnail": "https://img.youtube.com/vi/E_0biT9nlfM/0.jpg"
+  "sourceCodeUrl": "CI628-Multiplayer-Game-Development",
+  "image": "https://img.youtube.com/vi/E_0biT9nlfM/0.jpg",
+  "youtubeUrl": "https://youtu.be/E_0biT9nlfM"
 }
-].map(project => {
-  if (project.tags && project.language && project.tags[0] !== project.language) {
-    // Move the language tag to the front if not already
-    project.tags = [project.language, ...project.tags.filter(t => t !== project.language)];
-  }
-  return project;
-});
+];
+
+// Also make data available globally for backward compatibility
+window.projects = projects;

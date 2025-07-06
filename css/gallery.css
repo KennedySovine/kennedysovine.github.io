@@ -1154,6 +1154,25 @@ body {
     }
 }
 
+@media (max-width: 600px) {
+  .modal-content {
+    max-height: 95vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-body {
+    grid-template-columns: 1fr;
+    max-height: none;
+    overflow: visible;
+    display: block;
+  }
+  .modal-info {
+    padding: 1.5rem;
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
 /* ===========================
    ART PORTFOLIO CARDS
    =========================== */

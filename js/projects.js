@@ -1,3 +1,5 @@
+import { projects } from '../user-data/projects.js';
+
 /* TODO:
 - [ ] Add a search bar to the projects page
 - [ ] Implement a filter system for the projects page
@@ -6,13 +8,6 @@
 - [ ] Add project cards that shows image, title, description, tags, and a link to the project
 - [ ] Add 2 buttons: "View Source Code" and "Play Browser Game"
 */
-
-// Load projects data from user-data/projects.js (as a global variable)
-// This requires a <script> tag in Projects.html: <script src="user-data/projects.js"></script>
-// If not present, add it before this script in the HTML.
-
-// Use window.projects if available, fallback to empty array
-const projects = window.projects || [];
 
 // DOM Elements
 const projectsGrid = document.getElementById('projectsGrid');
