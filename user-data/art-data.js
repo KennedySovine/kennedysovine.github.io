@@ -448,6 +448,103 @@ export const artworks = [
     "uploadDate": "2025-07-01T22:04:04.150Z",
     "featured": false,
     "year": "2025"
+  },
+  {
+    "id": 1751795910002,
+    "title": "Toilet Bound Hanako-Kun Ceiling Tile",
+    "description": "Painted this ceiling tile for a local comic-store. Did it for fun. Took me 14 hours to paint.",
+    "category": "Painting",
+    "date": "2020-07-13",
+    "datePrecision": "full",
+    "formattedDate": "13 July 2020",
+    "tags": [
+      "Fan art",
+      "Toilet-Bound Hanako-Kun",
+      "Anime",
+      "Painting",
+      "Ceiling Tile"
+    ],
+    "linkedProject": null,
+    "image": "IMAGES/art/1751795909329-0113cc2f6ad8716dae2aed006c4410a45fffa26c9f.jpg",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751795909329-0113cc2f6ad8716dae2aed006c4410a45fffa26c9f.jpg",
+    "uploadDate": "2025-07-06T09:58:29.331Z",
+    "featured": false,
+    "year": "2020",
+    "imagePath": "IMAGES/art/1751795909329-0113cc2f6ad8716dae2aed006c4410a45fffa26c9f.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751795909329-0113cc2f6ad8716dae2aed006c4410a45fffa26c9f.jpg",
+    "dateCreated": "2025-07-06T09:58:29.337Z"
+  },
+  {
+    "id": 1751796198407,
+    "title": "Realistic Skull Study",
+    "description": "Realistic Skull study for art class. Took me a few days to achieve a great level of detail. Blended white color pencil and charcoal with my fingers, causing me to lose feeling in my fingers temporarily.",
+    "category": "Drawing",
+    "date": "2020-11-13",
+    "datePrecision": "full",
+    "formattedDate": "13 November 2020",
+    "tags": [
+      "Realistic",
+      "Art Class",
+      "School",
+      "Skull",
+      "Charcoal"
+    ],
+    "linkedProject": "HighSchool",
+    "image": "IMAGES/art/1751796198241-014237f7bbb54295d4fd5ef725bb2a512f0a3a5913.jpg",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751796198241-014237f7bbb54295d4fd5ef725bb2a512f0a3a5913.jpg",
+    "uploadDate": "2025-07-06T10:03:18.242Z",
+    "featured": false,
+    "year": "2020",
+    "imagePath": "IMAGES/art/1751796198241-014237f7bbb54295d4fd5ef725bb2a512f0a3a5913.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751796198241-014237f7bbb54295d4fd5ef725bb2a512f0a3a5913.jpg",
+    "dateCreated": "2025-07-06T10:03:18.238Z"
+  },
+  {
+    "id": 1751796302628,
+    "title": "Duo-Art Piece",
+    "description": "Art piece for school assignment. In this assignment, we were told to find existing works of art (3) and merge them into one painting. I decided to make it into a painting that was split into two canvases. ",
+    "category": "Painting",
+    "date": "2021-05-14",
+    "datePrecision": "full",
+    "formattedDate": "14 May 2021",
+    "tags": [
+      "Oil",
+      "Assignment",
+      "School"
+    ],
+    "linkedProject": "HighSchool",
+    "image": "IMAGES/art/1751796302429-01967ff38f17daef930b9e30abee5a0c2e41d87e16.jpg",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751796302429-01967ff38f17daef930b9e30abee5a0c2e41d87e16.jpg",
+    "uploadDate": "2025-07-06T10:05:02.430Z",
+    "featured": false,
+    "year": "2021",
+    "imagePath": "IMAGES/art/1751796302429-01967ff38f17daef930b9e30abee5a0c2e41d87e16.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751796302429-01967ff38f17daef930b9e30abee5a0c2e41d87e16.jpg",
+    "dateCreated": "2025-07-06T10:05:02.425Z"
+  },
+  {
+    "id": 1751796372576,
+    "title": "Charcoal Skull Sketch",
+    "description": "Quick sketch done as an assignment. Done in 15 minutes with my left hand as a challenge for us to practice creating art uncomfortably.",
+    "category": "Drawing",
+    "date": "2019-09",
+    "datePrecision": "month",
+    "formattedDate": "September 2019",
+    "tags": [
+      "Charcoal",
+      "School",
+      "Timed",
+      "Non-dom Hand"
+    ],
+    "linkedProject": "HighSchool",
+    "image": "IMAGES/art/1751796372054-019c15580827a619381216e84d88a81f986f9604d5.jpg",
+    "imageUrl": "https://raw.githubusercontent.com/KennedySovine/kennedysovine.github.io/main/IMAGES/art/1751796372054-019c15580827a619381216e84d88a81f986f9604d5.jpg",
+    "uploadDate": "2025-07-06T10:06:12.055Z",
+    "featured": false,
+    "year": "2019",
+    "imagePath": "IMAGES/art/1751796372054-019c15580827a619381216e84d88a81f986f9604d5.jpg",
+    "fullImagePath": "c:\\Users\\thatc\\Documents\\GitHub\\kennedysovine.github.io\\IMAGES\\art\\1751796372054-019c15580827a619381216e84d88a81f986f9604d5.jpg",
+    "dateCreated": "2025-07-06T10:06:12.050Z"
   }
 ];
 
