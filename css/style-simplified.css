@@ -288,8 +288,7 @@ a:hover, a:active, a:focus {
 .colorlib-services,
 .colorlib-footer,
 .colorlib-contact,
-.colorlib-certifications,
-.colorlib-github-contributions {
+.colorlib-certifications {
   padding-top: var(--spacing-xl);
   padding-bottom: 0;
   clear: both;
@@ -573,25 +572,6 @@ a:hover, a:active, a:focus {
   margin: 0;
 }
 
-.repos-projects-row > section {
-  flex: 0 0 48%;
-  width: 48%;
-  clear: none;
-  box-sizing: border-box;
-  margin: 0;
-}
-
-.skills-github-row .colorlib-skills {
-  flex: 0 0 60%;
-  width: 60%;
-}
-
-.skills-github-row .colorlib-profile {
-  flex: 0 0 35%;
-  width: 35%;
-  margin-top: 0;
-}
-
 /* Profile cards */
 .profile-cards {
   display: flex;
@@ -604,42 +584,6 @@ a:hover, a:active, a:focus {
   overflow: auto;
   max-height: 600px;
   max-width: 450px;
-}
-
-/* Repository cards */
-.repo-card {
-  background-color: var(--white);
-  border-radius: var(--border-radius);
-  padding: 16px;
-  margin: 0 24px;
-  box-shadow: var(--shadow);
-  transition: transform 0.4s cubic-bezier(.4,2,.6,1), box-shadow var(--transition), opacity 0.4s;
-  opacity: 0.7;
-  z-index: 1;
-  width: 320px;
-  height: 200px;
-  max-width: 90vw;
-  max-height: 90vw;
-  font-size: 1.1em;
-}
-
-#repos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 32px 0;
-  min-height: 220px;
-}
-
-#repos::-webkit-scrollbar {
-  display: none;
-}
-
-#repos {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 /* =======================================================
