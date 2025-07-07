@@ -4,7 +4,7 @@ import { education } from "./user-data/education.js";
 import { experience } from "./user-data/experience.js";
 import { footer } from "./user-data/footer.js";
 import { certifications } from "./user-data/certifications.js";
-import { projects } from "./user-data/projects-data.js";
+import { projects } from "./user-data/projects.js";
 
 import { URLs } from "./user-data/urls.js";
 import { config } from "./user-data/config-loader.js";

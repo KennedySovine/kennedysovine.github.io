@@ -1,5 +1,4 @@
-export const modules = [
-  {
+export const modules = [{
     title: "CI411 - Introduction to Games Programming",
     year: "2022 - 2023",
     semester: "3",
@@ -128,6 +127,188 @@ export const modules = [
       "Designing level encounters and puzzles"
     ],
     githubrepo: "https://github.com/KennedySovine/CI413-Game-Level-and-Asset-Design",
+  },  // LEVEL 5 MODULES
+  {
+    title: "CI541 - Game Development Frameworks",
+    year: "2023 - 2024",
+    semester: "1",
+    details: [],
+    content: [
+      "How to choose a game framework",
+      "Principles of 3D for games",
+      "Advances Games architecture",
+      "Problem deconstruction driven object oriented thinking",
+      "Screen and World space UI",
+      "The Game interaction vs. the visual world",
+      "The Player Controller",
+      "Non Player Character (NPC) Agent AI",
+      "C++ programming",
+      "Combining visual programming with C++",
+      "Game state serialisation",
+      "Advanced materials"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI541-Game_Development_Frameworks",
+    },
+    {
+    title: "CI587 - Web Based Game Development",
+    year: "2023 - 2024",
+    semester: "1",
+    details: [],
+    content: [
+      "Overview of the Document Object Model and HTML5 Canvas",
+      "JavaScript games engines, features and application",
+      "Physics for games",
+      "Simple collision detection techniques",
+      "Top down, side scrolling and platform games",
+      "Isometric views",
+      "Networked games – challenges and opportunities"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI587-Web-Development-For-Games",
+    },
+    {
+    title: "CI516 - Artificial Intelligence for Games",
+    year: "2023 - 2024",
+    semester: "1",
+    details: [],
+    content: [
+      "Implementation of AI elements",
+      "AI programming paradigms",
+      "AI debugging",
+      "Finite state machines",
+      "Goal-oriented action planning",
+      "Squad tactics",
+      "Pathfinding",
+      "Decision making",
+      "Behaviour AI"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI516-AI-for-Games",
+    },
+    {
+    title: "CI517 - Game Engine Fundamentals",
+    year: "2023 - 2024",
+    semester: "2",
+    details: [],
+    content: [
+      "Game engine architecture",
+      "Entity-Component System",
+      "Application framework",
+      "Physics subsystem",
+      "Graphics subsystem",
+      "Scripting and domain-specific languages",
+      "External tool integration"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI517_Game_Engine_Fundamentals",
+    },
+    {
+    title: "CI536 - Integrated Group Project",
+    year: "2023 - 2024",
+    semester: "2",
+    details: [],
+    content: [
+      "The project lifecycle",
+      "Agile project planning, process and management",
+      "Understanding and integrating user experience (UX) design",
+      "Requirements management",
+      "Design techniques Coding, both backend and front end",
+      "Testing",
+      "Project documentation"
+    ],
+    githubrepo: "https://github.com/KennedySovine/Integrated-Group-Project",
+    },
+    {
+    title: "CI520 - Narrative Game Design",
+    year: "2023 - 2024",
+    semester: "2",
+    details: [],
+    content: [
+      "Storytelling basics (e.g., story, plot, narrative arc, character arc, etc.)",
+      "Narrative structures (e.g., Three-Act structure, Freytag’s pyramid, Monomyth, Story Circle)",
+      "Game structure (e.g., Linear, String of pearls, Branching, Open)",
+      "Worldbuilding",
+      "Character development",
+      "Plot, world, and character archetypes",
+      "Dialogue (e.g., Ambient, Interactive, Cutscenes)",
+      "Cutscenes and Cinematics",
+      "Tools to create narrative-driven games"
+    ],
+    githubrepo: "https://github.com/KennedySovine/Project-new-world",
+    },
+  // LEVEL 6 MODULES
+  {
+    title: "CI601 - Computing Project",
+    year: "2024 - 2025", 
+    semester: "3",
+    details: [],
+    content: [
+      "Project Proposal",
+      "Legal, social and ethical issues",
+      "Research and planning",
+      "Project management and risk evaluation",
+      "Project evaluation",
+      "Report writing",
+      "Project presentation and Exhibition"
+    ],
+    githubrepo: "https://github.com/KennedySovine/Final-Project",
   },
-  // ...LEVEL 5 & 6 MODULES (truncated for brevity, but would be included in full)...
+  {
+    title: "CI628 - Multiplayer Game Development",
+    year: "2024 - 2025",
+    semester: "1",
+    details: [],
+    content: [
+      "General games architecture",
+      "Challenges facing network games",
+      "Multiplayer game architectures",
+      "Implementation issues and techniques"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI628-Multiplayer-Game-Development",
+  },
+  {
+    title: "CI606 - Virtual Reality Systems", // Option for semester 1
+    year: "2024 - 2025",
+    semester: "1",
+    details: [],
+    content: [
+      "Platforms for development of Virtual Reality systems",
+      "Describing content for Virtual Environments",
+      "Coordinate systems",
+      "Hardware platforms",
+      "Animations",
+      "Interaction methods",
+      "Motion tracking"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI606-Virtual-Reality",
+  },
+  {
+    title: "CI620 - Intellectual Property Law and IT", // Option for semester 2
+    year: "2024 - 2025",
+    semester: "2",
+    details: [],
+    content: [
+      "Why have an Intellectual Property system?",
+      "Appreciate the nature of protection offered by Copyright, Confidentiality, Patents, Trademarks, Database, Design and allied rights",
+      "Be able to apply the most appropriate forms of protection to IT products",
+      "Be able to determine what constitutes infringement and the most appropriate remedies available"
+    ],
+    githubrepo: "",
+  },
+  {
+    title: "CI646 - Programming Languages, Concurrency and Client Server Computing",
+    year: "2024 - 2025",
+    semester: "2",
+    details: [],
+    content: [
+      "Historical development of programming languages",
+      "Programming paradigms",
+      "Languages for concurrent and distributed processing",
+      "Modern trends and developments in programming languages",
+      "An overview of and mechanisms for achieving client-server computing",
+      "Performance and scalability issues in client server computing",
+      "Problems of concurrency: resource deadlock, interference, livelock, starvation, component failure, interrupts",
+      "Properties of concurrent systems: liveness, safety, fairness, nondeterminism",
+      "Definition of real-time systems: hard and soft real-time clocks and timeouts. Scheduling. Real-time execution environments",
+      "The web as a real-time system"
+    ],
+    githubrepo: "https://github.com/KennedySovine/CI646-Programming_Languages_Concurrency_and_ClientSideComputing",
+  }
 ];
