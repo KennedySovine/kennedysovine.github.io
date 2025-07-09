@@ -1,7 +1,9 @@
 export const skills = [
-  "Java",
-  "C++",
-  "C#",
-  "Unity",
-  "Object-Oriented Programming"
+  "Languages: Java, C++, C#, Python, JavaScript, CSS, HTML",
+  "Engines: Unity, Unreal",
+  "Object-Oriented Programming",
+    "Local Multiplayer Coding",
+    "Bug Fixing and Troubleshooting",
+    "Learning new skills quickly",
+    "Producing quality results",
 ];
