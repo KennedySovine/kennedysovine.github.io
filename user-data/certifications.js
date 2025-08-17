@@ -40,5 +40,10 @@ export const certifications = [
     tags: ["React", "JavaScript", "Frontend Development"],
     icon: "./icons/React-icon.png",
     verificationUrl: "https://www.codecademy.com/profiles/KennedySofine/certificates/af00e5032d0a68cc84879983f5d8333b"
-  }
+  },
+  {
+    title:"Create a Front-End App with React Skill Path",
+    issuer: "Codecademy,
+    duration: "July 2025 - No Expiry",
+    credentialId: "114F2C90-B"
 ];
