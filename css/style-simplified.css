@@ -1104,6 +1104,7 @@ body.offcanvas .colorlib-nav-toggle {
   position: absolute;
   top: 0;
   left: 0;
+  left: 0;
   right: 0;
   bottom: 0;
   background: rgba(106, 90, 205, 0.8);
@@ -1190,7 +1191,6 @@ body.offcanvas .colorlib-nav-toggle {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  visibility: hidden;
   transition: all var(--transition);
 }
 

@@ -1,5 +1,18 @@
 export const experience = [
   {
+    title: "Søstrene Grene",
+    duration: "September 2025 - Present",
+    location: "Cambridge, England",
+    subtitle: "Retail Assistant",
+    details: [
+      "Assisted customers in finding products and provided recommendations.",
+      "Maintained a clean and organized store environment.",
+      "Handled cash register operations and processed transactions."
+    ],
+    tags: ["Customer Service", "Retail", "Cash Handling", "Teamwork"],
+    icon: "store",
+  },
+  {
     title: "IridiumMC",
     duration: "Febuary 2025 - Present",
     location: "Remote",
@@ -51,7 +64,7 @@ export const experience = [
     details: [
       "In this internship, I learned the networking and engineering aspects that go into the development of the devices used in medical fields."
     ],
-    tags: ["Interoperability"],
+    tags: ["Interoperability", "Engineering", "Networking"],
     icon: "group",
   }
 ];

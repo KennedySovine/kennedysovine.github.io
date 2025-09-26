@@ -85,4 +85,32 @@ export const moduleGrades = [
     gradeTwo: 48,
     finalGrade: 42,
   },
+  {
+    module: "CI628 - Multiplayer Game Development",
+    assignmentOne: "Multiplayer Game Project",
+    gradeOne: 55,
+    finalGrade: 55,
+  },
+  {
+    module: "CI601 - Computing Project",
+    finalGrade: 68,
+  },
+  {
+    module: "CI606 - Virtual Reality Systems",
+    assignmentOne: "VR Game",
+    gradeOne: 50,
+    finalGrade: 50,
+  },
+  {
+    module: "CI620 - Intellectual Property Law and IT",
+    assignmentOne: "Exam",
+    gradeOne: 40,
+    finalGrade: 40,
+  },
+  {
+    module: "CI646 - Programming Languages, Concurrency and Client Server Computing",
+    assignmentOne: "Coursework",
+    gradeOne: 52,
+    finalGrade: 52,
+  }
 ];
