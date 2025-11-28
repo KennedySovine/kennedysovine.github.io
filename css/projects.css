@@ -188,8 +188,9 @@
   align-items: flex-start;
 }
 .projects-grid > .project-card {
+  /* made cards a bit wider on vertical screens by raising the min-width */
   flex: 1 1 calc(50% - var(--spacing-lg));
-  min-width: 340px;
+  min-width: 500px; /* was 340px — increased for wider cards */
   max-width: calc(50% - var(--spacing-lg));
   box-sizing: border-box;
   height: auto;
