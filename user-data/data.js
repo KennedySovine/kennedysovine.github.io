@@ -490,7 +490,7 @@ export const footer = [
      data: [
  {
  text: "Download CV",
- link: "./CV_KennedySovineATS.pdf",
+ link: "./CV_KennedySovine.pdf",
  download: "CV_KennedySovine.pdf",
  },
  {
