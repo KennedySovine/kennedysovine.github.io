@@ -491,7 +491,7 @@ export const footer = [
  {
  text: "Download CV",
  link: "./CV_KennedySovineATS.pdf",
- download: "Kennedy_Sovine_CV.pdf",
+ download: "CV_KennedySovine.pdf",
  },
  {
  text: "Enable Dark/Light Mode",
