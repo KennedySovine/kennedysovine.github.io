@@ -13,7 +13,7 @@ export const projects = [
       "Data Analysis"
     ],
     "sourceCodeUrl": "https://github.com/KennedySovine/Final-Project",
-    "image": "https://via.placeholder.com/400x300/8577e6/ffffff?text=MMO+Balance+Demo",
+    "image": "https://via.placeholder.com/400x300/7f72b7/ffffff?text=MMO+Balance+Demo",
     "youtubeUrl": "https://youtu.be/VYK1bcIwPtE"
   },
   {

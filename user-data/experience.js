@@ -1,7 +1,34 @@
 export const experience = [
   {
+    title: "Jagex: The RuneScape Company",
+    duration: "June 2026 - Present",
+    location: "Cambridge, England",
+    subtitle: "Junior QA Analyst",
+    details: [
+      "Conducting thorough testing of game features and updates to ensure a high-quality player experience.",
+      "Identifying and documenting bugs, glitches, and other issues in the game.",
+      "Collaborating with the development team to reproduce and resolve reported issues.",
+      "Participating in team meetings and providing feedback on game design and functionality.",
+      "Taking ownership of the XBox version of Dragonwilds, ensuring that it meets the same high standards as other platforms.",
+    ],
+    tags: ["Quality Assurance", "Game Testing", "Bug Reporting", "Collaboration", "XBox Development"],
+    icon: "./icons/Jagex_icon.png",
+  },
+  {
+    title: "John Lewis & Partners",
+    duration: "April 2026 - May 2026",
+    location: "Cambridge, England",
+    subtitle: "Retail Assistant",
+    details: [
+      "Assisted customers in finding products and provided recommendations.",
+      "Handled cash register operations and processed transactions."
+    ],
+    tags: ["Customer Service", "Retail", "Cash Handling", "Teamwork"],
+    icon: "store",
+  },
+  {
     title: "Søstrene Grene",
-    duration: "September 2025 - Present",
+    duration: "September 2025 - April 2026",
     location: "Cambridge, England",
     subtitle: "Retail Assistant",
     details: [

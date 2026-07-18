@@ -5,15 +5,19 @@
 
 body { 
     font-family: var(--font-primary); 
-    background: var(--background); 
+    background:
+        radial-gradient(circle at top left, rgba(146, 134, 200, 0.16), transparent 36%),
+        radial-gradient(circle at top right, rgba(146, 134, 200, 0.12), transparent 28%),
+        linear-gradient(180deg, #fbfbfe 0%, var(--background) 30%, #f7f5fb 100%);
     margin: 0; 
     position: relative;
+    color: var(--text-color);
 }
 
 .uob-back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    position: relative;
+    top: auto;
+    left: auto;
     padding: 12px 20px;
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
@@ -23,10 +27,12 @@ body {
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition-fast);
-    z-index: 100;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 6px;
+    box-shadow: 0 10px 24px rgba(92, 77, 138, 0.12);
+    margin: 14px 0 0 16px;
 }
 
 .uob-back-btn:hover {
@@ -35,38 +41,127 @@ body {
     transform: translateX(-2px);
 }
 
+.uob-hero {
+    max-width: 1280px;
+    margin: 18px auto 24px auto;
+    padding: 28px 32px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(240, 236, 250, 0.96));
+    border: 1px solid rgba(146, 134, 200, 0.18);
+    box-shadow: 0 18px 50px rgba(77, 67, 112, 0.08);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.uob-hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -120px -120px auto;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(146, 134, 200, 0.18), transparent 68%);
+    pointer-events: none;
+}
+
+.uob-hero-copy {
+    max-width: 760px;
+}
+
+.uob-hero-eyebrow {
+    margin: 0 0 10px 0;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--primary-color);
+    font-weight: var(--font-weight-bold);
+}
+
 .uob-header {
-    text-align: center; 
-    font-size: var(--font-size-5xl); 
-    font-weight: var(--font-weight-bold); 
-    margin-top: 32px; 
-    margin-bottom: 24px; 
-    letter-spacing: 1px; 
+    text-align: left;
+    font-size: clamp(2.6rem, 4vw, 4.2rem);
+    font-weight: var(--font-weight-bold);
+    margin: 0;
+    letter-spacing: -0.03em;
+    color: var(--gray-900);
+}
+
+.uob-hero-subtitle {
+    margin: 14px 0 0 0;
+    max-width: 700px;
+    font-size: var(--font-size-lg);
+    color: var(--gray-700);
+    line-height: 1.7;
+}
+
+.uob-hero-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    min-width: min(100%, 450px);
+}
+
+.uob-meta-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(146, 134, 200, 0.18);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 8px 24px rgba(77, 67, 112, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.uob-meta-label {
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-500);
+    font-weight: var(--font-weight-bold);
+}
+
+.uob-meta-value {
+    font-size: var(--font-size-sm);
+    color: var(--gray-800);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.4;
 }
 
 .uob-year-buttons { 
     display: flex; 
     justify-content: center; 
     gap: 24px; 
-    margin-bottom: 24px; 
+    margin: 12px auto 24px auto;
+    padding: 8px;
+    width: fit-content;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(146, 134, 200, 0.16);
+    box-shadow: 0 10px 28px rgba(77, 67, 112, 0.06);
 }
 
 .uob-year-btn { 
     padding: 16px 36px; 
     font-size: var(--font-size-lg); 
-    border-radius: var(--border-radius-lg); 
-    border: 2px solid var(--gray-400); 
-    background: var(--white); 
+    border-radius: 999px; 
+    border: 1px solid rgba(146, 134, 200, 0.22); 
+    background: transparent; 
     cursor: pointer; 
     font-weight: var(--font-weight-semibold); 
     transition: var(--transition-fast); 
+    color: var(--gray-700);
 }
 
 .uob-year-btn.active, 
 .uob-year-btn:focus { 
-    background: var(--secondary-color); 
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); 
     color: var(--white); 
-    border-color: var(--secondary-color); 
+    border-color: transparent; 
+    box-shadow: 0 10px 20px rgba(128, 105, 188, 0.22);
 }
 
 .uob-semester-labels { 
@@ -116,26 +211,29 @@ body {
 .uob-module-btn { 
     padding: 14px 18px; 
     border-radius: var(--border-radius); 
-    border: 2px solid var(--gray-400); 
-    background: var(--gray-100); 
+    border: 1px solid rgba(146, 134, 200, 0.18); 
+    background: rgba(255, 255, 255, 0.82); 
     font-size: var(--font-size-base); 
     font-weight: var(--font-weight-bold); 
     cursor: pointer; 
     text-align: center; 
-    transition: var(--transition-fast); 
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast); 
     position: relative; 
+    box-shadow: 0 6px 18px rgba(77, 67, 112, 0.05);
 }
 
 .uob-module-btn:hover {
-    background: var(--blue-100);
-    border-color: var(--blue-300);
+    background: rgba(146, 134, 200, 0.12);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(77, 67, 112, 0.1);
 }
 
 .uob-module-btn.active, 
 .uob-module-btn:focus { 
-    background: var(--secondary-color); 
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); 
     color: var(--white); 
-    border-color: var(--secondary-color); 
+    border-color: transparent; 
 }
 
 .uob-module-btn.sem3 { 
@@ -151,7 +249,7 @@ body {
     margin-top: 32px; 
     padding-left: 10px;
     padding-right: 10px;
-    border-top: 1px solid var(--gray-300);
+    border-top: 1px solid rgba(146, 134, 200, 0.18);
     padding-top: 32px;
     position: relative; /* Added for potential absolute positioning of children if needed */
     flex-wrap: wrap; /* Allow items to wrap if space is tight, especially with the button */
@@ -159,11 +257,13 @@ body {
 
 .uob-info-main { 
     flex: 2; 
-    background: var(--white); 
-    border-radius: var(--border-radius-lg); 
-    box-shadow: var(--shadow); 
+    background: rgba(255, 255, 255, 0.88); 
+    border: 1px solid rgba(146, 134, 200, 0.14);
+    border-radius: 24px; 
+    box-shadow: 0 16px 40px rgba(77, 67, 112, 0.07); 
     padding: 24px; 
     min-width: 320px; 
+    backdrop-filter: blur(10px);
 }
 
 .uob-info-title { 
@@ -174,7 +274,7 @@ body {
 
 .uob-info-readme { 
     font-size: var(--font-size-base); 
-    color: var(--text-color); 
+    color: var(--gray-800); 
     margin-bottom: 0; 
     line-height: 1.6;
 }
@@ -183,8 +283,8 @@ body {
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     margin: 0 0 16px 0;
-    color: var(--text-color);
-    border-bottom: 2px solid var(--gray-200);
+    color: var(--gray-900);
+    border-bottom: 2px solid rgba(146, 134, 200, 0.18);
     padding-bottom: 8px;
 }
 
@@ -192,14 +292,14 @@ body {
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     margin: 20px 0 12px 0;
-    color: var(--text-color);
+    color: var(--gray-900);
 }
 
 .uob-info-readme h3 {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     margin: 16px 0 8px 0;
-    color: var(--text-color);
+    color: var(--gray-800);
 }
 
 .uob-info-readme p {
@@ -237,11 +337,13 @@ body {
 
 .uob-info-bullets { 
     flex: 1; 
-    background: var(--blue-50); 
-    border-radius: var(--border-radius-lg); 
-    box-shadow: var(--shadow); 
+    background: linear-gradient(180deg, rgba(146, 134, 200, 0.12), rgba(255, 255, 255, 0.96)); 
+    border: 1px solid rgba(146, 134, 200, 0.14);
+    border-radius: 24px; 
+    box-shadow: 0 16px 40px rgba(77, 67, 112, 0.07); 
     padding: 20px 24px; 
     min-width: 200px; 
+    backdrop-filter: blur(10px);
 
 }
 
@@ -249,7 +351,7 @@ body {
     font-size: var(--font-size-lg); 
     font-weight: var(--font-weight-semibold); 
     margin-bottom: 10px; 
-    
+    color: var(--primary-color);
 }
 
 .uob-info-bullets ul { 
@@ -271,7 +373,7 @@ body {
     padding: 10px 15px;
     /* margin-top: 15px; */ /* Removed, handled by sidebar gap */
     /* margin-bottom: 15px; */ /* Removed, handled by sidebar gap or parent */
-    background-color: var(--secondary-color); 
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); 
     color: var(--white);
     border: none;
     border-radius: var(--border-radius);
@@ -283,7 +385,8 @@ body {
 }
 
 .uob-repo-btn:hover {
-    background-color: var(--accent-color); /* Slightly darker on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(128, 105, 188, 0.18);
 }
 
 .uob-repo-icon {
@@ -294,11 +397,20 @@ body {
 
 @media (max-width: 900px) {
     .uob-back-btn {
-        position: relative;
-        top: auto;
-        left: auto;
-        margin: 20px auto 0 20px;
+        margin: 12px 0 0 16px;
         display: inline-flex;
+    }
+
+    .uob-hero {
+        margin: 18px 16px 18px 16px;
+        padding: 22px 20px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .uob-hero-meta {
+        grid-template-columns: 1fr;
+        min-width: 0;
     }
     
     .uob-header {
@@ -349,11 +461,11 @@ body {
         display: block;
         font-size: var(--font-size-xl);
         font-weight: var(--font-weight-semibold);
-        color: var(--secondary-color);
+        color: var(--primary-color);
         text-align: center;
         margin-bottom: 16px;
         padding-bottom: 8px;
-        border-bottom: 2px solid var(--blue-200);
+        border-bottom: 2px solid rgba(146, 134, 200, 0.28);
     }
     
     .uob-modules-col:last-child::before {
@@ -361,11 +473,11 @@ body {
         display: block;
         font-size: var(--font-size-xl);
         font-weight: var(--font-weight-semibold);
-        color: var(--secondary-color);
+        color: var(--primary-color);
         text-align: center;
         margin-bottom: 16px;
         padding-bottom: 8px;
-        border-bottom: 2px solid var(--blue-200);
+        border-bottom: 2px solid rgba(146, 134, 200, 0.28);
     }
     
     .uob-semester3-container {
@@ -379,11 +491,11 @@ body {
         display: block;
         font-size: var(--font-size-xl);
         font-weight: var(--font-weight-semibold);
-        color: var(--secondary-color);
+        color: var(--primary-color);
         text-align: center;
         margin-bottom: 16px;
         padding-bottom: 8px;
-        border-bottom: 2px solid var(--blue-200);
+        border-bottom: 2px solid rgba(146, 134, 200, 0.28);
     }
     
     .uob-module-btn {
@@ -394,6 +506,10 @@ body {
 
 /* Medium screens */
 @media (max-width: 768px) {
+    .uob-hero {
+        margin: 16px 14px 16px 14px;
+    }
+
     .uob-header {
         font-size: 2.2rem;
         margin-top: 18px;
@@ -402,7 +518,7 @@ body {
     }
     
     .uob-back-btn {
-        margin: 18px auto 0 18px;
+        margin: 10px 0 0 16px;
         padding: 10px 16px;
         font-size: 0.95rem;
     }
@@ -411,7 +527,7 @@ body {
 /* Extra small screens */
 @media (max-width: 480px) {
     .uob-back-btn {
-        margin: 15px auto 0 15px;
+        margin: 8px 0 0 14px;
         padding: 8px 12px;
         font-size: 0.9rem;
     }
@@ -421,6 +537,14 @@ body {
         margin-top: 15px;
         margin-bottom: 20px;
         padding: 0 15px;
+    }
+
+    .uob-hero-copy {
+        padding-right: 0;
+    }
+
+    .uob-hero-subtitle {
+        font-size: var(--font-size-base);
     }
     
     .uob-year-buttons {
@@ -448,17 +572,20 @@ body {
 
 /* Assignment Grades Styles */
 .uob-assignments {
-    background: var(--blue-50); 
-    border-radius: var(--border-radius-lg); 
-    box-shadow: var(--shadow); 
+    background: linear-gradient(180deg, rgba(146, 134, 200, 0.12), rgba(255, 255, 255, 0.96)); 
+    border: 1px solid rgba(146, 134, 200, 0.14);
+    border-radius: 24px; 
+    box-shadow: 0 16px 40px rgba(77, 67, 112, 0.07); 
     padding: 20px 24px; 
     min-width: 200px;
+    backdrop-filter: blur(10px);
 }
 
 .uob-assignments-title {
     font-size: var(--font-size-lg); 
     font-weight: var(--font-weight-semibold); 
     margin-bottom: 10px; 
+    color: var(--primary-color);
 }
 
 #assignment-grades {
@@ -470,24 +597,25 @@ body {
     padding: 8px 12px;
     background: var(--white);
     border-radius: var(--border-radius);
-    border-left: 4px solid var(--secondary-color);
+    border-left: 4px solid var(--accent-color);
+    box-shadow: 0 4px 14px rgba(77, 67, 112, 0.05);
 }
 
 .grade-assignment {
     font-weight: var(--font-weight-semibold);
-    color: var(--text-color);
+    color: var(--gray-800);
     margin-bottom: 4px;
 }
 
 .grade-score {
     font-size: var(--font-size-sm);
-    color: var(--text-light);
+    color: var(--gray-600);
 }
 
 .grade-final {
     margin-top: 8px;
     padding: 8px 12px;
-    background: var(--secondary-color);
+    background: var(--accent-color);
     color: var(--white);
     border-radius: var(--border-radius);
     font-weight: var(--font-weight-semibold);
@@ -496,5 +624,5 @@ body {
 
 .grade-letter {
     font-weight: var(--font-weight-bold);
-    color: var(--secondary-color);
+    color: var(--accent-color);
 }

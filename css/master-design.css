@@ -30,9 +30,9 @@
    * ======================================================= */
   
   /* Primary brand colors */
-  --primary-color: #2c98f0;
-  --secondary-color: #8577e6;
-  --accent-color: #6a5acd;
+  --primary-color: #6b5aa1;
+  --secondary-color: #9286c8;
+  --accent-color: #8069bc;
   
   /* Gallery blue accent */
   --blue-50: #eff6ff;
@@ -76,14 +76,14 @@
   --info: #3b82f6;
   
   /* Portfolio specific color variants */
-  --color-2: #4169e1;
-  --color-3: #8577e6;
-  --color-4: #a84cb8;
-  --color-5: #2fa499;
-  --color-6: #4054b2;
+  --color-2: #6176a7;
+  --color-3: #9286c8;
+  --color-4: #a278ac;
+  --color-5: #5ea39a;
+  --color-6: #6d7ab0;
   
   /* Portfolio gradient */
-  --gradient-primary: linear-gradient(135deg, rgb(177, 156, 217), rgb(133, 119, 230));
+  --gradient-primary: linear-gradient(135deg, #6b5aa1, #4c4066);
   
   /* Gallery glass effects */
   --glass-bg: rgba(255, 255, 255, 0.1);

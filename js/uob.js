@@ -396,8 +396,7 @@ function updateBulletPoints(content) {
 
 function updateAssignmentGrades(module) {
     // Clear existing grades
-    if (!assignmentGrades){
-        assignmentGrades.innerHTML = '<div class="grade-final">No grades available</div>';
+    if (!assignmentGrades) {
         console.error("Assignment grades DOM element not found.");
         return;
     }

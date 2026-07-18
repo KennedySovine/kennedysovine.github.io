@@ -112,7 +112,7 @@ function createCard(repo, pos) {
     height: 180px;
     padding: 20px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #b19cd9, #6a5acd);
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     top: 50%;
@@ -250,7 +250,7 @@ function populateRepo(items, id) {
           border-radius: 12px;
           padding: 14px;
           font-size: 13px;
-          background: linear-gradient(135deg, #b19cd9, #6a5acd);
+          background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
           transition: transform 0.2s ease-in-out;
           cursor: pointer;
@@ -323,15 +323,6 @@ function populateExp_Edu(items, id) {
       let spanTimelineLocation = document.createElement("span");
       spanTimelineLocation.className = "timeline-location";
       spanTimelineLocation.innerHTML = " • " + items[i].location;
-      spanTimelineLocation.style.fontStyle = "italic";
-      spanTimelineLocation.style.color = "#C8A2C8";
-      // ADD OUTLINE FOR TEXT #C8A2C8
-      spanTimelineLocation.style.textShadow = `
-        -1px -1px 0 white,
-        1px -1px 0 white,
-        -1px 1px 0 white,
-        1px 1px 0 white
-      `;
       spanTimelineSublabel.append(spanTimelineLocation);
     }
 
@@ -692,7 +683,7 @@ async function fetchRepositories() {
       <div style="text-align: center; padding: 40px; color: #666;">
         <h3>Repositories Currently Unavailable</h3>
         <p>Unable to fetch repository data at this time.</p>
-        <p>Please visit my <a href="https://github.com/KennedySovine" target="_blank" style="color: #6a5acd;">GitHub profile</a> directly.</p>
+        <p>Please visit my <a href="https://github.com/KennedySovine" target="_blank" style="color: var(--accent-color);">GitHub profile</a> directly.</p>
       </div>
     `;
   }
@@ -717,7 +708,7 @@ function displayRepositoryCarousel3Cards(repos) {
         box-sizing: border-box;
       "></div><div style="text-align: center; margin-top: 20px;">
         <button id="prev-repo" style="
-          background: #6a5acd;
+          background: var(--accent-color);
           border: none;
           border-radius: 50%;
           width: 45px;
@@ -732,7 +723,7 @@ function displayRepositoryCarousel3Cards(repos) {
            onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">←</button>
         <span id="repo-counter" style="margin: 0 16px; font-weight: bold; font-size: 15px; color: #333;"></span>
         <button id="next-repo" style="
-          background: #6a5acd;
+          background: var(--accent-color);
           border: none;
           border-radius: 50%;
           width: 45px;
@@ -794,7 +785,7 @@ function displayRepositoryCarousel3Cards(repos) {
       height: ${cardHeight}px;
       padding: ${cardPadding}px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #b19cd9, #6a5acd);
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       top: 50%;
@@ -1030,8 +1021,8 @@ function createProjectCard(project, index) {
     <div class="project-card-inner" style="height: 100%; display: flex; flex-direction: column;">
       <div class="project-image" style="position: relative !important; height: 200px !important; display: flex !important; align-items: center !important; justify-content: center !important; background-color: #f8f8f8 !important; float: none !important; overflow: hidden !important; border-radius: 12px 12px 0 0 !important;">
         <img src="${imageUrl}" alt="${project.title}" loading="lazy" style="max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; display: block !important;">
-        <div class="project-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(106, 90, 205, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
-          <button class="project-expand-btn" data-project-index="${index}" style="background: white; color: #6a5acd; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s ease;">
+        <div class="project-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(63, 49, 79, 0.86); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+          <button class="project-expand-btn" data-project-index="${index}" style="background: white; color: var(--accent-color); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s ease;">
             <i class="fa fa-expand"></i>
           </button>
         </div>
@@ -1040,7 +1031,7 @@ function createProjectCard(project, index) {
         <h3 class="project-title" style="color: #333; margin: 0 0 12px 0; font-size: 1.4rem; font-weight: 600;">${project.title}</h3>
         <p class="project-description" style="color: #666; margin: 0 0 16px 0; line-height: 1.6; flex-grow: 1;">${project.description}</p>
         <div class="project-tags" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto;">
-          ${project.tags.map(tag => `<span class="project-tag" style="background: linear-gradient(135deg, #6a5acd, #8a7fd8); color: white; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: 500;">${tag}</span>`).join('')}
+          ${project.tags.map(tag => `<span class="project-tag" style="background: linear-gradient(135deg, var(--accent-color), var(--secondary-color)); color: white; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: 500;">${tag}</span>`).join('')}
         </div>
       </div>
     </div>
@@ -1557,7 +1548,7 @@ function loadGitHubContributions() {
         sandbox="allow-scripts allow-same-origin"
       ></iframe>
       <p style="margin-top: 15px; font-size: 14px; color: #666;">
-        <a href="https://github.com/${username}" target="_blank" style="color: #6a5acd; text-decoration: none;">
+        <a href="https://github.com/${username}" target="_blank" style="color: var(--accent-color); text-decoration: none;">
           📊 View full GitHub profile →
         </a>
       </p>
@@ -1598,7 +1589,7 @@ function loadGitHubContributions() {
                 background: white;
                 padding: 12px;
                 border-radius: 8px;
-                border-left: 4px solid #6a5acd;
+                border-left: 4px solid var(--accent-color);
                 font-size: 12px;
               ">
                 <div style="font-weight: bold; color: #333; margin-bottom: 4px;">
@@ -1619,14 +1610,14 @@ function loadGitHubContributions() {
               display: inline-flex;
               align-items: center;
               gap: 8px;
-              background: #6a5acd;
+              background: var(--accent-color);
               color: white;
               padding: 12px 24px;
               border-radius: 8px;
               text-decoration: none;
               font-weight: bold;
               transition: background 0.3s ease;
-            " onmouseover="this.style.background='#5a4bbd'" onmouseout="this.style.background='#6a5acd'">
+            " onmouseover="this.style.background='var(--secondary-color)'" onmouseout="this.style.background='var(--accent-color)'">
               📊 View Full GitHub Profile
               <span style="font-size: 12px;">→</span>
             </a>
@@ -1638,7 +1629,7 @@ function loadGitHubContributions() {
       // Final fallback: Simple GitHub profile link
       container.innerHTML = `
         <div style="
-          background: linear-gradient(135deg, #6a5acd, #8a7fd8);
+          background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
           border-radius: 12px;
           padding: 40px 20px;
           text-align: center;

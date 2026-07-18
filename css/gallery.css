@@ -382,7 +382,7 @@ body {
 .gallery-header h1 {
     font-size: var(--font-size-4xl);
     font-weight: var(--font-bold);
-    color: var(--gray-800);
+    color: var(--primary-color);
     margin: 0;
 }
 
@@ -434,7 +434,7 @@ body {
 .search-box input:focus {
     outline: none;
     border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(133, 119, 230, 0.1);
+    box-shadow: 0 0 0 3px rgba(146, 134, 200, 0.14);
 }
 
 .search-icon {
@@ -471,7 +471,7 @@ body {
 }
 
 .filter-group.collapsible .filter-header:hover {
-    color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 .collapse-icon {
@@ -521,13 +521,13 @@ body {
 }
 
 .filter-option:hover {
-    color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 .filter-option input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: var(--secondary-color);
+    accent-color: var(--accent-color);
 }
 
 .filter-option span {
@@ -559,9 +559,9 @@ body {
 .filter-tag.active,
 .filter-project:hover,
 .filter-project.active {
-    background: var(--secondary-color);
+    background: var(--accent-color);
     color: var(--white);
-    border-color: var(--secondary-color);
+    border-color: var(--accent-color);
 }
 
 .clear-filters {
